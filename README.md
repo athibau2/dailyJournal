@@ -12,14 +12,14 @@ My project will help people who struggle with journaling. I will build a website
 * Account logged in
 * Account logged out
 * Password updated
-* Prompt response submitted
-* Prompt response deleted
-* Prompt response updated
-* Responses viewed by topic
-* Responses viewed by week
-* Responses viewed by month
-* Responses viewed by year
-* Response shared with friends
+* Prompt entry submitted
+* Prompt entry deleted
+* Prompt entry updated
+* Entries viewed by topic
+* Entries viewed by week
+* Entries viewed by month
+* Entries viewed by year
+* Entry shared with friends
 * Prompt shared with friends
 * Prompt settings updated
 
@@ -30,14 +30,14 @@ My project will help people who struggle with journaling. I will build a website
 * userLogIn
 * userLogOut
 * updatePassword
-* submitResponse
-* deleteResponse
-* updateResponse
+* submitEntry
+* deleteEntry
+* updateEntry
 * sortByTopic
 * sortByWeek
 * sortByMonth
 * sortByYear
-* shareResponse
+* shareEntry
 * sharePrompt
 * updatePromptSettings
 
@@ -50,15 +50,12 @@ My project will help people who struggle with journaling. I will build a website
 * Password (chosen by user)
 * Session (Logged in or out)
 
-### Response
+### Entry
 
-* Response id (date? how to keep track?)
-* Response text
+* Id (auto generated)
+* Text
 * Shared status (shared/not shared)
-
-### Connections
-
-* Other friends (connected or not/removable)
+* Date
 
 ## *Value Objects*
 
@@ -67,3 +64,7 @@ My project will help people who struggle with journaling. I will build a website
 * Topic
 * Text
 * Id
+
+### Connections
+
+* Other friends (connected or not/removable)
