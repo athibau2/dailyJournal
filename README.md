@@ -68,3 +68,26 @@ My project will help people who struggle with journaling. I will build a website
 ### Connections
 
 * Other friends (connected or not/removable)
+
+
+# REST API Design
+
+## *Endpoints*
+
+| Description | URL Fragment | HTTP Method | Parameters | Representations |
+| ----------- | ------------ | ----------- | ---------- | --------------- |
+| create account | 
+| delete account | 
+| log in | 
+| log out | 
+| update password | 
+| submit entry | 
+| delete entry | 
+| update entry | 
+| get tasks by topic |
+| get tasks by week | 
+| get tasks by month |
+| get tasks by year | 
+| share entry | 
+| share prompt | 
+
