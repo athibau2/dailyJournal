@@ -76,8 +76,8 @@ My project will help people who struggle with journaling. I will build a website
 
 | Description | URL Fragment | HTTP Method | Parameters | Representations |
 | ----------- | ------------ | ----------- | ---------- | --------------- |
-| create account | 
-| delete account | 
+| create account | /accounts | POST |  | Create Account |
+| delete account | /accounts/{userId} | DELETE | userId | 
 | log in | 
 | log out | 
 | update password | 
