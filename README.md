@@ -76,18 +76,88 @@ My project will help people who struggle with journaling. I will build a website
 
 | Description | URL Fragment | HTTP Method | Parameters | Representations |
 | ----------- | ------------ | ----------- | ---------- | --------------- |
-| create account | /accounts | POST |  | Create Account |
-| delete account | /accounts/{userId} | DELETE | userId | 
-| log in | 
-| log out | 
-| update password | 
-| submit entry | 
-| delete entry | 
-| update entry | 
-| get tasks by topic |
-| get tasks by week | 
-| get tasks by month |
-| get tasks by year | 
-| share entry | 
-| share prompt | 
+| create account | /accounts | POST |                   | Create Account  |
+| delete account | /accounts/{userId} | DELETE | userId |                 |
+| log in | /accounts/{userId}/login | PUT | userId      | Login           |
+| log out | /accounts/{userId}/logout | PUT | userId    |                 |
+| update password | /accounts/{userId}/settings | PUT | | Update Password |
+| submit entry | /entries    | POST |                   | Submit Entry    |
+| delete entry | /entries/{entryId} | DELETE | entryId  |                 |
+| update entry | /entries/{entryId} | PUT | entryId     | Update Entry    |
+| get tasks by topic | /entries/{topic} | GET | topic   | Sort by Topic   |
+| get tasks by week | /entries/{date7days} | GET | date7days |            |
+| get tasks by month | /entries/{month} | GET | month   |                 |
+| get tasks by year | /entries/{year} | GET | year      |                 |
+| share entry | /connections/{connectionId} | PUT | connectionId |        |
+| share prompt | /connections/{connectionId} | PUT | connectionId |       |
 
+
+## *Representations*
+
+### Create Account
+```json
+{
+    "firstName": "Andrew",
+    "lastName": "Thibaudeau",
+    "email": "example@email.com",
+    "password": "fake-password"
+}
+```
+
+### Login
+```json
+{
+    "password": "fake-password"
+}
+```
+
+### Update Password
+```json
+{
+    "password": "new-password"
+}
+```
+
+### Submit Entry
+```json
+{
+    "prompt": "What is one thing you hope to accomplish within the next year and why?",
+    "promptId": "ae5df8n432",
+    "topic": "future goals",
+    "entryId": "001",
+    "text": "Become advanced in web development",
+    "date": "01/11/2022",
+    "shared": "false"
+}
+```
+
+### Update Entry
+```json
+{
+    "text": "Have developed 3 personal project websites so that I can show employers my work."
+}
+```
+
+### Sort By Topic
+```json
+[
+    {
+        "prompt": "What is one thing you hope to accomplish within the next year and why?",
+        "promptId": "ae5df8n432",
+        "topic": "future goals",
+        "entryId": "001",
+        "text": "Have developed 3 personal project websites so that I can show employers my work.",
+        "date": "01/11/2022",
+        "shared": "false"
+    },
+    {
+        "prompt": "What values do you hope you future family will have?",
+        "promptId": "dk8ei3a239",
+        "topic": "future goals",
+        "entryId": "002",
+        "text": "I want my family to regard other people with respect and be kind. I want my kids to instinctively stand up for their friends and serve others whenever someone needs help.",
+        "date": "01/12/2022",
+        "shared": "true"
+    }
+]
+```
