@@ -52,22 +52,15 @@ My project will help people who struggle with journaling. I will build a website
 
 ### Entry
 
+* Prompt
+* PromptId
+* Topic
 * Id (auto generated)
 * Text
-* Shared status (shared/not shared)
 * Date
 
 ## *Value Objects*
-
-### Prompt
-
-* Topic
-* Text
-* Id
-
-### Connections
-
-* Other friends (connected or not/removable)
+None
 
 
 # REST API Design
@@ -84,12 +77,10 @@ My project will help people who struggle with journaling. I will build a website
 | submit entry | /entries    | POST |                   | Submit Entry    |
 | delete entry | /entries/{entryId} | DELETE | entryId  |                 |
 | update entry | /entries/{entryId} | PUT | entryId     | Update Entry    |
-| get tasks by topic | /entries/{topic} | GET | topic   | Sort by Topic   |
-| get tasks by week | /entries/{date7days} | GET | date7days |            |
-| get tasks by month | /entries/{month} | GET | month   |                 |
-| get tasks by year | /entries/{year} | GET | year      |                 |
-| share entry | /connections/{connectionId} | PUT | connectionId |        |
-| share prompt | /connections/{connectionId} | PUT | connectionId |       |
+| get tasks by topic | /entries/?topic= | GET | topic   | Sort by Topic   |
+| get tasks by week | /entries/?date= | GET | date7days |                 |
+| get tasks by month | /entries/?date= | GET | month    |                 |
+| get tasks by year | /entries/?date= | GET | year      |                 |
 
 
 ## *Representations*
@@ -121,13 +112,10 @@ My project will help people who struggle with journaling. I will build a website
 ### Submit Entry
 ```json
 {
-    "prompt": "What is one thing you hope to accomplish within the next year and why?",
     "promptId": "ae5df8n432",
-    "topic": "future goals",
     "entryId": "001",
     "text": "Become advanced in web development",
-    "date": "01/11/2022",
-    "shared": "false"
+    "date": "01/11/2022"
 }
 ```
 
@@ -148,7 +136,6 @@ My project will help people who struggle with journaling. I will build a website
         "entryId": "001",
         "text": "Have developed 3 personal project websites so that I can show employers my work.",
         "date": "01/11/2022",
-        "shared": "false"
     },
     {
         "prompt": "What values do you hope you future family will have?",
@@ -157,7 +144,6 @@ My project will help people who struggle with journaling. I will build a website
         "entryId": "002",
         "text": "I want my family to regard other people with respect and be kind. I want my kids to instinctively stand up for their friends and serve others whenever someone needs help.",
         "date": "01/12/2022",
-        "shared": "true"
     }
 ]
 ```
