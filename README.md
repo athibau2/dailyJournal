@@ -78,9 +78,9 @@ None
 | delete entry | /entries/{entryId} | DELETE | entryId  |                 |
 | update entry | /entries/{entryId} | PUT | entryId     | Update Entry    |
 | get tasks by topic | /entries/?topic= | GET | topic   | Sort by Topic   |
-| get tasks by week | /entries/?date= | GET | date7days |                 |
-| get tasks by month | /entries/?date= | GET | month    |                 |
-| get tasks by year | /entries/?date= | GET | year      |                 |
+| get tasks by week | /entries/?week= | GET | date7days |                 |
+| get tasks by month | /entries/?month= | GET | month    |                 |
+| get tasks by year | /entries/?year= | GET | year      |                 |
 
 
 ## *Representations*
