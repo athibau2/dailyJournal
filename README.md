@@ -78,9 +78,9 @@ None
 | delete entry | /entries/{entryId} | DELETE | entryId  |                 |
 | update entry | /entries/{entryId} | PUT | entryId     | Update Entry    |
 | get tasks by topic | /entries/?topic= | GET | topic   | Sort by Topic   |
-| get tasks by week | /entries/?date= | GET | date7days |                 |
-| get tasks by month | /entries/?date= | GET | month    |                 |
-| get tasks by year | /entries/?date= | GET | year      |                 |
+| get tasks by week | /entries/?week= | GET | date7days |                 |
+| get tasks by month | /entries/?month= | GET | month    |                 |
+| get tasks by year | /entries/?year= | GET | year      |                 |
 
 
 ## *Representations*
@@ -138,7 +138,7 @@ None
         "date": "01/11/2022",
     },
     {
-        "prompt": "What values do you hope you future family will have?",
+        "prompt": "What values do you hope your future family will have?",
         "promptId": "dk8ei3a239",
         "topic": "future goals",
         "entryId": "002",
