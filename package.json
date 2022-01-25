@@ -1,0 +1,22 @@
+{
+  "name": "dailyjournal",
+  "version": "1.0.0",
+  "description": "My project will help people who struggle with journaling. I will build a website that prompts users each day to respond to a journal entry topic. Users can schedule when their prompts come, and they can view their responses in different formats. For example, they can sort by topic, by week/month/year, etc. They can also connect with other users and send each other prompts or share responses with each other. This will help people who don't know what to write about or who forget to write in a journal because it's tucked away and forgotten on a bookshelf.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/athibau2/dailyJournal.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/athibau2/dailyJournal/issues"
+  },
+  "homepage": "https://github.com/athibau2/dailyJournal#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
