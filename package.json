@@ -18,5 +18,8 @@
   "homepage": "https://github.com/athibau2/dailyJournal#readme",
   "dependencies": {
     "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "mocha": "^9.2.0"
   }
 }
