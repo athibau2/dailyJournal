@@ -136,8 +136,6 @@ paths:
       tags:
         - Entries
       summary: Submit an entry
-      parameters:
-        - $ref: '#/components/schemas/MakeEntry'
       requestBody:
         required: true
         content:
