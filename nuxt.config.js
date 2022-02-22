@@ -76,7 +76,7 @@ export default {
 
   serverMiddleware: [
     {
-      path: '/server/middleware',
+      path: '/api',
       handler: '~/api/server.js'
     }
   ]

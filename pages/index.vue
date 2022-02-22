@@ -1,5 +1,28 @@
 <template>
-  <v-row justify="center" align="center">
+
+  <div>
+    <form @submit="stopDefault">
+      <input name="fullname" type="text" placeholder="Your Name" v-model="fullname"><br>
+      <input name="phone" type="text" placeholder="Phone"><br>
+      <input name="address" type="text" placeholder="Address"><br>
+
+      <div>
+        <ul v-if="hasName">
+          <li v-for="item in items" :key="item.message">
+            <input type="radio" :id="item.id" :value="item.value" v-model="picked">
+            <label :for="item.id">{{ item.message }}</label>
+          </li>
+        </ul>
+
+        <button>Click Me</button>
+
+      </div>
+
+      Your Name: {{ fullname }}
+    </form>
+  </div>
+
+  <!-- <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
       <v-card class="logo py-4 d-flex justify-center">
         <NuxtLogo />
@@ -70,14 +93,47 @@
           >
             Continue
           </v-btn>
+          <v-btn
+            color="primary"
+            nuxt
+            to=""
+          >
+            Hit Endpoint
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
-  </v-row>
+  </v-row> -->
 </template>
 
 <script>
 export default {
-  name: 'IndexPage'
+  name: 'IndexPage',
+
+  data () {
+    return {
+      fullname: '',
+      phone: '',
+      address: '',
+
+      items: [
+        { id: '1', message: 'Foo', value: 'foo', },
+        { id: '2', message: 'Bar', value: 'bar', }
+      ]
+    }
+  },
+
+  methods: {
+    stopDefault ($event) {
+      console.log('Submitted')
+      $event.preventDefault()
+    }
+  },
+
+  computed: {
+    hasName () {
+      return this.fullname.length > 0
+    }
+  }
 }
 </script>
