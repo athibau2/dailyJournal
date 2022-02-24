@@ -15,7 +15,7 @@ module.exports = function (pool) {
 			}
 		},
 
-		async updateAccount (req, res) {
+		async updatePassword (req, res) {
 			const data = req.enforcer.body
 			const { userid } = req.enforcer.params
 
@@ -26,7 +26,7 @@ module.exports = function (pool) {
 				if (account === undefined) {
 					res.enforcer.status(404).send()
 				} else {
-					await accounts.updateAccount(client, userid, data)
+					await accounts.updatePassword(client, userid, data)
 					res.enforcer.status(200).send()
 				}
 				await client.query('COMMIT')
@@ -42,10 +42,6 @@ module.exports = function (pool) {
 			const { userid } = req.enforcer.params
 			await accounts.deleteAccount(pool, userid)
 			res.enforcer.status(204).send()
-		},
-
-		async updatePassword (req, res) {
-			
 		},
 
 		async login (req, res) {

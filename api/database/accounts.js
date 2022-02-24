@@ -26,7 +26,7 @@ exports.getAccount = async function (client, userid) {
     return rows[0]
 }
 
-exports.updateAccount = async  function (client, userid, data) {
+exports.updatePassword = async  function (client, userid, data) {
     // create dynamic query based on inputs
     const { email, password } = data
     const values = []
