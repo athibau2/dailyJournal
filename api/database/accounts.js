@@ -26,11 +26,13 @@ exports.getAccount = async function (client, userid) {
     return rows[0]
 }
 
-exports.updatePassword = async  function (client, userid, data) {
+exports.updatePassword = async function (client, userid, data) {
     // create dynamic query based on inputs
     const { email, password } = data
     const values = []
     const sets = []
+    const salt = await bcrypt.genSalt(10)
+
 
     if (email !== undefined) {
         values.push(email)
@@ -38,7 +40,7 @@ exports.updatePassword = async  function (client, userid, data) {
     }
 
     if (password !== undefined) {
-        values.push(password)
+        values.push(await bcrypt.hash(password, salt))
         sets.push('password=$' + values.length)
     }
 
@@ -46,8 +48,8 @@ exports.updatePassword = async  function (client, userid, data) {
     if (values.length === 0) return await exports.getAccount(client, userid)
 
     values.push(userid)
-    const { rows } = client.query({
-        name: 'update-account',
+    const { rows } = await client.query({
+        name: 'update-password',
         text: 'UPDATE accounts SET ' + sets.join(', ') + ' WHERE userid=$' + (values.length) + ' RETURNING *',
         values
     })
