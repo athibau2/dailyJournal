@@ -17,14 +17,14 @@ paths:
             schema:
               type: object
               required:
-                - firstName
-                - lastName
+                - firstname
+                - lastname
                 - email
                 - password
               properties:
-                firstName:
+                firstname:
                   type: string
-                lastName: 
+                lastname: 
                   type: string
                 email:
                   type: string
@@ -32,8 +32,8 @@ paths:
                   type: string
                   format: password
             example:
-              firstName: Andrew
-              lastName: Thibaudeau
+              firstname: Andrew
+              lastname: Thibaudeau
               email: example@email.com
               password: password
       responses:
@@ -41,10 +41,10 @@ paths:
           description: Account created
         400:
           description: Account already exists
-  /accounts/{userId}:
+  /accounts/{userid}:
     x-controller: accounts
     parameters:
-      - $ref: '#/components/parameters/PathUserId'
+      - $ref: '#/components/parameters/Pathuserid'
     delete: 
       x-operation: deleteAccount
       tags:
@@ -55,10 +55,10 @@ paths:
           description: Account deleted
         404:
           description: Account not found
-  /accounts/{userId}/login:
+  /accounts/{userid}/login:
     x-controller: accounts
     parameters:
-      - $ref: '#/components/parameters/PathUserId'
+      - $ref: '#/components/parameters/Pathuserid'
     put:
       x-operation: login
       tags:
@@ -89,10 +89,10 @@ paths:
           description: Email and password do not match
         404:
           description: Account does not exist
-  /accounts/{userId}/logout:
+  /accounts/{userid}/logout:
     x-controller: accounts
     parameters:
-        - $ref: '#/components/parameters/PathUserId'
+        - $ref: '#/components/parameters/Pathuserid'
     put:
       x-operation: logout
       tags:
@@ -103,10 +103,10 @@ paths:
           description: Account logged out
         400:
           description: Logout failed
-  /accounts/{userId}/settings:
+  /accounts/{userid}/settings:
     x-controller: accounts
     parameters:
-      - $ref: '#/components/parameters/PathUserId'
+      - $ref: '#/components/parameters/Pathuserid'
     put:
       x-operation: updatePassword
       tags:
@@ -143,15 +143,15 @@ paths:
             schema:
               type: object
               required:
-                - promptId
-                - entryId
+                - promptid
+                - entryid
                 - text
                 - date
               properties:
-                promptId:
+                promptid:
                   type: string
                   readOnly: true
-                entryId:
+                entryid:
                   type: string
                   readOnly: true
                 text:
@@ -196,10 +196,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Entries'
-  /entries/{entryId}:
+  /entries/{entryid}:
     x-controller: entries
     parameters:
-      - $ref: '#/components/parameters/PathEntryId'
+      - $ref: '#/components/parameters/Pathentryid'
     put:
       x-operation: updateEntry
       tags:
@@ -235,26 +235,31 @@ paths:
           description: Entry not found
 components:
   parameters:
-    PathUserId:
-      name: userId
+    Pathuserid:
+      name: userid
       in: path
       required: true
       schema:
         type: string
-    PathEntryId:
-      name: entryId
+    Pathentryid:
+      name: entryid
       in: path
       required: true
       schema:
         type: string
+  # securitySchemes:
+  #   cookieAuth:
+  #     type: apiKey
+  #     in: cookie
+  #     name: journalSessionId
   schemas:
     MakeEntry:
       type: object
       properties:
-        promptId:
+        promptid:
             type: string
             readOnly: true
-        entryId:
+        entryid:
           type: string
           readOnly: true
         text:
@@ -265,16 +270,16 @@ components:
     GetEntry:
       type: object
       properties:
-        promptId:
+        promptid:
           type: string
           readOnly: true
-        promptText:
+        prompttext:
           type: string
           readOnly: true
         topic:
           type: string
           readOnly: true
-        entryId:
+        entryid:
           type: string
           readOnly: true
         text:

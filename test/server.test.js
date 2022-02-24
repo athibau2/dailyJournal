@@ -10,8 +10,8 @@ describe('server', () => {
             return request(app)
                 .post('/accounts')
                 .send({
-                    firstName: 'Andrew',
-                    lastName: 'Thibaudeau',
+                    firstname: 'Andrew',
+                    lastname: 'Thibaudeau',
                     email: 'a.thibs98@gmail.com',
                     password: 'a-password'
                 })
@@ -25,17 +25,17 @@ describe('server', () => {
         }),
         it('can delete an account', () => {
             return request(app)
-                .delete('/accounts/{userId}')
+                .delete('/accounts/{userid}')
                 .expect(204)
         }),
         it('fails to delete an account', () => {
             return request(app)
-                .delete('/accounts/{userId}')
+                .delete('/accounts/{userid}')
                 .expect(204)
         }),
         it('can log a user in', () => {
             return request(app)
-                .put('/accounts/{userId}/login')
+                .put('/accounts/{userid}/login')
                 .send({
                     password: "a-password"
                 })
@@ -43,18 +43,18 @@ describe('server', () => {
         }),
         it('fails to log a user in', () => {
             return request(app)
-                .put('/accounts/{userId}/login')
+                .put('/accounts/{userid}/login')
                 .send({})
                 .expect(400)
         }),
         it('can log a user out', () => {
             return request(app)
-                .put('/accounts/{userId}/logout')
+                .put('/accounts/{userid}/logout')
                 .expect(200)
         }),
         it('can update a user\'s password', () => {
             return request(app)
-                .put('/accounts/{userId}/settings')
+                .put('/accounts/{userid}/settings')
                 .send({
                     password: "new-password"
                 })
@@ -77,8 +77,8 @@ describe('server', () => {
             return request(app)
                 .post('/entries')
                 .send({
-                    promptId: "ae5df8n432",
-                    entryId: "001",
+                    promptid: "ae5df8n432",
+                    entryid: "001",
                     text: "",
                     date: "2022-01-01T00:00:00.000Z"
                 })
@@ -86,17 +86,17 @@ describe('server', () => {
         }),
         it('can delete an entry', () => {
             return request(app)
-                .delete('/entries/{entryId}')
+                .delete('/entries/{entryid}')
                 .expect(204)
         }),
         it('fails to delete an entry', () => {
             return request(app)
-                .delete('/entries/{entryId}')
+                .delete('/entries/{entryid}')
                 .expect(204)
         }),
         it('can update an entry', () => {
             return request(app)
-                .put('/entries/{entryId}')
+                .put('/entries/{entryid}')
                 .send({
                     text: "Have developed 3 personal project websites so that I can show employers my work."
                 })

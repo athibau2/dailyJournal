@@ -1,32 +1,32 @@
 const bcrypt = require('bcryptjs')
 const uuid = require('uuid').v4
 
-exports.createAccount = async function (client, firstName, lastName, email, password) {
-    const userId = uuid()
+exports.createAccount = async function (client, firstname, lastname, email, password) {
+    const userid = uuid()
     const salt = await bcrypt.genSalt(10)
     const { rowCount } = await client.query({
         name: 'create-account',
-        text: 'INSERT INTO accounts (firstName, lastName, email, password) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING',
+        text: 'INSERT INTO accounts (firstname, lastname, email, password) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING',
         values: [
-            firstName,
-            lastName,
+            firstname,
+            lastname,
             email,
-            await bcrypt.hash(password, salt)	
+            await bcrypt.hash(password, salt)
         ]
     })
-    return rowCount > 0 ? userId : undefined
+    return rowCount > 0 ? userid : undefined
 }
 
-exports.getAccount = async function (client, userId) {
+exports.getAccount = async function (client, userid) {
     const { rows } = await client.query({
         name: 'get-account-by-id',
-        text: 'SELECT * FROM accounts WHERE userId=$1',
-        values: [userId]
+        text: 'SELECT * FROM accounts WHERE userid=$1',
+        values: [userid]
     })
     return rows[0]
 }
 
-exports.updateAccount = async  function (client, userId, data) {
+exports.updateAccount = async  function (client, userid, data) {
     // create dynamic query based on inputs
     const { email, password } = data
     const values = []
@@ -43,22 +43,22 @@ exports.updateAccount = async  function (client, userId, data) {
     }
 
     // if no properties were passed in then there is nothing to update
-    if (values.length === 0) return await exports.getAccount(client, userId)
+    if (values.length === 0) return await exports.getAccount(client, userid)
 
-    values.push(userId)
+    values.push(userid)
     const { rows } = client.query({
         name: 'update-account',
-        text: 'UPDATE accounts SET ' + sets.join(', ') + ' WHERE userId=$' + (values.length) + ' RETURNING *',
+        text: 'UPDATE accounts SET ' + sets.join(', ') + ' WHERE userid=$' + (values.length) + ' RETURNING *',
         values
     })
     return rows[0]
 }
 
-exports.deleteAccount = async function (client, userId) {
+exports.deleteAccount = async function (client, userid) {
     const { rowCount } = client.query({
         name: 'delete-account',
-        text: 'DELETE FROM accounts WHERE userId=$1',
-        values: [userId]
+        text: 'DELETE FROM accounts WHERE userid=$1',
+        values: [userid]
     })
     return rowCount > 0
 }

@@ -1,40 +1,38 @@
 CREATE TABLE "accounts" (
-  "userId" SERIAL NOT NULL,
-  "firstName" varchar(30) NOT NULL,
-  "lastName" varchar(30) NOT NULL,
-  "email" varchar(50) NOT NULL,
-  "password" varchar(30) NOT NULL,
-  PRIMARY KEY ("userId")
-  UNIQUE ("email"),
+  "userid" SERIAL NOT NULL,
+  "firstname" varchar(30) NOT NULL,
+  "lastname" varchar(30) NOT NULL,
+  "email" varchar(60) NOT NULL,
+  "password" varchar(200) NOT NULL,
+  PRIMARY KEY ("userid"),
+  UNIQUE ("email")
 );
 
 CREATE TABLE "entries" (
-  "userId" SERIAL NOT NULL,
-  "entryId" SERIAL NOT NULL,
-  "promptText" text NOT NULL,
-  "promptId" SERIAL NOT NULL,
-  "topic" varchar(30) NOT NULL,
+  "userid" SERIAL NOT NULL,
+  "entryid" SERIAL NOT NULL,
+  "prompttext" text NOT NULL,
+  "promptid" SERIAL NOT NULL,
+  "topicid" varchar(30) NOT NULL,
   "text" text NOT NULL,
   "date" timestamptz NOT NULL,
-  PRIMARY KEY ("entryId"),
-  FOREIGN KEY ("userId") REFERENCES "accounts" ("userId")
-);
-
-CREATE TABLE "prompts" (
-  "promptId" SERIAL NOT NULL,
-  "promptText" text NOT NULL,
-  "topicId" SERIAL NOT NULL,
-  PRIMARY KEY ("promptId"),
-  FOREIGN KEY ("topicId") REFERENCES "topics" ("topicId")
+  PRIMARY KEY ("entryid"),
+  FOREIGN KEY ("userid") REFERENCES "accounts" ("userid")
 );
 
 CREATE TABLE "topics" (
-  "topicId" SERIAL NOT NULL,
-  "topicText" varchar(30),
-  PRIMARY KEY ("topicId")
+  "topicid" SERIAL NOT NULL,
+  "topictext" varchar(30),
+  PRIMARY KEY ("topicid")
+);
+
+CREATE TABLE "prompts" (
+  "promptid" SERIAL NOT NULL,
+  "prompttext" text NOT NULL,
+  "topicid" SERIAL NOT NULL,
+  PRIMARY KEY ("promptid"),
+  FOREIGN KEY ("topicid") REFERENCES "topics" ("topicid")
 );
 
 
--- CREATE INDEX "tasks_account_id" ON "tasks" ("account_id");
--- CREATE INDEX "tasks_due_date" ON "tasks" ("account_id", "due_date");
--- CREATE INDEX "tasks_completed" ON "tasks" ("account_id", "completed");
+CREATE INDEX "entry_topic" ON "entries" ("topicid");

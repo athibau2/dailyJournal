@@ -53,7 +53,7 @@ My project will help people who struggle with journaling. I will build a website
 ### Entry
 
 * Prompt
-* PromptId
+* promptid
 * Topic
 * Id (auto generated)
 * Text
@@ -70,13 +70,13 @@ None
 | Description | URL Fragment | HTTP Method | Parameters | Representations |
 | ----------- | ------------ | ----------- | ---------- | --------------- |
 | create account | /accounts | POST |                   | Create Account  |
-| delete account | /accounts/{userId} | DELETE | userId |                 |
-| log in | /accounts/{userId}/login | PUT | userId      | Login           |
-| log out | /accounts/{userId}/logout | PUT | userId    |                 |
-| update password | /accounts/{userId}/settings | PUT | | Update Password |
+| delete account | /accounts/{userid} | DELETE | userid |                 |
+| log in | /accounts/{userid}/login | PUT | userid      | Login           |
+| log out | /accounts/{userid}/logout | PUT | userid    |                 |
+| update password | /accounts/{userid}/settings | PUT | | Update Password |
 | submit entry | /entries    | POST |                   | Submit Entry    |
-| delete entry | /entries/{entryId} | DELETE | entryId  |                 |
-| update entry | /entries/{entryId} | PUT | entryId     | Update Entry    |
+| delete entry | /entries/{entryid} | DELETE | entryid  |                 |
+| update entry | /entries/{entryid} | PUT | entryid     | Update Entry    |
 | get tasks by topic | /entries/?topic= | GET | topic   | Sort by Topic   |
 | get tasks by week | /entries/?week= | GET | date7days |                 |
 | get tasks by month | /entries/?month= | GET | month    |                 |
@@ -88,8 +88,8 @@ None
 ### Create Account
 ```json
 {
-    "firstName": "Andrew",
-    "lastName": "Thibaudeau",
+    "firstname": "Andrew",
+    "lastname": "Thibaudeau",
     "email": "example@email.com",
     "password": "fake-password"
 }
@@ -112,8 +112,8 @@ None
 ### Submit Entry
 ```json
 {
-    "promptId": "ae5df8n432",
-    "entryId": "001",
+    "promptid": "ae5df8n432",
+    "entryid": "001",
     "text": "Become advanced in web development",
     "date": "01/11/2022"
 }
@@ -131,17 +131,17 @@ None
 [
     {
         "prompt": "What is one thing you hope to accomplish within the next year and why?",
-        "promptId": "ae5df8n432",
+        "promptid": "ae5df8n432",
         "topic": "future goals",
-        "entryId": "001",
+        "entryid": "001",
         "text": "Have developed 3 personal project websites so that I can show employers my work.",
         "date": "01/11/2022",
     },
     {
         "prompt": "What values do you hope your future family will have?",
-        "promptId": "dk8ei3a239",
+        "promptid": "dk8ei3a239",
         "topic": "future goals",
-        "entryId": "002",
+        "entryid": "002",
         "text": "I want my family to regard other people with respect and be kind. I want my kids to instinctively stand up for their friends and serve others whenever someone needs help.",
         "date": "01/12/2022",
     }
