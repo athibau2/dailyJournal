@@ -179,6 +179,8 @@ paths:
           description: Not authenticated
   /entries/{promptid}:
     x-controller: entries
+    parameters:
+      - $ref: '#/components/parameters/PathPromptid'
     post:
       x-operation: submitEntry
       tags:
@@ -245,13 +247,19 @@ paths:
 components:
   parameters:
     PathEmail:
-      name: userid
+      name: email
       in: path
       required: true
       schema:
         type: string
     PathEntryid:
       name: entryid
+      in: path
+      required: true
+      schema:
+        type: string
+    PathPromptid:
+      name: promptid
       in: path
       required: true
       schema:
