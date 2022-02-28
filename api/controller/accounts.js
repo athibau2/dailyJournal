@@ -17,14 +17,16 @@ module.exports = function (pool) {
 
 		async updatePassword (req, res) {
 			const data = req.enforcer.body
-			const { userid } = req.enforcer.params
+			const { email } = req.enforcer.params
 
 			const client = await pool.connect()
 			try {
 				await client.query('BEGIN')
-				let account = await accounts.getAccount(client, userid)
+				let account = await accounts.getAccountByEmail(client, email)
 				if (account === undefined) {
 					res.enforcer.status(404).send()
+				} else if (account.userid !== req.user.id) {
+					res.enforcer.status(403).send()
 				} else {
 					await accounts.updatePassword(client, userid, data)
 					res.enforcer.status(200).send()
@@ -39,9 +41,25 @@ module.exports = function (pool) {
 		},
 
 		async deleteAccount (req, res) {
-			const { userid } = req.enforcer.params
-			await accounts.deleteAccount(pool, userid)
-			res.enforcer.status(204).send()
+			const { email } = req.enforcer.params
+			try {
+				await client.query('BEGIN')
+				let account = await accounts.getAccountByEmail(client, email)
+				if (account === undefined) {
+					res.enforcer.status(204).send()
+				} else if (account.userid !== req.user.id) {
+					res.enforcer.status(403).send()
+				} else {
+					await accounts.deleteAccount(pool, account.id)
+					res.enforcer.status(200).send()
+				}
+				await client.query('COMMIT')
+			} catch (e) {
+				await client.query('ROLLBACK')
+				throw e
+			} finally {
+				client.release()
+			}
 		},
 
 		async login (req, res) {

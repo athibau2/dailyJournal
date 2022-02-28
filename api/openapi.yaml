@@ -31,6 +31,7 @@ paths:
                 password:
                   type: string
                   format: password
+                  minLength: 4
             example:
               firstname: Andrew
               lastname: Thibaudeau
@@ -40,77 +41,33 @@ paths:
         201:
           description: Account created
         400:
+          description: Invalid request
+        409:
           description: Account already exists
-  /accounts/{userid}:
+  /accounts/{email}:
     x-controller: accounts
     parameters:
-      - $ref: '#/components/parameters/Pathuserid'
+      - $ref: '#/components/parameters/PathEmail'
     delete: 
       x-operation: deleteAccount
       tags:
         - Accounts
+      security:
+        - cookieAuth: []
       summary: Delete an account
       responses:
         204: 
           description: Account deleted
-        404:
-          description: Account not found
-  /accounts/{userid}/login:
-    x-controller: accounts
-    parameters:
-      - $ref: '#/components/parameters/Pathuserid'
-    put:
-      x-operation: login
-      tags:
-        - Accounts
-      summary: Login to an account
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - password
-              properties:
-                password:
-                  type: string
-                  format: password
-            example:
-              password: a-password
-      responses:
-        200:
-          description: Account logged in
-        400:
-          description: Login failed
         401:
-          description: Password required
+          description: Not authenticated
         403:
-          description: Email and password do not match
-        404:
-          description: Account does not exist
-  /accounts/{userid}/logout:
-    x-controller: accounts
-    parameters:
-        - $ref: '#/components/parameters/Pathuserid'
-    put:
-      x-operation: logout
-      tags:
-        - Accounts
-      summary: Logout of an account
-      responses:
-        200:
-          description: Account logged out
-        400:
-          description: Logout failed
-  /accounts/{userid}/settings:
-    x-controller: accounts
-    parameters:
-      - $ref: '#/components/parameters/Pathuserid'
+          description: Access denied
     put:
       x-operation: updatePassword
       tags:
         - Accounts
+      security:
+        - cookieAuth: []
       summary: Update user password
       requestBody:
         required: true
@@ -124,18 +81,27 @@ paths:
                 password:
                   type: string
                   format: password
+                  minLength: 4
             example:
               password: new-password
       responses:
         200:
           description: Password updated
-  /entries:
-    x-controller: entries
-    post:
-      x-operation: submitEntry
+        400:
+          description: Invalid request
+        401:
+          description: Not authenticated
+        403:
+          description: Access denied
+        404:
+          description: Account not found
+  /authentication/login:
+    x-controller: authentication
+    put:
+      x-operation: login
       tags:
-        - Entries
-      summary: Submit an entry
+        - Authentication
+      summary: Login to an account
       requestBody:
         required: true
         content:
@@ -143,31 +109,42 @@ paths:
             schema:
               type: object
               required:
-                - promptid
-                - entryid
-                - text
-                - date
+                - password
               properties:
-                promptid:
+                password:
                   type: string
-                  readOnly: true
-                entryid:
-                  type: string
-                  readOnly: true
-                text:
-                  type: string
-                date:
-                  type: string
-                  format: date-time
+                  format: password
+                  minLength: 4
+            example:
+              password: a-password
       responses:
-        201:
-          description: Entry submitted
+        200:
+          description: Account logged in
         400:
-          description: Submission failed, response text required
+          description: Invalid request
+        401:
+          description: Not authenticated
+        404:
+          description: Account does not exist
+  /authentication/logout:
+    x-controller: accounts
+    put:
+      x-operation: logout
+      tags:
+        - Authentication
+      summary: Logout of an account
+      responses:
+        200:
+          description: Account logged out
+        400:
+          description: Invalid request
+  /entries:
     get:
       x-operation: getEntries
       tags: 
         - Entries
+      security:
+        - cookieAuth: []
       summary: Get entries
       parameters:
         - name: topic
@@ -196,14 +173,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Entries'
+        400:
+          description: Invalid request
+        401:
+          description: Not authenticated
+  /entries/{promptid}:
+    x-controller: entries
+    post:
+      x-operation: submitEntry
+      tags:
+        - Entries
+      security:
+        - cookieAuth: []
+      summary: Submit an entry
+      requestBody:
+        $ref: '#/components/requestBodies/MakeEntry'
+      responses:
+        201:
+          description: Entry submitted
+        400:
+          description: Invalid request
+        401:
+          description: Not authenticated
   /entries/{entryid}:
     x-controller: entries
     parameters:
-      - $ref: '#/components/parameters/Pathentryid'
+      - $ref: '#/components/parameters/PathEntryid'
     put:
       x-operation: updateEntry
       tags:
         - Entries
+      security:
+        - cookieAuth: []
       summary: Update an entry
       requestBody:
         required: true
@@ -219,54 +220,64 @@ paths:
       responses:
         200:
           description: Entry updated
-        404: 
-          description: Entry not found
         400:
           description: Update failed
+        401:
+          description: Not authenticated
+        403:
+          description: Access denied
+        404: 
+          description: Entry not found
     delete:
       x-operation: deleteEntry
       tags:
         - Entries
+      security:
+        - cookieAuth: []
       summary: Delete an entry
       responses:
         204:
           description: Entry deleted
-        404:
-          description: Entry not found
+        401:
+          description: Not authenticated
+        403:
+          description: Access denied
 components:
   parameters:
-    Pathuserid:
+    PathEmail:
       name: userid
       in: path
       required: true
       schema:
         type: string
-    Pathentryid:
+    PathEntryid:
       name: entryid
       in: path
       required: true
       schema:
         type: string
-  # securitySchemes:
-  #   cookieAuth:
-  #     type: apiKey
-  #     in: cookie
-  #     name: journalSessionId
-  schemas:
+  requestBodies:
     MakeEntry:
-      type: object
-      properties:
-        promptid:
-            type: string
-            readOnly: true
-        entryid:
-          type: string
-          readOnly: true
-        text:
-          type: string
-        date:
-          type: string
-          format: date-time
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                entryid:
+                  type: string
+                  readOnly: true
+                text:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: journalSessionId
+  schemas:
     GetEntry:
       type: object
       properties:

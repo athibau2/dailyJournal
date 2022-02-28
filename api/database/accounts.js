@@ -1,9 +1,13 @@
 const bcrypt = require('bcryptjs')
 const uuid = require('uuid').v4
 
+async function encryptPassword (password) {
+    const salt = await bcrypt.genSalt(10)
+    return await bcrypt.hash(password, salt)
+}
+
 exports.createAccount = async function (client, firstname, lastname, email, password) {
     const userid = uuid()
-    const salt = await bcrypt.genSalt(10)
     const { rowCount } = await client.query({
         name: 'create-account',
         text: 'INSERT INTO accounts (firstname, lastname, email, password) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING',
@@ -11,7 +15,7 @@ exports.createAccount = async function (client, firstname, lastname, email, pass
             firstname,
             lastname,
             email,
-            await bcrypt.hash(password, salt)
+            await encryptPassword(password)
         ]
     })
     return rowCount > 0 ? userid : undefined
@@ -26,13 +30,20 @@ exports.getAccount = async function (client, userid) {
     return rows[0]
 }
 
+exports.getAccountByEmail = async function (client, email) {
+    const { rows } = await client.query({
+        name: 'get-account-by-email',
+        text: 'SELECT * FROM accounts WHERE email=$1',
+        values: [email]
+    })
+    return rows[0]
+}
+
 exports.updatePassword = async function (client, userid, data) {
     // create dynamic query based on inputs
     const { email, password } = data
     const values = []
     const sets = []
-    const salt = await bcrypt.genSalt(10)
-
 
     if (email !== undefined) {
         values.push(email)
@@ -40,7 +51,7 @@ exports.updatePassword = async function (client, userid, data) {
     }
 
     if (password !== undefined) {
-        values.push(await bcrypt.hash(password, salt))
+        values.push(await encryptPassword(password))
         sets.push('password=$' + values.length)
     }
 

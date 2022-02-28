@@ -8,6 +8,17 @@ CREATE TABLE "accounts" (
   UNIQUE ("email")
 );
 
+
+CREATE TABLE "session" (
+  "sid" varchar NOT NULL COLLATE "default",
+  "sess" json NOT NULL,
+  "expire" timestamp(6) NOT NULL,
+  PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE
+)
+WITH (OIDS=FALSE);
+CREATE INDEX "IDX_session_expire" ON "session" ("expire");
+
+
 CREATE TABLE "entries" (
   "userid" SERIAL NOT NULL,
   "entryid" SERIAL NOT NULL,
@@ -19,12 +30,15 @@ CREATE TABLE "entries" (
   PRIMARY KEY ("entryid"),
   FOREIGN KEY ("userid") REFERENCES "accounts" ("userid")
 );
+CREATE INDEX "entry_topic" ON "entries" ("topicid");
+
 
 CREATE TABLE "topics" (
   "topicid" SERIAL NOT NULL,
   "topictext" varchar(30),
   PRIMARY KEY ("topicid")
 );
+
 
 CREATE TABLE "prompts" (
   "promptid" SERIAL NOT NULL,
@@ -35,4 +49,4 @@ CREATE TABLE "prompts" (
 );
 
 
-CREATE INDEX "entry_topic" ON "entries" ("topicid");
+
