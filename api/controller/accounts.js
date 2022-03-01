@@ -62,13 +62,5 @@ module.exports = function (pool) {
 				client.release()
 			}
 		},
-
-		async login (req, res) {
-
-		},
-
-		async logout (req, res) {
-
-		}
 	}
 }

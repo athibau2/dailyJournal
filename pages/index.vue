@@ -1,16 +1,40 @@
 <template>
+  <v-app>
+    <div>
+      <v-btn @click="login">Login</v-btn>
+    </div>
 
-  <div>
-    <v-btn @click="getItems">Get Items</v-btn>
+    <div>
+      <v-row justify="center" align="center">
+        <v-card
+          elevation="5"
+          width="400"
+        >
+          <v-card-title>
+            This is where the prompt will go
+          </v-card-title>
+          <v-card-subtitle>
+            Topic
+          </v-card-subtitle>
+          <v-card-text>
+            <input v-model="response" placeholder="Enter your response here">
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="addEntry">Submit Response</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-row>
 
-    <v-btn @click="addEntry">Click Me</v-btn>
+      <v-btn @click="getItems">Get Entries</v-btn>
 
-    <ul>
-      <li v-for="item in list" :key="item.text">
-        {{item.text}}
-      </li>
-    </ul>
-  </div>
+      <ul>
+        <li v-for="item in list" :key="item.text">
+          {{item.text}}
+        </li>
+      </ul>
+    </div>
+
+  </v-app>
 
   <!-- <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
@@ -107,6 +131,10 @@ export default {
   },
 
   methods: {
+    login() {
+      this.$store.dispatch('journal/login')
+    },
+
     getItems() {
       this.$store.dispatch('journal/getList')
     },
