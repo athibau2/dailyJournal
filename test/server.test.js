@@ -12,7 +12,7 @@ describe('server', () => {
                 .send({
                     firstname: 'Andrew',
                     lastname: 'Thibaudeau',
-                    email: 'a.thibs98@gmail.com',
+                    username: 'a.thibs98@gmail.com',
                     password: 'a-password'
                 })
                 .expect(201)

@@ -45,7 +45,7 @@ My project will help people who struggle with journaling. I will build a website
 
 ### Account
 
-* User id (email/username)
+* User id (username/username)
 * Name (chosen by user)
 * Password (chosen by user)
 * Session (Logged in or out)
@@ -90,7 +90,7 @@ None
 {
     "firstname": "Andrew",
     "lastname": "Thibaudeau",
-    "email": "example@email.com",
+    "username": "example@username.com",
     "password": "fake-password"
 }
 ```

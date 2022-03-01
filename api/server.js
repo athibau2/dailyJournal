@@ -37,10 +37,10 @@ pool.query('SELECT NOW()', (err, res) => {
 })
 
 // set up passport local strategy
-passport.use(new LocalStrategy((email, password, done) => {
-	DatabaseAccounts.getAccountByEmail(pool, email)
+passport.use(new LocalStrategy((username, password, done) => {
+	DatabaseAccounts.getAccountByusername(pool, username)
 		.then(async account => {
-			// if no account with the email was found then authentication failed
+			// if no account with the username was found then authentication failed
 			if (account === undefined) {
 				done(null, false)
 			} else {
@@ -48,7 +48,7 @@ passport.use(new LocalStrategy((email, password, done) => {
 				const match = await bcrypt.compare(password, account.password)
 				if (match) {
 					// passwords matched, so create the user object
-					done(null, { id: account.userid, email: account.email, firstname: account.firstname, lastname: account.lastname })
+					done(null, { id: account.userid, username: account.username, firstname: account.firstname, lastname: account.lastname })
 				} else {
 					const hash = await bcrypt.hash(password, 10)
 					const m2 = await bcrypt.compare(password, hash)

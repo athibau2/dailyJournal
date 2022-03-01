@@ -2,10 +2,10 @@ CREATE TABLE "accounts" (
   "userid" SERIAL NOT NULL,
   "firstname" varchar(30) NOT NULL,
   "lastname" varchar(30) NOT NULL,
-  "email" varchar(60) NOT NULL,
+  "username" varchar(60) NOT NULL,
   "password" varchar(200) NOT NULL,
   PRIMARY KEY ("userid"),
-  UNIQUE ("email")
+  UNIQUE ("username")
 );
 
 

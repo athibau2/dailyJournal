@@ -1,25 +1,15 @@
 <template>
 
   <div>
-    <form @submit="stopDefault">
-      <input name="fullname" type="text" placeholder="Your Name" v-model="fullname"><br>
-      <input name="phone" type="text" placeholder="Phone"><br>
-      <input name="address" type="text" placeholder="Address"><br>
+    <v-btn @click="getItems">Get Items</v-btn>
 
-      <div>
-        <ul v-if="hasName">
-          <li v-for="item in items" :key="item.message">
-            <input type="radio" :id="item.id" :value="item.value" v-model="picked">
-            <label :for="item.id">{{ item.message }}</label>
-          </li>
-        </ul>
+    <v-btn @click="addEntry">Click Me</v-btn>
 
-        <button>Click Me</button>
-
-      </div>
-
-      Your Name: {{ fullname }}
-    </form>
+    <ul>
+      <li v-for="item in list" :key="item.text">
+        {{item.text}}
+      </li>
+    </ul>
   </div>
 
   <!-- <v-row justify="center" align="center">
@@ -112,27 +102,33 @@ export default {
 
   data () {
     return {
-      fullname: '',
-      phone: '',
-      address: '',
-
-      items: [
-        { id: '1', message: 'Foo', value: 'foo', },
-        { id: '2', message: 'Bar', value: 'bar', }
-      ]
+      text: '',
     }
   },
 
   methods: {
+    getItems() {
+      this.$store.dispatch('journal/getList')
+    },
+
     stopDefault ($event) {
       console.log('Submitted')
       $event.preventDefault()
+    },
+
+    addEntry () {
+      this.$store.commit('journal/add', this.text)
+      this.text = ''
     }
   },
 
   computed: {
     hasName () {
       return this.fullname.length > 0
+    },
+
+    list () {
+      return this.$store.state.journal.list
     }
   }
 }

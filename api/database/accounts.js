@@ -6,21 +6,6 @@ async function encryptPassword (password) {
     return await bcrypt.hash(password, salt)
 }
 
-exports.createAccount = async function (client, firstname, lastname, email, password) {
-    const userid = uuid()
-    const { rowCount } = await client.query({
-        name: 'create-account',
-        text: 'INSERT INTO accounts (firstname, lastname, email, password) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING',
-        values: [
-            firstname,
-            lastname,
-            email,
-            await encryptPassword(password)
-        ]
-    })
-    return rowCount > 0 ? userid : undefined
-}
-
 exports.getAccount = async function (client, userid) {
     const { rows } = await client.query({
         name: 'get-account-by-id',
@@ -30,24 +15,39 @@ exports.getAccount = async function (client, userid) {
     return rows[0]
 }
 
-exports.getAccountByEmail = async function (client, email) {
+exports.getAccountByusername = async function (client, username) {
     const { rows } = await client.query({
-        name: 'get-account-by-email',
-        text: 'SELECT * FROM accounts WHERE email=$1',
-        values: [email]
+        name: 'get-account-by-username',
+        text: 'SELECT * FROM accounts WHERE username=$1',
+        values: [username]
     })
     return rows[0]
 }
 
-exports.updatePassword = async function (client, userid, data) {
+exports.createAccount = async function (client, firstname, lastname, username, password) {
+    const userid = uuid()
+    const { rowCount } = await client.query({
+        name: 'create-account',
+        text: 'INSERT INTO accounts (firstname, lastname, username, password) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING',
+        values: [
+            firstname,
+            lastname,
+            username,
+            await encryptPassword(password)
+        ]
+    })
+    return rowCount > 0 ? userid : undefined
+}
+
+exports.updatePassword = async function (client, username, userid, data) {
     // create dynamic query based on inputs
-    const { email, password } = data
+    const { password } = data
     const values = []
     const sets = []
 
-    if (email !== undefined) {
-        values.push(email)
-        sets.push('email=$' + values.length)
+    if (username !== undefined) {
+        values.push(username)
+        sets.push('username=$' + values.length)
     }
 
     if (password !== undefined) {

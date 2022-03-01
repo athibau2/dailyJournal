@@ -19,14 +19,14 @@ paths:
               required:
                 - firstname
                 - lastname
-                - email
+                - username
                 - password
               properties:
                 firstname:
                   type: string
                 lastname: 
                   type: string
-                email:
+                username:
                   type: string
                 password:
                   type: string
@@ -35,7 +35,7 @@ paths:
             example:
               firstname: Andrew
               lastname: Thibaudeau
-              email: example@email.com
+              username: example@username.com
               password: password
       responses:
         201:
@@ -44,10 +44,10 @@ paths:
           description: Invalid request
         409:
           description: Account already exists
-  /accounts/{email}:
+  /accounts/{username}:
     x-controller: accounts
     parameters:
-      - $ref: '#/components/parameters/PathEmail'
+      - $ref: '#/components/parameters/Pathusername'
     delete: 
       x-operation: deleteAccount
       tags:
@@ -109,13 +109,17 @@ paths:
             schema:
               type: object
               required:
+                - username
                 - password
               properties:
+                username:
+                  type: string
                 password:
                   type: string
                   format: password
                   minLength: 4
             example:
+              username: a.thibs98@gmail.com
               password: a-password
       responses:
         200:
@@ -127,7 +131,7 @@ paths:
         404:
           description: Account does not exist
   /authentication/logout:
-    x-controller: accounts
+    x-controller: authentication
     put:
       x-operation: logout
       tags:
@@ -246,8 +250,8 @@ paths:
           description: Access denied
 components:
   parameters:
-    PathEmail:
-      name: email
+    Pathusername:
+      name: username
       in: path
       required: true
       schema:
