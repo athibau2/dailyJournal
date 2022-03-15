@@ -17,7 +17,7 @@ module.exports = function (pool) {
 
 		async updatePassword (req, res) {
 			const data = req.enforcer.body
-			const { username, userid } = req.enforcer.params
+			const { username } = req.enforcer.params
 
 			const client = await pool.connect()
 			try {
@@ -28,7 +28,7 @@ module.exports = function (pool) {
 				} else if (account.userid !== req.user.id) {
 					res.enforcer.status(403).send()
 				} else {
-					await accounts.updatePassword(client, username, userid, data)
+					await accounts.updatePassword(client, username, data)
 					res.enforcer.status(200).send()
 				}
 				await client.query('COMMIT')

@@ -1,16 +1,6 @@
 <template>
   <v-app>
-    <div>
-      <h1>Authentication</h1>
-      <v-btn to="/login">To Login</v-btn>
-    </div>
-
-
-    <div v-if="user !== null && user !== undefined">
-      Logged in as {{user}}
-    </div>
-
-    <div>
+    <v-container>
       <v-row justify="center" align="center">
         <v-card
           elevation="5"
@@ -38,7 +28,7 @@
           {{item.text}}
         </li>
       </ul>
-    </div>
+    </v-container>
 
   </v-app>
 </template>

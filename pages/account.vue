@@ -16,9 +16,6 @@
           <v-card-subtitle>
             {{user.username}}
           </v-card-subtitle>
-          <v-card-subtitle>
-            Password: {{user.password}}
-          </v-card-subtitle>
           <v-card-text>
             <input v-model="password" type="password" placeholder="Update Password Here">
           </v-card-text>
@@ -51,6 +48,7 @@ export default {
               password: this.password,
               username: this.user.username
           })
+          this.password = ""
       },
 
       deleteAccount () {

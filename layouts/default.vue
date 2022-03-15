@@ -43,13 +43,9 @@
       >
         <v-icon>mdi-application</v-icon>
       </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
       <v-toolbar-title v-text="title" />
+      <v-spacer />
+      <v-toolbar-title>{{user.firstname}} {{user.lastname}}</v-toolbar-title>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -57,7 +53,7 @@
       </v-container>
     </v-main>
     <v-footer
-      :absolute="!fixed"
+      :absolute="fixed"
       app
     >
       <span>&copy; {{ new Date().getFullYear() }}</span>
@@ -99,7 +95,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'Memory'
     }
   },
 
@@ -107,7 +103,12 @@ export default {
     logout() {
       this.$store.dispatch('accounts/logout')
     },
-
   },
+
+  computed: {
+    user() {
+      return JSON.parse(this.$store.state.accounts.user)
+    }
+  }
 }
 </script>

@@ -39,30 +39,14 @@ exports.createAccount = async function (client, firstname, lastname, username, p
     return rowCount > 0 ? userid : undefined
 }
 
-exports.updatePassword = async function (client, username, userid, data) {
+exports.updatePassword = async function (client, username, data) {
     // create dynamic query based on inputs
     const { password } = data
-    const values = []
-    const sets = []
 
-    // if (username !== undefined) {
-    //     values.push(username)
-    //     sets.push('username=$' + values.length)
-    // }
-
-    if (password !== undefined) {
-        values.push(await encryptPassword(password))
-        sets.push('password=$' + values.length)
-    }
-
-    // if no properties were passed in then there is nothing to update
-    if (values.length === 0) return await exports.getAccount(client, userid)
-
-    values.push(userid)
     const { rows } = await client.query({
         name: 'update-password',
-        text: 'UPDATE accounts SET ' + sets.join(', ') + ' WHERE userid=$' + (values.length) + ' RETURNING *',
-        values
+        text: 'UPDATE accounts SET password=$1 WHERE username=$2 RETURNING *',
+        values: [await encryptPassword(password), username]
     })
     return rows[0]
 }

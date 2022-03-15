@@ -50,7 +50,6 @@ export const actions = {
         const res = await this.$axios.put('/api/accounts/' + username, {
             password: password
         })
-        console.log(res.status)
     },
 
     async delete({ commit }, { username }) {
