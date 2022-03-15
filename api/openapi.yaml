@@ -142,7 +142,24 @@ paths:
           description: Account logged out
         400:
           description: Invalid request
+  /prompts:
+    x-controller: prompts
+    get:
+      x-operation: getPrompt
+      tags:
+        - Prompts
+      security:
+        - cookieAuth: []
+      summary: Get a prompt
+      responses:
+        200:
+          description: Prompt retrieved
+        400:
+          description: Invalid request
+        404:
+          description: Not found
   /entries:
+    x-controller: entries
     get:
       x-operation: getEntries
       tags: 

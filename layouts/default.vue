@@ -75,6 +75,7 @@ export default {
           icon: 'mdi-apps',
           title: 'Welcome',
           to: '/',
+          click: this.getPrompt
         },
         {
           icon: 'mdi-chart-bubble',
@@ -102,6 +103,10 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('accounts/logout')
+    },
+
+    getPrompt() {
+      this.$store.dispatch('journal/getPrompt')
     },
   },
 

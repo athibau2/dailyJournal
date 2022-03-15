@@ -8,6 +8,7 @@ const path = require('path')
 const Accounts = require('./controller/accounts')
 const Entries = require('./controller/entries')
 const Authentication = require('./controller/authentication')
+const Prompts = require('./controller/prompts')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
@@ -116,7 +117,8 @@ app.use((req, res, next) => {
 app.use(enforcerMiddleware.route({
 	accounts: Accounts(pool),
 	authentication: Authentication(passport),
-	entries: Entries(pool)
+	entries: Entries(pool),
+	prompts: Prompts(pool)
 }))
 
 

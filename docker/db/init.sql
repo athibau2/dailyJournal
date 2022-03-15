@@ -19,20 +19,6 @@ WITH (OIDS=FALSE);
 CREATE INDEX "IDX_session_expire" ON "session" ("expire");
 
 
-CREATE TABLE "entries" (
-  "userid" SERIAL NOT NULL,
-  "entryid" SERIAL NOT NULL,
-  "prompttext" text NOT NULL,
-  "promptid" SERIAL NOT NULL,
-  "topicid" varchar(30) NOT NULL,
-  "text" text NOT NULL,
-  "date" timestamptz NOT NULL,
-  PRIMARY KEY ("entryid"),
-  FOREIGN KEY ("userid") REFERENCES "accounts" ("userid")
-);
-CREATE INDEX "entry_topic" ON "entries" ("topicid");
-
-
 CREATE TABLE "topics" (
   "topicid" SERIAL NOT NULL,
   "topictext" varchar(30),
@@ -47,6 +33,31 @@ CREATE TABLE "prompts" (
   PRIMARY KEY ("promptid"),
   FOREIGN KEY ("topicid") REFERENCES "topics" ("topicid")
 );
+CREATE INDEX "random_prompt" ON "prompts" ("promptid");
 
 
+CREATE TABLE "entries" (
+  "entryid" SERIAL NOT NULL,
+  "text" text NOT NULL,
+  "date" timestamptz,
+  "promptid" SERIAL NOT NULL,
+  "userid" SERIAL NOT NULL,
+  PRIMARY KEY ("entryid"),
+  FOREIGN KEY ("userid") REFERENCES "accounts" ("userid"),
+  FOREIGN KEY ("promptid") REFERENCES "prompts" ("promptid")
+);
+
+
+INSERT INTO topics (topictext) values('Gratitude');
+INSERT INTO topics (topictext) values('Goals');
+INSERT INTO topics (topictext) values('Self-awareness');
+
+
+INSERT INTO prompts (topicid, prompttext) values(2, 'Describe 3 things that are on your bucket list.');
+INSERT INTO prompts (topicid, prompttext) values(2, 'What do you hope to accomplish this week?');
+INSERT INTO prompts (topicid, prompttext) values(3, 'What is your biggest motivator right now and why?');
+INSERT INTO prompts (topicid, prompttext) values(3, 'Is there anything about your current mindset you want to change? Why or why not?');
+INSERT INTO prompts (topicid, prompttext) values(1, 'Name three good things about your life today.');
+INSERT INTO prompts (topicid, prompttext) values(1, 'Describe someone in your life you are grateful for right now and why.');
+INSERT INTO prompts (topicid, prompttext) values(1, 'Explain something you have learned recently that you are grateful for.');
 

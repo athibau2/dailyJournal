@@ -2,12 +2,9 @@
   <v-app>
     <v-container>
       <v-row justify="center" align="center">
-        <v-card
-          elevation="5"
-          width="400"
-        >
+        <v-card elevation="5" width="400" v-if="prompt !== null && prompt !== undefined">
           <v-card-title>
-            This is where the prompt will go
+            {{prompt.prompttext}}
           </v-card-title>
           <v-card-subtitle>
             Topic
@@ -20,14 +17,6 @@
           </v-card-actions>
         </v-card>
       </v-row>
-
-      <v-btn @click="getItems()">Get Entries</v-btn>
-
-      <ul>
-        <li v-for="item in list" :key="item.text">
-          {{item.text}}
-        </li>
-      </ul>
     </v-container>
 
   </v-app>
@@ -69,6 +58,10 @@ export default {
     user () {
       return this.$store.state.accounts.user
     },
+
+    prompt () {
+      return this.$store.state.journal.prompt
+    }
   },
 }
 </script>

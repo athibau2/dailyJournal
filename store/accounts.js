@@ -1,6 +1,7 @@
 export const state = () => {
     return {
         user: getUserFromCookie(),
+        prompt: {}
     }
 }
   
@@ -9,10 +10,24 @@ export const mutations = {
   setUser(state, cookieValue) {
       state.user = cookieValue
   },
+
+  setPrompt(state, data) {
+    state.prompt = data
+  }
 }
 
 // actions should call mutations
 export const actions = {
+    async getPrompt({ commit, state }) {
+        const response = await this.$axios.get('/api/prompts', {
+            username: state.user.username
+        })
+        if (response.status === 200) {
+          console.log(response.data)
+          commit('setPrompt', response.data)
+        }
+    },
+
     async signup({ dispatch, commit }, { firstname, lastname, username, password }) {
         const response = await this.$axios.post('/api/accounts', {
             firstname: firstname,
@@ -27,13 +42,14 @@ export const actions = {
         }
     },
 
-    async login({ commit }, { username, password }) {
+    async login({ dispatch, commit }, { username, password }) {
         const response = await this.$axios.put('/api/authentication/login', {
                 username,
                 password
         })
         if (response.status === 200) {
             commit('setUser', getUserFromCookie())
+            dispatch('getPrompt')
             this.$router.push('/')
         }
     },
