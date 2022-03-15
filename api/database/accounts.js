@@ -15,7 +15,7 @@ exports.getAccount = async function (client, userid) {
     return rows[0]
 }
 
-exports.getAccountByusername = async function (client, username) {
+exports.getAccountByUsername = async function (client, username) {
     const { rows } = await client.query({
         name: 'get-account-by-username',
         text: 'SELECT * FROM accounts WHERE username=$1',
@@ -45,10 +45,10 @@ exports.updatePassword = async function (client, username, userid, data) {
     const values = []
     const sets = []
 
-    if (username !== undefined) {
-        values.push(username)
-        sets.push('username=$' + values.length)
-    }
+    // if (username !== undefined) {
+    //     values.push(username)
+    //     sets.push('username=$' + values.length)
+    // }
 
     if (password !== undefined) {
         values.push(await encryptPassword(password))

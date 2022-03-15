@@ -14,8 +14,7 @@ const LocalStrategy = require('passport-local').Strategy
 const session = require('express-session')
 const DatabaseAccounts = require('./database/accounts')
 const ConnectPgSimple = require('connect-pg-simple')(session)
-const { resolveSoa } = require('dns')
-const req = require('express/lib/request')
+
 
 // Establish database connection
 const pool = new Pool({
@@ -38,7 +37,7 @@ pool.query('SELECT NOW()', (err, res) => {
 
 // set up passport local strategy
 passport.use(new LocalStrategy((username, password, done) => {
-	DatabaseAccounts.getAccountByusername(pool, username)
+	DatabaseAccounts.getAccountByUsername(pool, username)
 		.then(async account => {
 			// if no account with the username was found then authentication failed
 			if (account === undefined) {
@@ -119,6 +118,7 @@ app.use(enforcerMiddleware.route({
 	authentication: Authentication(passport),
 	entries: Entries(pool)
 }))
+
 
 // fallback mocking middleware
 //app.use(enforcerMiddleware.mock())

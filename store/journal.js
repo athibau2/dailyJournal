@@ -1,8 +1,5 @@
-import { Store } from "express-session"
-
 export const state = () => ({
     list: [],
-    user: Store.user
   })
   
 // mutations should update state
@@ -16,9 +13,6 @@ export const mutations = {
   remove(state, { todo }) {
     state.list.splice(state.list.indexOf(todo), 1)
   },
-  toggle(state, todo) {
-    todo.done = !todo.done
-  }
 }
 
 // actions should call mutations
@@ -35,13 +29,14 @@ export const actions = {
     })
   },
 
-  login({ commit, state }) {
-    // login here
-  }
-}
-
-export const getters = {
-  isLoggedIn: state => {
-    return state.user
-  }
+  async submit({ commit, state }, promptid) {
+    const response = await this.$axios.post('/api/entries/${promptid}', {
+            entryid: '',
+            text: '',
+            date: ''
+        })
+    if (response.status === 200) {
+        commit('setCookie', getUserFromCookie())
+    }
+},
 }
