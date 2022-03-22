@@ -202,10 +202,6 @@ paths:
           description: Invalid request
         401:
           description: Not authenticated
-  /entries/{promptid}:
-    x-controller: entries
-    parameters:
-      - $ref: '#/components/parameters/PathPromptid'
     post:
       x-operation: submitEntry
       tags:
@@ -283,12 +279,6 @@ components:
       required: true
       schema:
         type: number
-    PathPromptid:
-      name: promptid
-      in: path
-      required: true
-      schema:
-        type: number
   requestBodies:
     MakeEntry:
         required: true
@@ -302,9 +292,6 @@ components:
                   readOnly: true
                 text:
                   type: string
-                date:
-                  type: string
-                  format: date-time
   securitySchemes:
     cookieAuth:
       type: apiKey

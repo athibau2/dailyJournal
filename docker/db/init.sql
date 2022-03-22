@@ -39,7 +39,7 @@ CREATE INDEX "random_prompt" ON "prompts" ("promptid");
 CREATE TABLE "entries" (
   "entryid" SERIAL NOT NULL,
   "text" text NOT NULL,
-  "date" timestamptz,
+  "date" date NOT NULL,
   "promptid" SERIAL NOT NULL,
   "userid" SERIAL NOT NULL,
   PRIMARY KEY ("entryid"),

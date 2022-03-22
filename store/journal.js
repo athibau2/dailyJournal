@@ -10,14 +10,19 @@ export const mutations = {
 
 // actions should call mutations
 export const actions = {
-  async submit({ commit, state }, promptid) {
-    const response = await this.$axios.post('/api/entries/${promptid}', {
-            entryid: '',
-            text: '',
-            date: ''
+  async submit({ commit }, { response, userid, promptid }) {
+    let year = new Date().getFullYear()
+    let month = new Date().getMonth()
+    let date = new Date().getDate()
+    let fullDate = year + '-' + month + '-' + date
+    const res = await this.$axios.post('/api/entries', {
+            response: response,
+            date: fullDate,
+            userid: userid,
+            promptid: promptid
         })
-    if (response.status === 200) {
-        commit('setCookie', getUserFromCookie())
+    if (res.status === 201) {
+        //commit('setCookie', getUserFromCookie())
     }
-},
+  },
 }

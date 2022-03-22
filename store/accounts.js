@@ -63,6 +63,9 @@ export const actions = {
         const res = await this.$axios.put('/api/accounts/' + username, {
             password: password
         })
+        if (res.status === 200) {
+            alert('Your password has been successfully updated')
+        }
     },
 
     async delete({ commit }, { username }) {

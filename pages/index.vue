@@ -32,7 +32,7 @@
               </template>
               <span>New Prompt</span>
             </v-tooltip>
-            <v-btn @click="addEntry()">Submit Response</v-btn>
+            <v-btn @click="submit()">Submit</v-btn>
           </v-card-actions>
         </v-card>
       </v-row>
@@ -52,8 +52,7 @@ export default {
 
   data () {
     return {
-      text: '',
-      response: '',
+      response: "",
       hover: false
     }
   },
@@ -63,17 +62,13 @@ export default {
       this.$store.dispatch('accounts/getPrompt')
     },
 
-    logout() {
-      this.$store.dispatch('accounts/logout')
-    },
-
-    getItems() {
-      this.$store.dispatch('journal/getList')
-    },
-
-    addEntry () {
-      this.$store.commit('journal/add', this.text)
-      this.text = ''
+    submit () {
+      this.$store.dispatch('journal/submit', {
+        response: this.response,
+        userid: this.user.id,
+        promptid: this.prompt.promptid
+      })
+      this.response = ""
     }
   },
 
@@ -83,7 +78,7 @@ export default {
     },
 
     user () {
-      return this.$store.state.accounts.user
+      return JSON.parse(this.$store.state.accounts.user)
     },
 
     prompt () {
