@@ -15,6 +15,7 @@ const LocalStrategy = require('passport-local').Strategy
 const session = require('express-session')
 const DatabaseAccounts = require('./database/accounts')
 const ConnectPgSimple = require('connect-pg-simple')(session)
+const cron = require('node-cron')
 
 
 // Establish database connection
@@ -120,6 +121,15 @@ app.use(enforcerMiddleware.route({
 	entries: Entries(pool),
 	prompts: Prompts(pool)
 }))
+
+cron.schedule('0 1 * * *', async () => {
+	console.log('Getting a new prompt')
+    await this.$store.dispatch('accounts/getPrompt')
+	console.log('Got a new prompt')
+}, {
+    scheduled: true,
+    timezone: "America/Denver"
+})
 
 
 // fallback mocking middleware

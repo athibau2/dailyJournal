@@ -72,15 +72,14 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'mdi-apps',
-          title: 'Welcome',
+          icon: 'mdi-home',
+          title: 'Home',
           to: '/',
-          click: this.getPrompt
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire',
+          icon: 'mdi-format-list-bulleted',
+          title: 'My Entries',
+          to: '/entries',
         },
         {
           icon: 'mdi-account-cog',
@@ -105,9 +104,6 @@ export default {
       this.$store.dispatch('accounts/logout')
     },
 
-    getPrompt() {
-      this.$store.dispatch('journal/getPrompt')
-    },
   },
 
   computed: {

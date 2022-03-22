@@ -1,10 +1,6 @@
 <template>
   <v-app>
-    <div >
-      Logged in as {{user}}
-    </div><br>
-
-    <div>
+    <v-container>
       <v-row justify="center" align="center">
         <v-card
           elevation="5"
@@ -26,8 +22,7 @@
           </v-card-actions>
         </v-card>
       </v-row>
-    </div>
-
+    </v-container>
   </v-app>
 </template>
 

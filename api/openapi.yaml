@@ -154,6 +154,10 @@ paths:
       responses:
         200:
           description: Prompt retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prompt'
         400:
           description: Invalid request
         404:
@@ -278,13 +282,13 @@ components:
       in: path
       required: true
       schema:
-        type: string
+        type: number
     PathPromptid:
       name: promptid
       in: path
       required: true
       schema:
-        type: string
+        type: number
   requestBodies:
     MakeEntry:
         required: true
@@ -294,7 +298,7 @@ components:
               type: object
               properties:
                 entryid:
-                  type: string
+                  type: number
                   readOnly: true
                 text:
                   type: string
@@ -307,11 +311,26 @@ components:
       in: cookie
       name: journalSessionId
   schemas:
+    Prompt:
+      type: object
+      properties:
+        promptid:
+          type: number
+          readOnly: true
+        prompttext:
+          type: string
+          readOnly: true
+        topictext:
+          type: string
+          readOnly: true
+        topicid:
+          type: number
+          readOnly: true
     GetEntry:
       type: object
       properties:
         promptid:
-          type: string
+          type: number
           readOnly: true
         prompttext:
           type: string
@@ -320,7 +339,7 @@ components:
           type: string
           readOnly: true
         entryid:
-          type: string
+          type: number
           readOnly: true
         text:
           type: string
