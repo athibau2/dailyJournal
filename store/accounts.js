@@ -18,11 +18,62 @@ export const mutations = {
 
 // actions should call mutations
 export const actions = {
-    async getPrompt({ commit, state }) {
+    async getPrompt({ commit, state }, { isNew }) {
+        // generate new prompt
         const response = await this.$axios.get('/api/prompts')
         if (response.status === 200) {
-          commit('setPrompt', response.data)
-          localStorage.setItem('prompt', JSON.stringify(response.data))
+            commit('setPrompt', response.data)
+            localStorage.setItem('prompt', JSON.stringify(response.data))
+            
+            // new user signing up
+            if (isNew) {
+              try {
+                // add that new prompt to active_prompt table
+                const res = await this.$axios.post('/api/prompts', {
+                    userid: JSON.parse(state.user).id,
+                    promptid: response.data.promptid,
+                    dateadded: new Date().toDateString()
+                })
+                if (res.status === 201) {
+                }
+              } catch (err) {
+                  // do something
+              }
+          }
+          // not a new user
+          else {
+              try {
+                // update the user's active prompt
+                const res = await this.$axios.put(`/api/prompts/${JSON.parse(state.user).id}`, {
+                    promptid: response.data.promptid,
+                    dateadded: new Date().toDateString()
+                })
+                if (res.status === 200) {
+                    console.log('Success!!')
+                }
+              } catch (err) {
+                  // do something
+              }
+          }
+        }
+    },
+
+    async activePrompt({ commit, dispatch, state }) {
+        const today = new Date().toDateString()
+        try {
+            // get the user's active prompt
+            const active_prompt = await this.$axios.get(`/api/prompts/${JSON.parse(state.user).id}`)
+            // prompt is old, get a new one
+            if (active_prompt.data.dateadded !== today) {
+                dispatch('getPrompt', { isNew: false })
+            }
+            // maintain current active prompt
+            else {
+                commit('setPrompt', active_prompt.data)
+                localStorage.setItem('prompt', JSON.stringify(active_prompt.data))
+            }
+        } catch (err) {
+            // do something
         }
     },
 
@@ -34,13 +85,13 @@ export const actions = {
             password: password
         })
         if (response.status === 201) {
-            dispatch('login',{
-                username: username, password: password
+            dispatch('login', {
+                username: username, password: password, isNew: true
             })
         }
     },
 
-    async login({ dispatch, commit }, { username, password }) {
+    async login({ dispatch, commit }, { username, password, isNew }) {
         const response = await this.$axios.put('/api/authentication/login', {
                 username,
                 password
@@ -48,6 +99,7 @@ export const actions = {
         if (response.status === 200) {
             await commit('setUser', getUserFromCookie())
             this.$router.push('/')
+            isNew ? dispatch('getPrompt', { isNew: true }) : dispatch('activePrompt')
         }
     },
 
@@ -55,6 +107,7 @@ export const actions = {
         const res = await this.$axios.put('/api/authentication/logout')
         if (res.status === 200) {
             commit('setUser', null)
+            localStorage.removeItem('prompt')
             this.$router.push('/login')
         }
     },
@@ -70,7 +123,6 @@ export const actions = {
 
     async delete({ commit }, { username }) {
         const res = await this.$axios.delete('/api/accounts/' + username)
-        console.log(res.status)
         if (res.status === 204) {
             commit('setUser', null)
             this.$router.push('/login')

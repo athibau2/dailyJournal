@@ -9,6 +9,7 @@ const Accounts = require('./controller/accounts')
 const Entries = require('./controller/entries')
 const Authentication = require('./controller/authentication')
 const Prompts = require('./controller/prompts')
+const Topics = require('./controller/topics')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
@@ -80,6 +81,11 @@ const enforcerMiddleware = EnforcerMiddleware(enforcerPromise)
 
 app.use(express.json())
 
+app.use(function(req, res, next) {
+	console.log(req.method + ' ' + req.path)
+	next()
+})
+
 app.use(enforcerMiddleware.init({baseUrl: '/api'}))
 
 // Catch errors
@@ -119,18 +125,9 @@ app.use(enforcerMiddleware.route({
 	accounts: Accounts(pool),
 	authentication: Authentication(passport),
 	entries: Entries(pool),
-	prompts: Prompts(pool)
+	prompts: Prompts(pool),
+	topics: Topics(pool)
 }))
-
-cron.schedule('0 1 * * *', async () => {
-	console.log('Getting a new prompt')
-    await this.$store.dispatch('accounts/getPrompt')
-	console.log('Got a new prompt')
-}, {
-    scheduled: true,
-    timezone: "America/Denver"
-})
-
 
 // fallback mocking middleware
 //app.use(enforcerMiddleware.mock())

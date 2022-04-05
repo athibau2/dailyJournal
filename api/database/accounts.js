@@ -25,10 +25,9 @@ exports.getAccountByUsername = async function (client, username) {
 }
 
 exports.createAccount = async function (client, firstname, lastname, username, password) {
-    const userid = uuid()
-    const { rowCount } = await client.query({
+    const { rowCount, rows } = await client.query({
         name: 'create-account',
-        text: 'INSERT INTO accounts (firstname, lastname, username, password) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING',
+        text: 'INSERT INTO accounts (firstname, lastname, username, password) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING RETURNING userid',
         values: [
             firstname,
             lastname,
@@ -36,7 +35,7 @@ exports.createAccount = async function (client, firstname, lastname, username, p
             await encryptPassword(password)
         ]
     })
-    return rowCount > 0 ? userid : undefined
+    return rowCount > 0 ? rows[0] : undefined
 }
 
 exports.updatePassword = async function (client, username, data) {

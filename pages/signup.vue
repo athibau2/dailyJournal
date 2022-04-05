@@ -16,7 +16,7 @@
                         <input v-model="email" placeholder="Enter your email" required>
                     </div>
                     <div>
-                        <input v-model="password" type="password" placeholder="Enter your password" required>
+                        <input @keyup.enter="signup()" v-model="password" type="password" placeholder="Enter your password" required>
                     </div>
                 </v-card-text>
                 <v-card-actions>

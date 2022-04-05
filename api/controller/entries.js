@@ -4,19 +4,44 @@ module.exports = function (pool) {
     return {
         async submitEntry (req, res) {
             const { response, date, userid, promptid } = req.enforcer.body
-            const entryid = await entries.submit(pool, response, date, userid, promptid)
-			if (entryid) {
-				res.set('location', '/api/journal/' + entryid)
-					.enforcer
-					.status(201)
-					.send()
+            const entry = await entries.submit(pool, response, date, userid, promptid)
+			if (entry !== null && entry !== undefined) {
+				res.enforcer.status(201).send(entry)
 			} else {
 				res.enforcer.status(409).send()
 			}
         },
 
-        async getEntries (req, res) {
+        async getEntriesToday(req, res) {
+            const { userid, today } = req.enforcer.params
+            const todayEntries = await entries.getToday(pool, today, userid)
+            if (todayEntries !== null && todayEntries !== undefined) {
+				res.enforcer.status(200).send(todayEntries)
+			} else {
+				res.enforcer.status(404).send()
+			}
+        },
 
+        async filterEntries (req, res) {
+            const afterDate = req.enforcer.query.afterdate
+            const topicid = req.enforcer.query.topicid
+            const userid = req.enforcer.query.userid
+            if (topicid !== undefined) {
+                const filtered = await entries.filterTopic(pool, topicid, userid)
+                if (filtered !== null && filtered !== undefined) {
+                    res.enforcer.status(200).send(filtered)
+                } else {
+                    res.enforcer.status(404).send()
+                }
+            }
+            else if (afterDate !== undefined) {
+                const filtered = await entries.filterDate(pool, afterDate, userid)
+                if (filtered !== null && filtered !== undefined) {
+                    res.enforcer.status(200).send(filtered)
+                } else {
+                    res.enforcer.status(404).send()
+                }
+            }
         },
         
         async updateEntry (req, res) {

@@ -37,7 +37,6 @@
         </v-card>
       </v-row>
     </v-container>
-
   </v-app>
 </template>
 
@@ -53,13 +52,13 @@ export default {
   data () {
     return {
       response: "",
-      hover: false
+      hover: false,
     }
   },
 
   methods: {
     newPrompt () {
-      this.$store.dispatch('accounts/getPrompt')
+      this.$store.dispatch('accounts/getPrompt', { isNew: false })
     },
 
     submit () {
@@ -73,16 +72,16 @@ export default {
   },
 
   computed: {
-    list () {
-      return this.$store.state.journal.list
-    },
-
     user () {
       return JSON.parse(this.$store.state.accounts.user)
     },
 
     prompt () {
       return this.$store.state.accounts.prompt
+    },
+
+    newestEntry () {
+      return this.$store.state.journal.newestEntry
     }
   },
 }

@@ -12,7 +12,7 @@
                 <v-card-text>
                     <input v-model="email" placeholder="Enter your email" required>
                     <div>
-                        <input v-model="password" type="password" placeholder="Enter your password" required>
+                        <input @keyup.enter="login()" v-model="password" type="password" placeholder="Enter your password" required>
                     </div>
                 </v-card-text>
                 <v-card-actions>
@@ -42,10 +42,11 @@ export default {
   },
 
   methods: {
-    login() {
-      this.$store.dispatch('accounts/login', {
+    async login() {
+      await this.$store.dispatch('accounts/login', {
         username: this.email,
-        password: this.password
+        password: this.password,
+        isNew: false
       })
     },
   },

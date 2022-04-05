@@ -36,16 +36,26 @@ CREATE TABLE "prompts" (
 CREATE INDEX "random_prompt" ON "prompts" ("promptid");
 
 
+CREATE TABLE "active_prompt" (
+	"promptid" SERIAL NOT NULL,
+	"userid" SERIAL NOT NULL,
+	"dateadded" TEXT NOT NULL,
+	FOREIGN KEY ("promptid") REFERENCES "prompts" ("promptid"),
+	FOREIGN KEY ("userid") REFERENCES "accounts" ("userid")
+);
+
+
 CREATE TABLE "entries" (
   "entryid" SERIAL NOT NULL,
   "text" text NOT NULL,
-  "date" date NOT NULL,
+  "date" timestamp NOT NULL,
   "promptid" SERIAL NOT NULL,
   "userid" SERIAL NOT NULL,
   PRIMARY KEY ("entryid"),
   FOREIGN KEY ("userid") REFERENCES "accounts" ("userid"),
   FOREIGN KEY ("promptid") REFERENCES "prompts" ("promptid")
 );
+create index "entries_userid" ON "entries" ("userid");
 
 
 INSERT INTO topics (topictext) values('Gratitude');

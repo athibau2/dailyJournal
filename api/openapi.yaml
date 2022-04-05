@@ -162,35 +162,129 @@ paths:
           description: Invalid request
         404:
           description: Not found
+    post:
+      x-operation: setActivePrompt
+      tags:
+        - Prompt
+      security:
+        - cookieAuth: []
+      summary: Set the active prompt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userid
+                - promptid
+                - dateadded
+              properties:
+                userid:
+                  type: number
+                promptid: 
+                  type: number
+                dateadded:
+                  type: string
+            example:
+              userid: 1
+              promptid: 1
+              dateadded: "Mon Mar 28 2022"
+      responses:
+        201:
+          description: Active prompt set
+        400:
+          description: Invalid request
+        401:
+          description: Unauthorized
+  /prompts/{userid}:
+    x-controller: prompts
+    parameters:
+      - $ref: '#/components/parameters/PathUserid'
+    get:
+      x-operation: activePrompt
+      tags:
+        - Prompts
+      security:
+        - cookieAuth: []
+      summary: Get a user's active prompt
+      responses:
+        200:
+          description: Prompt retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivePrompt'
+        400:
+          description: Invalid request
+        401:
+          description: Unauthorized
+        404:
+          description: Not found
+    put:
+      x-operation: updateActivePrompt
+      tags:
+        - Prompts
+      security:
+        - cookieAuth: []
+      summary: Update the active prompt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - promptid
+                - dateadded
+              properties:
+                promptid:
+                  type: number
+                dateadded:
+                  type: string
+            example:
+              promptid: 1
+              dateadded: "Mon Mar 28 2022"
+      responses:
+        200:
+          description: Active prompt updated
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        404:
+          description: User not found
+  /topics:
+    x-controller: topics
+    get:
+      x-operation: getTopics
+      tags:
+        - Topics
+      security:
+        - cookieAuth: []
+      summary: Get all topics
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        404:
+          description: Not found
   /entries:
     x-controller: entries
     get:
-      x-operation: getEntries
-      tags: 
+      x-operation: filterEntries
+      tags:
         - Entries
       security:
         - cookieAuth: []
-      summary: Get entries
+      summary: Filter entries by date or topic
       parameters:
-        - name: topic
-          in: query
-          schema:
-            type: string
-        - name: week
-          in: query
-          schema:
-            type: string
-            format: date-time
-        - name: month
-          in: query
-          schema:
-            type: string
-            format: date-time
-        - name: year
-          in: query
-          schema:
-            type: string
-            format: date-time
+        - $ref: '#/components/parameters/QueryAfterdate'
+        - $ref: '#/components/parameters/QueryTopicid'
+        - $ref: '#/components/parameters/QueryUserid'
       responses:
         200:
           description: Success
@@ -202,6 +296,8 @@ paths:
           description: Invalid request
         401:
           description: Not authenticated
+        404:
+          description: Not found
     post:
       x-operation: submitEntry
       tags:
@@ -218,6 +314,27 @@ paths:
           description: Invalid request
         401:
           description: Not authenticated
+  /entries/{userid}/{today}:
+    x-controller: entries
+    parameters:
+      - $ref: '#/components/parameters/Pathtoday'
+      - $ref: '#/components/parameters/PathUserid'
+    get:
+      x-operation: getEntriesToday
+      tags:
+        - Entries
+      security:
+        - cookieAuth: []
+      summary: Get entries submitted today
+      responses:
+        200:
+          description: Today's entries loaded
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        404:
+          description: Not found
   /entries/{entryid}:
     x-controller: entries
     parameters:
@@ -267,6 +384,31 @@ paths:
           description: Access denied
 components:
   parameters:
+    QueryUserid:
+      name: userid
+      in: query
+      required: true
+      schema:
+        type: number
+    QueryTopicid:
+      name: topicid
+      in: query
+      required: false
+      schema:
+        type: number
+    QueryAfterdate:
+      name: afterdate
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date-time
+    PathUserid:
+      name: userid
+      in: path
+      required: true
+      schema:
+        type: string
     Pathusername:
       name: username
       in: path
@@ -279,6 +421,13 @@ components:
       required: true
       schema:
         type: number
+    Pathtoday:
+      name: today
+      in: path
+      required: true
+      schema:
+        type: string
+        format: date-time
   requestBodies:
     MakeEntry:
         required: true
@@ -286,18 +435,45 @@ components:
           application/json:
             schema:
               type: object
+              required:
+                - response
+                - date
+                - userid
+                - promptid
               properties:
-                entryid:
-                  type: number
-                  readOnly: true
-                text:
+                response:
                   type: string
+                date:
+                  type: string
+                  format: date-time
+                userid:
+                  type: number
+                promptid:
+                  type: number               
   securitySchemes:
     cookieAuth:
       type: apiKey
       in: cookie
       name: journalSessionId
   schemas:
+    ActivePrompt:
+      type: object
+      properties:
+        dateadded:
+          type: string
+          readOnly: true
+        promptid:
+          type: number
+          readOnly: true
+        prompttext:
+          type: string
+          readOnly: true
+        topicid:
+          type: number
+          readOnly: true
+        topictext:
+          type: string
+          readOnly: true
     Prompt:
       type: object
       properties:

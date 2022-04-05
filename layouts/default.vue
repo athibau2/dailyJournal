@@ -52,12 +52,6 @@
         <Nuxt />
       </v-container>
     </v-main>
-    <v-footer
-      :absolute="fixed"
-      app
-    >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
   </v-app>
 </template>
 
@@ -80,6 +74,7 @@ export default {
           icon: 'mdi-format-list-bulleted',
           title: 'My Entries',
           to: '/entries',
+          click: this.loadEntry
         },
         {
           icon: 'mdi-account-cog',
@@ -104,6 +99,9 @@ export default {
       this.$store.dispatch('accounts/logout')
     },
 
+    loadEntries() {
+      this.$store.dispatch('journal/loadEntries')
+    }
   },
 
   computed: {
