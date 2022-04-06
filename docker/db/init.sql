@@ -2,10 +2,9 @@ CREATE TABLE "accounts" (
   "userid" SERIAL NOT NULL,
   "firstname" varchar(30) NOT NULL,
   "lastname" varchar(30) NOT NULL,
-  "username" varchar(60) NOT NULL,
+  "username" varchar(60) NOT NULL UNIQUE,
   "password" varchar(200) NOT NULL,
-  PRIMARY KEY ("userid"),
-  UNIQUE ("username")
+  PRIMARY KEY ("userid")
 );
 
 
@@ -40,7 +39,7 @@ CREATE TABLE "active_prompt" (
 	"promptid" INTEGER NOT NULL,
 	"userid" SERIAL NOT NULL,
 	"dateadded" TEXT NOT NULL,
-	FOREIGN KEY ("userid") REFERENCES "accounts" ("userid")
+	FOREIGN KEY ("userid") REFERENCES "accounts" ("userid") ON DELETE CASCADE
 );
 
 
@@ -51,7 +50,7 @@ CREATE TABLE "entries" (
   "promptid" INTEGER NOT NULL,
   "userid" SERIAL NOT NULL,
   PRIMARY KEY ("entryid"),
-  FOREIGN KEY ("userid") REFERENCES "accounts" ("userid"),
+  FOREIGN KEY ("userid") REFERENCES "accounts" ("userid") ON DELETE CASCADE
 );
 create index "entries_userid" ON "entries" ("userid");
 
