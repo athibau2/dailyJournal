@@ -68,7 +68,8 @@
               </v-card-subtitle>
               <v-card-text v-if="viewState === 'Save' && entryToEdit === entry.entryid">
                 <v-textarea
-                  v-model="entry.text"
+                  :value="entry.text"
+                  @input="textChanged($event)"
                 >
                 </v-textarea>
               </v-card-text>
@@ -80,7 +81,7 @@
                 <v-btn @click="deleteEntry(entry)">Delete</v-btn>
                 <v-btn 
                   :disabled="entryToEdit === null ? false : entryToEdit === entry.entryid ? false : true" 
-                  @click="(viewState === 'Edit') ? editMode(entry.entryid) : updateEntry(entry.entryid, entry.text)"
+                  @click="(viewState === 'Edit') ? editMode(entry.entryid) : updateEntry(entry)"
                 >
                   {{(entryToEdit === null) ? viewState : (entryToEdit === entry.entryid) ? "Save" : "Edit"}}
                 </v-btn>
@@ -116,21 +117,33 @@ export default {
       showDate: false,
       filterMethod: "Entries Today",
       viewState: "Edit",
-      entryToEdit: null
+      entryToEdit: null,
+      response: ""
     }
   },
 
   methods: {
+    textChanged (event) {
+      console.log(event)
+      this.response = event
+    },
+
     editMode (entryid) {
       this.viewState = "Save"
       this.entryToEdit = entryid
     },
 
-    updateEntry (entryid, text) { //// Can't update currently because of state mutation issues
+    updateEntry (e) {
       this.viewState = "Edit"
+      let temp = ""
+      if (this.filterMethod === "Entries Today") temp = "today"
+      else if (this.filterMethod.split(':')[0] === "Entries Since") temp = this.afterDate
+      else if (this.filterMethod.split(':')[0] === "Entries About") temp = e.topicid
       this.$store.dispatch('journal/updateEntry', {
-        entryid: entryid,
-        text: text
+        entryid: e.entryid,
+        text: this.response,
+        filterMethod: temp,
+        userid: this.user.id
       })
       this.entryToEdit = null
     },

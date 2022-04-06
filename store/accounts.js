@@ -92,29 +92,36 @@ export const actions = {
     },
 
     async login({ dispatch, commit }, { username, password, isNew }) {
-        const response = await this.$axios.put('/api/authentication/login', {
+        try {
+            const response = await this.$axios.put('/api/authentication/login', {
                 username,
                 password
-        })
-        if (response.status === 200) {
-            await commit('setUser', getUserFromCookie())
-            this.$router.push('/')
-            isNew ? dispatch('getPrompt', { isNew: true }) : dispatch('activePrompt')
+            })
+            if (response.status === 200) {
+                await commit('setUser', getUserFromCookie())
+                this.$router.push('/')
+                isNew ? dispatch('getPrompt', { isNew: true }) : dispatch('activePrompt')
+            }
+        } catch (err) {
+            this.$router.push('/login')
+            alert('Something went wrong')
         }
     },
 
     async logout ({ commit }) {
         const res = await this.$axios.put('/api/authentication/logout')
         if (res.status === 200) {
-            commit('setUser', null)
             localStorage.removeItem('prompt')
+            localStorage.removeItem('newestEntry')
+            localStorage.removeItem('entriesList')
+            commit('setUser', null)
             this.$router.push('/login')
         }
     },
 
-    async update({ commit }, { currentPass, newPass, username }) {
+    async update({ commit }, { currentPass, newPass, userid }) {
         try {
-            const res = await this.$axios.put('/api/accounts/' + username, {
+            const res = await this.$axios.put('/api/accounts/' + userid, {
                 currentPass: currentPass,
                 newPass: newPass
             })
@@ -128,11 +135,23 @@ export const actions = {
         }
     },
 
-    async delete({ commit }, { username }) {
-        const res = await this.$axios.delete('/api/accounts/' + username)
-        if (res.status === 204) {
-            commit('setUser', null)
-            this.$router.push('/login')
+    async delete({ commit }, { userid }) {
+        try {
+            const res = await this.$axios.delete('/api/accounts/' + userid)
+            if (res.status === 204) {
+                commit('setUser', null)
+                localStorage.removeItem('prompt')
+                localStorage.removeItem('newestEntry')
+                localStorage.removeItem('entriesList')
+                this.$router.push('/signup')
+            }
+        } catch (err) {
+            if (err.response.status === 400) {
+                alert('Something went wrong, please try again')
+            }
+            else if (err.response.status === 403) {
+                alert('You do not have permission to delete this account')
+            }
         }
     }
 }

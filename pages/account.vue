@@ -3,6 +3,7 @@
     <v-container>
       <v-row justify="center" align="center">
         <v-card
+        v-if="user !== null && user !== undefined"
           elevation="5"
           width="400"
         >
@@ -71,16 +72,18 @@ export default {
           this.$store.dispatch('accounts/update', {
               currentPass: this.currentPass,
               newPass: this.newPass,
-              username: this.user.username
+              userid: this.user.id
           })
           this.currentPass = ""
           this.newPass = ""
       },
 
-      deleteAccount () {
-          this.$store.dispatch('accounts/delete', {
-              username: this.user.username
+      async deleteAccount () {
+        if (confirm('Are you sure you want to delete your account?')) {
+          await this.$store.dispatch('accounts/delete', {
+              userid: this.user.id
           })
+        }
       }
   },
 

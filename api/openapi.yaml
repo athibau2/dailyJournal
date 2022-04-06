@@ -44,10 +44,10 @@ paths:
           description: Invalid request
         409:
           description: Account already exists
-  /accounts/{username}:
+  /accounts/{userid}:
     x-controller: accounts
     parameters:
-      - $ref: '#/components/parameters/Pathusername'
+      - $ref: '#/components/parameters/PathUserid'
     delete: 
       x-operation: deleteAccount
       tags:
@@ -58,6 +58,8 @@ paths:
       responses:
         204: 
           description: Account deleted
+        400:
+          description: Bad request
         401:
           description: Not authenticated
         403:

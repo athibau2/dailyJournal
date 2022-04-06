@@ -53,7 +53,7 @@ exports.filterTopic = async function (client, topicid, userid) {
 exports.updateEntry = async function (client, entryid, text) {
     const { rowCount, rows } = await client.query({
         name: 'update-entry',
-        text: 'UPDATE entries SET text=$1 WHERE entryid=$2 ON CONFLICT DO NOTHING RETURNING *',
+        text: 'UPDATE entries SET text=$1 WHERE entryid=$2 RETURNING *',
         values: [
             text,
             entryid

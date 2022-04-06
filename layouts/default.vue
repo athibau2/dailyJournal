@@ -45,7 +45,9 @@
       </v-btn>
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-toolbar-title>{{user.firstname}} {{user.lastname}}</v-toolbar-title>
+      <v-toolbar-title v-if="user !== null && user !== undefined">
+        {{user.firstname}} {{user.lastname}}
+      </v-toolbar-title>
     </v-app-bar>
     <v-main>
       <v-container>

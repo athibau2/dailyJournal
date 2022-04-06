@@ -62,13 +62,28 @@ export const actions = {
     }
   },
 
-  async updateEntry({ commit }, { entryid, text }) {
-    const res = await this.$axios.put(`/api/entries/${entryid}`, {
-      text: text
-    })
-    if (res.status === 200) {
-      alert(`Entry number ${entryid} has been updated`)
-    }
+  async updateEntry({ dispatch }, { entryid, text, filterMethod, userid }) {
+    try {
+      let afterDate = ""
+      let topicid = null;
+      (filterMethod.toString().length === 1) ? topicid = filterMethod : afterDate = filterMethod
+      const res = await this.$axios.put(`/api/entries/${entryid}`, {
+        text: text
+      })
+      if (res.status === 200) {
+        //alert(`Entry number ${entryid} has been updated`)
+        if (filterMethod === "today") dispatch('loadEntries')
+        else {
+          (topicid === null)
+            ? await dispatch('filterDate', { afterDate, userid })
+            : await dispatch('filterTopic', { topicid, userid })
+        }
+      }
+    } catch (err) {
+        if (err.response.status === 400) {
+          alert('Something went wrong, please try again')
+        }
+      }
   },
 
   async deleteEntry({ dispatch }, { entryid, filterMethod, userid }) {
@@ -78,7 +93,7 @@ export const actions = {
       (filterMethod.toString().length === 1) ? topicid = filterMethod : afterDate = filterMethod
       const res = await this.$axios.delete(`/api/entries/${entryid}`)
       if (res.status === 204) {
-        alert(`Entry number ${entryid} has successfully been deleted`)
+        //alert(`Entry number ${entryid} has successfully been deleted`)
         if (filterMethod === "today") dispatch('loadEntries')
         else {
           (topicid === null)
