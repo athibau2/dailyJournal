@@ -13,7 +13,33 @@
             {{user.username}}
           </v-card-subtitle>
           <v-card-text>
-            <input v-model="password" type="password" placeholder="Update Password Here">
+            <v-text-field
+              class="selector"
+              dense
+              solo
+              rounded
+              background-color="light blue lighten-5"
+              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="show1 ? 'text' : 'password'"
+              @click:append="show1 = !show1"
+              v-model="currentPass" 
+              placeholder="Current Password"
+            >
+            </v-text-field>
+            <v-text-field
+              class="selector"
+              dense
+              solo
+              rounded
+              background-color="light blue lighten-5"
+              :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="show2 ? 'text' : 'password'"
+              @click:append="show2 = !show2"
+              v-model="newPass" 
+              placeholder="New Password"
+              @keyup.enter="updatePassword()"
+            >
+            </v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -33,17 +59,22 @@ export default {
 
   data () {
     return {
-        password: "",
+        currentPass: "",
+        newPass: "",
+        show1: false,
+        show2: false
     }
   },
 
   methods: {
       updatePassword() {
           this.$store.dispatch('accounts/update', {
-              password: this.password,
+              currentPass: this.currentPass,
+              newPass: this.newPass,
               username: this.user.username
           })
-          this.password = ""
+          this.currentPass = ""
+          this.newPass = ""
       },
 
       deleteAccount () {

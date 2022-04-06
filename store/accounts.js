@@ -112,12 +112,19 @@ export const actions = {
         }
     },
 
-    async update({ commit }, { password, username }) {
-        const res = await this.$axios.put('/api/accounts/' + username, {
-            password: password
-        })
-        if (res.status === 200) {
-            alert('Your password has been successfully updated')
+    async update({ commit }, { currentPass, newPass, username }) {
+        try {
+            const res = await this.$axios.put('/api/accounts/' + username, {
+                currentPass: currentPass,
+                newPass: newPass
+            })
+            if (res.status === 200) {
+                alert('Your password has been successfully updated')
+            }
+        } catch (err) {
+            if (err.response.status === 401) {
+                alert('The current password you provided was incorrect')
+            }
         }
     },
 

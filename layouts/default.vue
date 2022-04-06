@@ -74,7 +74,13 @@ export default {
           icon: 'mdi-format-list-bulleted',
           title: 'My Entries',
           to: '/entries',
-          click: this.loadEntry
+          click: this.loadEntries
+        },
+        {
+          icon: 'mdi-share-variant',
+          title: 'Shared With Me',
+          to: '/shared',
+          click: this.loadShared
         },
         {
           icon: 'mdi-account-cog',
@@ -90,7 +96,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Memory'
+      title: 'Write Now'
     }
   },
 
@@ -101,6 +107,11 @@ export default {
 
     loadEntries() {
       this.$store.dispatch('journal/loadEntries')
+      this.$store.dispatch('journal/loadTopics')
+    },
+
+    loadShared() {
+      
     }
   },
 

@@ -4,20 +4,58 @@
             <v-row justify="center" align="center">
                 <v-card elevation="5" width="400">
                 <v-card-title class="headline">
-                    Welcome to MinuteMemory!
+                    Welcome to Write Now!
                 </v-card-title>
                 <v-card-subtitle>
                     Sign Up Here
                 </v-card-subtitle>
                 <v-card-text>
-                    <input v-model="firstname" placeholder="Enter your first name" required>
-                    <input v-model="lastname" placeholder="Enter your last name" required>
-                    <div>
-                        <input v-model="email" placeholder="Enter your email" required>
-                    </div>
-                    <div>
-                        <input @keyup.enter="signup()" v-model="password" type="password" placeholder="Enter your password" required>
-                    </div>
+                    <v-text-field
+                        class="selector"
+                        dense
+                        solo
+                        rounded
+                        background-color="light blue lighten-5"
+                        v-model="firstname"
+                        placeholder="First name"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                        class="selector"
+                        dense
+                        solo
+                        rounded
+                        background-color="light blue lighten-5"
+                        v-model="lastname"
+                        placeholder="Last name"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                        class="selector"
+                        dense
+                        solo
+                        rounded
+                        background-color="light blue lighten-5"
+                        v-model="email"
+                        :append-icon="'mdi-email'"
+                        placeholder="Enter your email"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                        class="selector"
+                        dense
+                        solo
+                        rounded
+                        background-color="light blue lighten-5"
+                        :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="show ? 'text' : 'password'"
+                        @click:append="show = !show"
+                        v-model="password"
+                        @keyup.enter="signup()"
+                        placeholder="Enter your password"
+                    >
+                    </v-text-field>
+                    <em><h5>&nbsp;Password must be at least 8 characters</h5></em>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer />
@@ -43,7 +81,8 @@ export default {
         firstname: '',
         lastname: '',
         email: '',
-        password: ''
+        password: '',
+        show: false
     }
   },
 
@@ -66,3 +105,8 @@ export default {
 
 }
 </script>
+
+<style scoped>
+@import '~/assets/style.css';
+
+</style>

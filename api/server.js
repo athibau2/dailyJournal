@@ -16,7 +16,6 @@ const LocalStrategy = require('passport-local').Strategy
 const session = require('express-session')
 const DatabaseAccounts = require('./database/accounts')
 const ConnectPgSimple = require('connect-pg-simple')(session)
-const cron = require('node-cron')
 
 
 // Establish database connection

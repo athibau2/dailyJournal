@@ -38,14 +38,12 @@ exports.createAccount = async function (client, firstname, lastname, username, p
     return rowCount > 0 ? rows[0] : undefined
 }
 
-exports.updatePassword = async function (client, username, data) {
+exports.updatePassword = async function (client, username, newPass) {
     // create dynamic query based on inputs
-    const { password } = data
-
     const { rows } = await client.query({
         name: 'update-password',
         text: 'UPDATE accounts SET password=$1 WHERE username=$2 RETURNING *',
-        values: [await encryptPassword(password), username]
+        values: [await encryptPassword(newPass), username]
     })
     return rows[0]
 }

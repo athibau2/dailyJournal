@@ -1,4 +1,5 @@
 const accounts = require('../database/accounts')
+const bcrypt = require('bcryptjs')
 
 module.exports = function (pool) {
 	return {
@@ -16,7 +17,7 @@ module.exports = function (pool) {
 		},
 
 		async updatePassword (req, res) {
-			const data = req.enforcer.body
+			const { currentPass, newPass } = req.enforcer.body
 			const { username } = req.enforcer.params
 
 			const client = await pool.connect()
@@ -28,8 +29,13 @@ module.exports = function (pool) {
 				} else if (account.userid !== req.user.id) {
 					res.enforcer.status(403).send()
 				} else {
-					await accounts.updatePassword(client, username, data)
-					res.enforcer.status(200).send()
+					const match = await bcrypt.compare(currentPass, account.password)
+					if (match) {
+						await accounts.updatePassword(client, username, newPass)
+						res.enforcer.status(200).send()
+					} else {
+						res.enforcer.status(401).send()
+					}
 				}
 				await client.query('COMMIT')
 			} catch (e) {

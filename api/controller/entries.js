@@ -45,11 +45,24 @@ module.exports = function (pool) {
         },
         
         async updateEntry (req, res) {
-
+            const { entryid } = req.enforcer.params
+            const { text } = req.enforcer.body
+            const response = await entries.updateEntry(pool, entryid, text)
+            if (response !== null && response !== undefined) {
+                res.enforcer.status(200).send()
+            } else {
+                res.enforcer.status(404).send()
+            }
         },
         
         async deleteEntry (req, res) {
-
+            const { entryid } = req.enforcer.params
+            const response = await entries.deleteEntry(pool, entryid)
+            if (response > 0) {
+                res.enforcer.status(204).send()
+            } else {
+                res.enforcer.status(400).send()
+            }
         },
         
     }

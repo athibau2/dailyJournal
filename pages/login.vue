@@ -4,16 +4,37 @@
             <v-row justify="center" align="center">
                 <v-card elevation="5" width="400">
                 <v-card-title class="headline">
-                    Welcome to Memory!
+                    Welcome to Write Now!
                 </v-card-title>
                 <v-card-subtitle>
                     Sign In Here
                 </v-card-subtitle>
                 <v-card-text>
-                    <input v-model="email" placeholder="Enter your email" required>
-                    <div>
-                        <input @keyup.enter="login()" v-model="password" type="password" placeholder="Enter your password" required>
-                    </div>
+                    <v-text-field
+                        class="selector"
+                        dense
+                        solo
+                        rounded
+                        background-color="light blue lighten-5"
+                        v-model="email"
+                        :append-icon="'mdi-email'"
+                        placeholder="Enter your email"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                        class="selector"
+                        dense
+                        solo
+                        rounded
+                        background-color="light blue lighten-5"
+                        :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="show ? 'text' : 'password'"
+                        @click:append="show = !show"
+                        v-model="password"
+                        @keyup.enter="login()"
+                        placeholder="Enter your password"
+                    >
+                    </v-text-field>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer />
@@ -37,7 +58,8 @@ export default {
   data () {
     return {
       email: "",
-      password: ""
+      password: "",
+      show: false,
     }
   },
 
@@ -59,3 +81,8 @@ export default {
 
 }
 </script>
+
+<style scoped>
+@import '~/assets/style.css';
+
+</style>

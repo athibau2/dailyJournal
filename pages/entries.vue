@@ -57,7 +57,7 @@
           </v-menu>
         </v-col>
         <v-col cols="8" v-if="entriesList.length !== 0">
-          <h2 class="text-center">Entries Today</h2>
+          <h2 class="text-center">{{filterMethod}}</h2>
           <v-row justify="center" align="center" v-for="(entry, i) in entriesList" :key="i">
             <v-card class="entries" elevation="5" width="450">
               <v-card-title style="word-break: break-word">
@@ -66,16 +66,30 @@
               <v-card-subtitle>
                 <em>{{entry.topictext}}</em>&nbsp;&nbsp;&nbsp;&nbsp;{{entry.date}}
               </v-card-subtitle>
-              <v-card-text>
+              <v-card-text v-if="viewState === 'Save' && entryToEdit === entry.entryid">
+                <v-textarea
+                  v-model="entry.text"
+                >
+                </v-textarea>
+              </v-card-text>
+              <v-card-text v-else>
                 {{entry.text}}
               </v-card-text>
               <v-card-actions>
+                <v-spacer />
+                <v-btn @click="deleteEntry(entry)">Delete</v-btn>
+                <v-btn 
+                  :disabled="entryToEdit === null ? false : entryToEdit === entry.entryid ? false : true" 
+                  @click="(viewState === 'Edit') ? editMode(entry.entryid) : updateEntry(entry.entryid, entry.text)"
+                >
+                  {{(entryToEdit === null) ? viewState : (entryToEdit === entry.entryid) ? "Save" : "Edit"}}
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-row>
         </v-col>
         <v-col cols="8" v-else>
-          <h2 class="text-center" v-if="entriesList.length === 0">No Entries Found</h2>
+          <h2 class="text-center" v-if="entriesList.length === 0">No Entries Found For: {{filterMethod}}</h2>
         </v-col>
       </v-row>
     </v-container>
@@ -83,13 +97,13 @@
 </template>
 
 <script>
-import topics from '~/api/controller/topics'
 export default {
   name: 'EntriesPage',
   middleware: "auth",
 
   mounted () {
     this.$store.dispatch('journal/loadEntries')
+    this.$store.dispatch('journal/loadTopics')
   },
 
   data () {
@@ -100,11 +114,43 @@ export default {
       afterDate: "",
       topicSort: "Choose Topic",
       showDate: false,
+      filterMethod: "Entries Today",
+      viewState: "Edit",
+      entryToEdit: null
     }
   },
 
   methods: {
+    editMode (entryid) {
+      this.viewState = "Save"
+      this.entryToEdit = entryid
+    },
+
+    updateEntry (entryid, text) { //// Can't update currently because of state mutation issues
+      this.viewState = "Edit"
+      this.$store.dispatch('journal/updateEntry', {
+        entryid: entryid,
+        text: text
+      })
+      this.entryToEdit = null
+    },
+
+    async deleteEntry(e) {
+      if (confirm('Are you sure you want to delete this entry?')) {
+        let temp = ""
+        if (this.filterMethod === "Entries Today") temp = "today"
+        else if (this.filterMethod.split(':')[0] === "Entries Since") temp = this.afterDate
+        else if (this.filterMethod.split(':')[0] === "Entries About") temp = e.topicid
+        await this.$store.dispatch('journal/deleteEntry', {
+          entryid: e.entryid,
+          filterMethod: temp,
+          userid: this.user.id
+        })
+      }
+    },
+
     loadEntries () {
+      this.filterMethod = "Entries Today"
       this.dateHint = "Choose Date"
       this.topicSort = "Choose Topic"
       this.$store.dispatch('journal/loadEntries')
@@ -112,6 +158,8 @@ export default {
 
     filterDate () {
       this.showDate = !this.showDate
+      const temp = this.afterDate.split('-')
+      this.filterMethod = "Entries Since: " + temp[1] + ' / ' + temp[2] + ' / ' + temp[0]
       this.$store.dispatch('journal/filterDate', {
         afterDate: this.afterDate,
         userid: this.user.id
@@ -120,6 +168,7 @@ export default {
 
     filterTopic (t) {
       this.topicSort = t.topictext
+      this.filterMethod = "Entries About: " + this.topicSort
       this.$store.dispatch('journal/filterTopic', {
         topicid: t.topicid,
         userid: this.user.id
@@ -133,7 +182,7 @@ export default {
     },
 
     entriesList () {
-      return this.$store.state.journal.entriesList
+      return this.$store.state.journal.entriesList //JSON.parse(localStorage.getItem('entriesList'))
     },
 
     topics () {

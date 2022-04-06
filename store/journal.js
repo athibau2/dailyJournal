@@ -21,7 +21,7 @@ export const mutations = {
 
 // actions should call mutations
 export const actions = {
-  async submit({ dispatch, commit }, { response, userid, promptid }) {
+  async submit({ commit }, { response, userid, promptid }) {
     const res = await this.$axios.post('/api/entries', {
             response: response,
             date: await todayTimestamp(),
@@ -29,27 +29,68 @@ export const actions = {
             promptid: promptid
         })
     if (res.status === 201) {
-        commit('newestEntry', res.data)
+        await commit('newestEntry', res.data)
         localStorage.setItem('newestEntry', JSON.stringify(res.data))
-        dispatch('loadEntries')
+        alert('Your journal entry has been successfully submitted')
     }
   },
 
   async loadEntries({ commit, rootState }) {
     let today = await todayTimestamp()
     let userid = JSON.parse(rootState.accounts.user).id
-    const res = await this.$axios.get(`/api/entries/${userid}/${today}`)
-    if (res.status === 200) {
-      for (let i = 0; i < res.data.length; ++i) {
-        res.data[i].date = await parseDate(res.data[i].date)
+    try {
+      const res = await this.$axios.get(`/api/entries/${userid}/${today}`)
+      if (res.status === 200) {
+        for (let i = 0; i < res.data.length; ++i) {
+          res.data[i].date = await parseDate(res.data[i].date)
+        }
+        await commit('entriesList', res.data)
+        localStorage.setItem('entriesList', JSON.stringify(res.data))
       }
-      commit('entriesList', res.data)
+    } catch (err) {
+      if (err.response.status === 404) {
+        await commit('entriesList', [])
+        localStorage.setItem('entriesList', JSON.stringify([]))
+      }
     }
+  },
 
+  async loadTopics({ commit }) {
     const topics = await this.$axios.get(`/api/topics`)
     if (topics.status === 200) {
-      commit('topics', topics.data)
+      await commit('topics', topics.data)
     }
+  },
+
+  async updateEntry({ commit }, { entryid, text }) {
+    const res = await this.$axios.put(`/api/entries/${entryid}`, {
+      text: text
+    })
+    if (res.status === 200) {
+      alert(`Entry number ${entryid} has been updated`)
+    }
+  },
+
+  async deleteEntry({ dispatch }, { entryid, filterMethod, userid }) {
+    try {
+      let afterDate = ""
+      let topicid = null;
+      (filterMethod.toString().length === 1) ? topicid = filterMethod : afterDate = filterMethod
+      const res = await this.$axios.delete(`/api/entries/${entryid}`)
+      if (res.status === 204) {
+        alert(`Entry number ${entryid} has successfully been deleted`)
+        if (filterMethod === "today") dispatch('loadEntries')
+        else {
+          (topicid === null)
+            ? await dispatch('filterDate', { afterDate, userid })
+            : await dispatch('filterTopic', { topicid, userid })
+        }
+      }
+    } catch (err) {
+        if (err.response.status === 400) {
+          alert('Something went wrong, please try again')
+        }
+      }
   },
 
   async filterDate({ commit }, { afterDate, userid }) {
@@ -60,7 +101,8 @@ export const actions = {
       for (let i = 0; i < res.data.length; ++i) {
         res.data[i].date = await parseDate(res.data[i].date)
       }
-      commit('entriesList', res.data)
+      await commit('entriesList', res.data)
+      localStorage.setItem('entriesList', JSON.stringify(res.data))
     }
   },
 
@@ -71,7 +113,8 @@ export const actions = {
       for (let i = 0; i < res.data.length; ++i) {
         res.data[i].date = await parseDate(res.data[i].date)
       }
-      commit('entriesList', res.data)
+      await commit('entriesList', res.data)
+      localStorage.setItem('entriesList', JSON.stringify(res.data))
     }
   },
 }
