@@ -167,14 +167,18 @@ paths:
               type: object
               required:
                 - entryid
+                - owner
                 - userid
               properties:
                 entryid:
+                  type: number
+                owner:
                   type: number
                 userid:
                   type: number
             example:
               entryid: 1
+              owner: 1
               userid: 1
       responses:
         201:
@@ -198,6 +202,26 @@ paths:
           description: Success
         400:
           description: Bad request
+        404:
+          description: Not found
+  /share/{userid}:
+    x-controller: share
+    parameters:
+      - $ref: '#/components/parameters/PathUserid'
+    get:
+      x-operation: getSharedWithMe
+      tags:
+        - Share
+      security:
+        - cookieAuth: []
+      summary: Get all entries shared with me
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
         404:
           description: Not found
   /share/{entryid}/{userid}:

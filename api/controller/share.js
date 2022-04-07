@@ -24,8 +24,8 @@ module.exports = function (pool) {
         },
 
         async shareEntry(req, res) {
-            const { entryid, userid } = req.enforcer.body
-            const count = await share.shareEntry(pool, entryid, userid)
+            const { entryid, owner, userid } = req.enforcer.body
+            const count = await share.shareEntry(pool, entryid, owner, userid)
             if (count !== undefined) {
                 res.enforcer.status(201).send()
             } else {
@@ -40,6 +40,19 @@ module.exports = function (pool) {
                 res.enforcer.status(204).send()
             } else {
                 res.enforcer.status(400).send()
+            }
+        },
+
+        async getSharedWithMe(req, res) {
+            const { userid } = req.enforcer.params
+            if (userid === undefined || userid === null) res.enforcer.status(400).send();
+            else {
+                const entries = await share.getSharedWithMe(pool, userid)
+                if (entries !== undefined) {
+                    res.enforcer.status(200).send(entries)
+                } else {
+                    res.enforcer.status(404).send()
+                }
             }
         }
     }

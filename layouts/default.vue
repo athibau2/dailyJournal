@@ -113,7 +113,7 @@ export default {
     },
 
     loadShared() {
-      
+      this.$store.dispatch('share/getSharedWithMe', { userid: this.user.id })
     }
   },
 

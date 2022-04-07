@@ -39,7 +39,7 @@
                 {{s.username}}&nbsp;<v-icon size="20" @click="shareList.splice(i, 1)">mdi-close</v-icon>
               </span>
             </div>
-            <v-btn @click="$emit('close-modal')">Done</v-btn>
+            <v-btn @click="$emit('close-modal')">Exit</v-btn>
             <v-btn @click="shareEntry()">Share</v-btn>
         </div>
     </div>
@@ -89,9 +89,10 @@ export default {
       }
     },
 
-    async shareEntry (r) {
+    async shareEntry () {
       await this.$store.dispatch('share/shareEntry', {
         entryid: this.entryBeingShared,
+        owner: this.user.id,
         users: this.shareList
       })
       this.shareList = []
@@ -100,12 +101,17 @@ export default {
     unshareEntry (s) {
       this.$store.dispatch('share/unshareEntry', {
         entryid: this.entryBeingShared,
-        userid: s.userid
+        userid: s.userid,
+        type: "owner"
       })
     },
   },
 
   computed: {
+    user () {
+      return JSON.parse(this.$store.state.accounts.user)
+    },
+
     results () {
       return this.$store.state.share.results
     },
