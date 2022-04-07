@@ -55,6 +55,15 @@ CREATE TABLE "entries" (
 create index "entries_userid" ON "entries" ("userid");
 
 
+CREATE TABLE "shared_entries" (
+	"entryid" SERIAL NOT NULL,
+	"userid" SERIAL NOT NULL,
+	FOREIGN KEY ("entryid") REFERENCES "entries" ("entryid") ON DELETE CASCADE,
+	FOREIGN KEY ("userid") REFERENCES "accounts" ("userid") ON DELETE CASCADE
+);
+create index "shared_entries_userid" ON "shared_entries" ("userid");
+
+
 INSERT INTO topics (topictext) values('Gratitude');
 INSERT INTO topics (topictext) values('Goals');
 INSERT INTO topics (topictext) values('Self-awareness');

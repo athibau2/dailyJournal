@@ -10,6 +10,7 @@ const Entries = require('./controller/entries')
 const Authentication = require('./controller/authentication')
 const Prompts = require('./controller/prompts')
 const Topics = require('./controller/topics')
+const Share = require('./controller/share')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
@@ -125,7 +126,8 @@ app.use(enforcerMiddleware.route({
 	authentication: Authentication(passport),
 	entries: Entries(pool),
 	prompts: Prompts(pool),
-	topics: Topics(pool)
+	topics: Topics(pool),
+	share: Share(pool)
 }))
 
 // fallback mocking middleware

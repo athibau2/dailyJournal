@@ -78,6 +78,18 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="getSharedList(entry)"
+                    >
+                      <v-icon>mdi-share-variant</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Share</span>
+                </v-tooltip>
                 <v-btn @click="deleteEntry(entry)">Delete</v-btn>
                 <v-btn 
                   :disabled="entryToEdit === null ? false : entryToEdit === entry.entryid ? false : true" 
@@ -92,15 +104,21 @@
         <v-col cols="8" v-else>
           <h2 class="text-center" v-if="entriesList.length === 0">No Entries Found For: {{filterMethod}}</h2>
         </v-col>
+        <Share v-show="showShare" @close-modal="showShare = false" />
       </v-row>
     </v-container>
   </v-app>
 </template>
 
 <script>
+import Share from '~/components/Share.vue'
 export default {
   name: 'EntriesPage',
   middleware: "auth",
+
+  components: {
+    Share
+  },
 
   mounted () {
     this.$store.dispatch('journal/loadEntries')
@@ -118,13 +136,13 @@ export default {
       filterMethod: "Entries Today",
       viewState: "Edit",
       entryToEdit: null,
-      response: ""
+      response: "",
+      showShare: false
     }
   },
 
   methods: {
     textChanged (event) {
-      console.log(event)
       this.response = event
     },
 
@@ -187,6 +205,13 @@ export default {
         userid: this.user.id
       })
     },
+
+    getSharedList (entry) {
+      this.showShare = true
+      this.$store.dispatch('share/getSharedList', {
+        entryid: entry.entryid
+      })
+    }
   },
 
   computed: {
@@ -195,7 +220,7 @@ export default {
     },
 
     entriesList () {
-      return this.$store.state.journal.entriesList //JSON.parse(localStorage.getItem('entriesList'))
+      return this.$store.state.journal.entriesList
     },
 
     topics () {
