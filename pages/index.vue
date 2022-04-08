@@ -2,7 +2,7 @@
   <v-app>
     <v-container>
       <v-row justify="center" align="center">
-        <v-card elevation="5" width="450" v-if="prompt !== null && prompt !== undefined">
+        <v-card class="card" elevation="5" width="450" v-if="prompt !== null && prompt !== undefined">
           <v-card-title style="word-break: break-word">
             {{prompt.prompttext}}
           </v-card-title>
@@ -21,7 +21,6 @@
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  color="primary"
                   v-bind="attrs"
                   v-on="on"
                   @click="newPrompt()"
@@ -31,7 +30,7 @@
               </template>
               <span>New Prompt</span>
             </v-tooltip>
-            <v-btn @click="submit()">Submit</v-btn>
+            <v-btn  @click="submit()">Submit</v-btn>
           </v-card-actions>
         </v-card>
       </v-row>
@@ -85,3 +84,7 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+@import '~/assets/style.css';
+</style>

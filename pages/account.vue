@@ -3,7 +3,8 @@
     <v-container>
       <v-row justify="center" align="center">
         <v-card
-        v-if="user !== null && user !== undefined"
+          class="card"
+          v-if="user !== null && user !== undefined"
           elevation="5"
           width="400"
         >
@@ -19,7 +20,6 @@
               dense
               solo
               rounded
-              background-color="light blue lighten-5"
               :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
               :type="show1 ? 'text' : 'password'"
               @click:append="show1 = !show1"
@@ -32,7 +32,6 @@
               dense
               solo
               rounded
-              background-color="light blue lighten-5"
               :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
               :type="show2 ? 'text' : 'password'"
               @click:append="show2 = !show2"
@@ -44,8 +43,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn @click="updatePassword()">Update Password</v-btn>
-            <v-btn @click="deleteAccount()">Delete Account</v-btn>
+            <v-btn  @click="deleteAccount()">Delete Account</v-btn>
+            <v-btn  @click="updatePassword()">Update Password</v-btn>
           </v-card-actions>
         </v-card>
       </v-row>
@@ -94,3 +93,7 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+@import '~/assets/style.css';
+</style>

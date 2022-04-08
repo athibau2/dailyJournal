@@ -2,7 +2,8 @@ export const state = () => ({
     results: [],
     sharedList: [],
     entryBeingShared: null,
-    sharedWithMe: []
+    sharedEntries: [],
+    sharedPrompts: []
 })
 
 // mutations should update state
@@ -20,7 +21,7 @@ export const mutations = {
     },
 
     setSharedWithMe(state, data) {
-        state.sharedWithMe = data
+        state.sharedEntries = data
     }
 }
 

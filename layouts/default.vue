@@ -1,9 +1,8 @@
 <template>
   <v-app>
     <v-navigation-drawer
-      v-model="drawer"
       :mini-variant="miniVariant"
-      :clipped="clipped"
+      :clipped="true"
       fixed
       app
     >
@@ -26,32 +25,23 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
-      :clipped-left="clipped"
+      :clipped-left="true"
       fixed
       app
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
+      <v-app-bar-nav-icon @click.stop="miniVariant = !miniVariant" />
+      <v-toolbar-title class="title">
+        <span class="title-text">{{title}}&nbsp;</span>
+        <v-icon class="icon" size="30" @click="toHome()">mdi-thought-bubble</v-icon>
+      </v-toolbar-title>
       <v-spacer />
       <v-toolbar-title v-if="user !== null && user !== undefined">
         {{user.firstname}} {{user.lastname}}
       </v-toolbar-title>
     </v-app-bar>
-    <v-main>
-      <v-container>
-        <Nuxt />
+    <v-main class="main">
+      <v-container class="main">
+        <Nuxt class="main" />
       </v-container>
     </v-main>
   </v-app>
@@ -63,9 +53,7 @@ export default {
 
   data () {
     return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
+      fixed: true,
       items: [
         {
           icon: 'mdi-home',
@@ -103,6 +91,10 @@ export default {
   },
 
   methods: {
+    toHome () {
+      this.$router.push('/')
+    },
+    
     logout() {
       this.$store.dispatch('accounts/logout')
     },
@@ -124,3 +116,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+@import '~/assets/style.css';
+
+
+</style>

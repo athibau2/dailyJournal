@@ -128,6 +128,7 @@ export default {
 </script>
 
 <style scoped>
+@import '~/assets/style.css';
 
 .modal-overlay {
   position: fixed;
@@ -160,14 +161,12 @@ export default {
   margin-top: 35%;
   height: 125px;
   overflow: auto;
-  background-color: rgb(226, 225, 209);
   text-align: left;
   width: 100%;
   bottom: 30px;
 }
 
 .shared-items {
-  background-color: rgb(220, 245, 243);
   position: relative;
   word-wrap: break-word;
   display: inline-block;
@@ -182,7 +181,6 @@ export default {
 }
 
 .share-item {
-  background-color: rgb(243, 175, 170);
   position: relative;
   word-wrap: break-word;
   display: inline-block;

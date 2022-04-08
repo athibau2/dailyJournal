@@ -1,9 +1,23 @@
 <template>
   <v-app>
-    <v-container>
-      <v-col v-if="sharedWithMe.length !== 0">
-          <v-row justify="center" align="center" v-for="(entry, i) in sharedWithMe" :key="i">
-            <v-card class="entries" elevation="5" width="450">
+    <span>
+        <v-tabs left v-model="tab">
+          <v-tabs-slider></v-tabs-slider>
+            <v-tab v-for="item in items" :key="item.tab">
+              {{ item.tab }} ({{item.tab === 'entries' ? sharedEntries.length : sharedPrompts.length}})
+            </v-tab>
+        </v-tabs>
+    </span>
+    <v-tabs-items v-model="tab">
+      <v-col v-for="item in items" :key="item.tab">
+        <v-row justify="center" align="center">
+          <v-tab-item>
+            <v-card
+              class="card"
+              elevation="5"
+              width="450"
+              v-for="(entry, i) in item.tab === 'entries' ? sharedEntries : sharedPrompts" :key="i"
+            >
               <v-card-title style="word-break: break-word">
                 {{entry.prompttext}}
               </v-card-title>
@@ -16,15 +30,14 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn @click="removeEntry(entry)">Remove</v-btn>
+                <v-btn  @click="removeEntry(entry)">Remove</v-btn>
               </v-card-actions>
             </v-card>
-          </v-row>
-        </v-col>
-        <v-col v-else>
-          <h2 class="text-center" v-if="sharedWithMe.length === 0">No Entries Have Been Shared With You</h2>
-        </v-col>
-    </v-container>
+          </v-tab-item>
+        </v-row>
+      </v-col>
+    </v-tabs-items>
+
   </v-app>
 </template>
 
@@ -39,7 +52,11 @@ export default {
 
   data () {
     return {
-      
+      tab: null,
+      items: [
+        { tab: 'entries' },
+        { tab: 'prompts' },
+      ],
     }
   },
 
@@ -57,17 +74,22 @@ export default {
     user () {
       return JSON.parse(this.$store.state.accounts.user)
     },
+    
+    sharedEntries () {
+      return this.$store.state.share.sharedEntries
+    },
 
-    sharedWithMe () {
-      return this.$store.state.share.sharedWithMe
+    sharedPrompts () {
+      return this.$store.state.share.sharedPrompts
     }
   },
 }
 </script>
 
 <style scoped>
+@import '~/assets/style.css';
 
-.entries {
+.card {
   margin-top: 20px;
 }
 </style>

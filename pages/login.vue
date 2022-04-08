@@ -2,7 +2,7 @@
     <v-app>
         <v-col>
             <v-row justify="center" align="center">
-                <v-card elevation="5" width="400">
+              <v-card class="card" elevation="5" width="400">
                 <v-card-title class="headline">
                     Welcome to Write Now!
                 </v-card-title>
@@ -15,7 +15,6 @@
                         dense
                         solo
                         rounded
-                        background-color="light blue lighten-5"
                         v-model="email"
                         :append-icon="'mdi-email'"
                         placeholder="Enter your email"
@@ -26,7 +25,6 @@
                         dense
                         solo
                         rounded
-                        background-color="light blue lighten-5"
                         :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="show ? 'text' : 'password'"
                         @click:append="show = !show"
@@ -40,11 +38,11 @@
                     <v-spacer />
                     <nuxt-link to="/signup">Join Here</nuxt-link>
                     <span>&nbsp;</span>
-                    <v-btn color="primary" nuxt @click="login()">
+                    <v-btn  nuxt @click="login()">
                         Sign In
                     </v-btn>
                 </v-card-actions>
-                </v-card>
+              </v-card>
             </v-row>
         </v-col>
     </v-app>

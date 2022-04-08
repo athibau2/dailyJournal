@@ -5,12 +5,15 @@
       fixed
       app
     >
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title class="title">
+        <span class="title-text">{{title}}&nbsp;</span>
+        <v-icon >mdi-thought-bubble</v-icon>
+      </v-toolbar-title>
       <v-spacer />
     </v-app-bar>
-    <v-main>
-      <v-container>
-        <Nuxt />
+    <v-main class="main">
+      <v-container class="main">
+        <Nuxt class="main" />
       </v-container>
     </v-main>
   </v-app>
@@ -28,3 +31,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+@import '~/assets/style.css';
+
+
+</style>

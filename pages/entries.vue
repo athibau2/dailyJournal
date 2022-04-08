@@ -14,7 +14,7 @@
             >
             </v-switch>
           </v-layout>
-          <v-btn :disabled="!sortByDate" @click="showDate = !showDate">
+          <v-btn  :disabled="!sortByDate" @click="showDate = !showDate">
               {{(afterDate.length === 0) ? dateHint : afterDate}}
           </v-btn>
           <v-date-picker 
@@ -42,7 +42,7 @@
             :close-on-content-click="true"
           >
             <template v-slot:activator="{ on, attrs }">
-              <v-btn v-bind="attrs" v-on="on" :disabled="!sortByTopic">{{topicSort}}</v-btn>
+              <v-btn  v-bind="attrs" v-on="on" :disabled="!sortByTopic">{{topicSort}}</v-btn>
             </template>
             <v-list>
               <v-list-item v-for="(t, i) in topics" :key="i" link>
@@ -59,7 +59,7 @@
         <v-col cols="8" v-if="entriesList.length !== 0">
           <h2 class="text-center">{{filterMethod}}</h2>
           <v-row justify="center" align="center" v-for="(entry, i) in entriesList" :key="i">
-            <v-card class="entries" elevation="5" width="450">
+            <v-card class="card" elevation="5" width="450">
               <v-card-title style="word-break: break-word">
                 {{entry.prompttext}}
               </v-card-title>
@@ -90,8 +90,8 @@
                   </template>
                   <span>Share</span>
                 </v-tooltip>
-                <v-btn @click="deleteEntry(entry)">Delete</v-btn>
-                <v-btn 
+                <v-btn  @click="deleteEntry(entry)">Delete</v-btn>
+                <v-btn
                   :disabled="entryToEdit === null ? false : entryToEdit === entry.entryid ? false : true" 
                   @click="(viewState === 'Edit') ? editMode(entry.entryid) : updateEntry(entry)"
                 >
@@ -240,7 +240,9 @@ export default {
 </script>
 
 <style scoped>
-.entries {
+@import '~/assets/style.css';
+.card {
   margin-top: 20px;
 }
+
 </style>

@@ -2,69 +2,65 @@
     <v-app>
         <v-col>
             <v-row justify="center" align="center">
-                <v-card elevation="5" width="400">
-                <v-card-title class="headline">
-                    Welcome to Write Now!
-                </v-card-title>
-                <v-card-subtitle>
-                    Sign Up Here
-                </v-card-subtitle>
-                <v-card-text>
-                    <v-text-field
-                        class="selector"
-                        dense
-                        solo
-                        rounded
-                        background-color="light blue lighten-5"
-                        v-model="firstname"
-                        placeholder="First name"
-                    >
-                    </v-text-field>
-                    <v-text-field
-                        class="selector"
-                        dense
-                        solo
-                        rounded
-                        background-color="light blue lighten-5"
-                        v-model="lastname"
-                        placeholder="Last name"
-                    >
-                    </v-text-field>
-                    <v-text-field
-                        class="selector"
-                        dense
-                        solo
-                        rounded
-                        background-color="light blue lighten-5"
-                        v-model="email"
-                        :append-icon="'mdi-email'"
-                        placeholder="Enter your email"
-                    >
-                    </v-text-field>
-                    <v-text-field
-                        class="selector"
-                        dense
-                        solo
-                        rounded
-                        background-color="light blue lighten-5"
-                        :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
-                        :type="show ? 'text' : 'password'"
-                        @click:append="show = !show"
-                        v-model="password"
-                        @keyup.enter="signup()"
-                        placeholder="Enter your password"
-                    >
-                    </v-text-field>
-                    <em><h5>&nbsp;Password must be at least 8 characters</h5></em>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer />
-                    <nuxt-link to="/login">Sign In</nuxt-link>
-                    <span>&nbsp;</span>
-                    <v-btn color="primary" nuxt @click="signup()">
-                        Sign Up
-                    </v-btn>
-                </v-card-actions>
+                <v-card class="card" elevation="5" width="400">
+                    <v-card-title class="headline">
+                        Welcome to Write Now!
+                    </v-card-title>
+                    <v-card-subtitle>
+                        Sign Up Here
+                    </v-card-subtitle>
+                    <v-card-text>
+                        <v-text-field
+                            class="selector"
+                            dense
+                            solo
+                            rounded
+                            v-model="firstname"
+                            placeholder="First name"
+                        >
+                        </v-text-field>
+                        <v-text-field
+                            class="selector"
+                            dense
+                            solo
+                            rounded
+                            v-model="lastname"
+                            placeholder="Last name"
+                        >
+                        </v-text-field>
+                        <v-text-field
+                            class="selector"
+                            dense
+                            solo
+                            rounded
+                            v-model="email"
+                            :append-icon="'mdi-email'"
+                            placeholder="Enter your email"
+                        >
+                        </v-text-field>
+                        <v-text-field
+                            class="selector"
+                            dense
+                            solo
+                            rounded
+                            :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="show ? 'text' : 'password'"
+                            @click:append="show = !show"
+                            v-model="password"
+                            @keyup.enter="signup()"
+                            placeholder="Enter your password"
+                        >
+                        </v-text-field>
+                        <em><h5>&nbsp;Password must be at least 8 characters</h5></em>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer />
+                        <nuxt-link to="/login">Sign In</nuxt-link>
+                        <span>&nbsp;</span>
+                        <v-btn  nuxt @click="signup()">
+                            Sign Up
+                        </v-btn>
+                    </v-card-actions>
                 </v-card>
             </v-row>
         </v-col>
