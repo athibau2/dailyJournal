@@ -1,46 +1,92 @@
 <template>
-    <div class="modal-overlay" @click="$emit('close-modal')">
+    <div class="modal-overlay" @click="close()">
         <div class="modal" @click.stop>
-            <h6>Share Entry</h6>
+            <v-btn-toggle
+              mandatory
+              rounded
+              v-model="sharing"
+            >
+              <v-btn>Share Entry</v-btn>
+              <v-btn>Share Prompt</v-btn>
+            </v-btn-toggle>
             <v-divider />
-            <div>
-              <v-menu
-                bottom
-                :offset-y="true"
-                :close-on-content-click="false"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-on="on"
-                    v-bind="attrs"
-                    v-model="searchText"
-                    class="name-search"
-                    @input="search()"
-                  >
-                  </v-text-field>
-                </template>
-                <v-list class="result-list">
-                    <v-list-item 
-                      v-for="(r, i) in results" :key="i" link 
-                      @click="pushToList(r)">
-                        <v-list-item-subtitle>
-                          {{r.firstname}} {{r.lastname}}<v-spacer />{{r.username}}
-                        </v-list-item-subtitle>
-                        <v-divider />
-                    </v-list-item>
-                </v-list>
-              </v-menu>
+            <div v-if="sharing === 0">
+              <div>
+                <v-menu
+                  bottom
+                  :offset-y="true"
+                  :close-on-content-click="false"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      class="name-search"
+                      v-on="on"
+                      v-bind="attrs"
+                      v-model="searchText1"
+                      placeholder="Search by email..."
+                      @input="search()"
+                    >
+                    </v-text-field>
+                  </template>
+                  <v-list class="result-list">
+                      <v-list-item 
+                        v-for="(r, i) in resultsE" :key="i" link 
+                        @click="pushToList(r)">
+                          <v-list-item-subtitle>
+                            {{r.firstname}} {{r.lastname}}<v-spacer />{{r.username}}
+                          </v-list-item-subtitle>
+                          <v-divider />
+                      </v-list-item>
+                  </v-list>
+                </v-menu>
+              </div>
+              <div class="share-list">
+                <span class="shared-items" v-for="(s, i) in sharedList" :key="i">
+                  {{s.username}}&nbsp;<v-icon size="20" @click="unshareEntry(s)">mdi-close</v-icon>
+                </span>
+                <span class="share-item" v-for="(s, i) in shareEntryList" :key="i">
+                  {{s.username}}&nbsp;<v-icon size="20" @click="shareEntryList.splice(i, 1)">mdi-close</v-icon>
+                </span>
+              </div>
             </div>
-            <div class="share-list">
-              <span class="shared-items" v-for="(s, i) in sharedList" :key="i">
-                {{s.username}}&nbsp;<v-icon size="20" @click="unshareEntry(s)">mdi-close</v-icon>
-              </span>
-              <span class="share-item" v-for="(s, i) in shareList" :key="i">
-                {{s.username}}&nbsp;<v-icon size="20" @click="shareList.splice(i, 1)">mdi-close</v-icon>
-              </span>
+            <div v-else-if="sharing === 1">
+              <div>
+                <v-menu
+                  bottom
+                  :offset-y="true"
+                  :close-on-content-click="false"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      class="name-search"
+                      v-on="on"
+                      v-bind="attrs"
+                      v-model="searchText2"
+                      placeholder="Search by email..."
+                      @input="search()"
+                    >
+                    </v-text-field>
+                  </template>
+                  <v-list class="result-list">
+                      <v-list-item 
+                        v-for="(r, i) in resultsP" :key="i" link 
+                        @click="pushToList(r)">
+                          <v-list-item-subtitle>
+                            {{r.firstname}} {{r.lastname}}<v-spacer />{{r.username}}
+                          </v-list-item-subtitle>
+                          <v-divider />
+                      </v-list-item>
+                  </v-list>
+                </v-menu>
+              </div>
+              <div class="share-list">
+                <span class="share-item" v-for="(s, i) in sharePromptList" :key="i">
+                  {{s.username}}&nbsp;<v-icon size="20" @click="sharePromptList.splice(i, 1)">mdi-close</v-icon>
+                </span>
+              </div>
             </div>
-            <v-btn @click="$emit('close-modal')">Exit</v-btn>
-            <v-btn @click="shareEntry()">Share</v-btn>
+            <v-btn @click="close()">Exit</v-btn>
+            <v-btn @click="sharing === 0 ? shareEntry() : sharePrompt()">Share</v-btn>
         </div>
     </div>
 </template>
@@ -50,52 +96,79 @@ export default {
   name: 'Share',
 
   mounted () {
-    this.$store.commit('share/updateResults', undefined)
+    this.$store.commit('share/updateResultsE', undefined)
+    this.$store.commit('share/updateResultsP', undefined)
   },
 
   data () {
     return {
-        searchText: "",
-        shareList: []
+        searchText1: "",
+        searchText2: "",
+        shareEntryList: [],
+        sharePromptList: [],
+        sharing: 0
     }
   },
 
   methods: {
-    search () {
-      this.$store.dispatch('share/search', {
-        searchText: this.searchText
+    async search () {
+      (this.sharing === 0)
+      ? await this.$store.dispatch('share/search', {
+        searchText: this.searchText1,
+        sharing: this.sharing
+      })
+      : await this.$store.dispatch('share/search', {
+        searchText: this.searchText2,
+        sharing: this.sharing
       })
     },
 
     pushToList (r) {
-      let counter1 = 0
-      let counter2 = 0
-      for (let i = 0; i < this.sharedList.length; ++i) {
-        if (this.sharedList[i].userid === r.userid) {
-          alert(`User ${r.username} has already been added`)
-          break
-        }
-        else counter1++
-      }
-      if (counter1 === this.sharedList.length) {
-        for (let i = 0; i < this.shareList.length; ++i) {
-          if (this.shareList[i].userid === r.userid) {
+      if (this.sharing === 0) {
+        let counter1 = 0
+        let counter2 = 0
+        for (let i = 0; i < this.sharedList.length; ++i) {
+          if (this.sharedList[i].userid === r.userid) {
             alert(`User ${r.username} has already been added`)
             break
           }
-          else counter2++
+          else counter1++
         }
-        if (counter2 === this.shareList.length) this.shareList.push(r)
+        if (counter1 === this.sharedList.length) {
+          for (let i = 0; i < this.shareEntryList.length; ++i) {
+            if (this.shareEntryList[i].userid === r.userid) {
+              alert(`User ${r.username} has already been added`)
+              break
+            }
+            else counter2++
+          }
+          if (counter2 === this.shareEntryList.length) this.shareEntryList.push(r)
+        }
       }
+      else if (this.sharing === 1) {
+        let counter = 0
+        for (let i = 0; i < this.sharePromptList.length; ++i) {
+            if (this.sharePromptList[i].userid === r.userid) {
+              alert(`User ${r.username} has already been added`)
+              break
+            }
+            else counter++
+          }
+          if (counter === this.sharePromptList.length) this.sharePromptList.push(r)
+      }
+    },
+
+    async sharePrompt() {
+
     },
 
     async shareEntry () {
       await this.$store.dispatch('share/shareEntry', {
         entryid: this.entryBeingShared,
         owner: this.user.id,
-        users: this.shareList
+        users: this.shareEntryList
       })
-      this.shareList = []
+      this.shareEntryList = []
     },
 
     unshareEntry (s) {
@@ -105,6 +178,12 @@ export default {
         type: "owner"
       })
     },
+
+    close () {
+      this.shareEntryList = []
+      this.sharePromptList = []
+      this.$emit('close-modal')
+    }
   },
 
   computed: {
@@ -112,8 +191,12 @@ export default {
       return JSON.parse(this.$store.state.accounts.user)
     },
 
-    results () {
-      return this.$store.state.share.results
+    resultsE () {
+      return this.$store.state.share.resultsE
+    },
+
+    resultsP () {
+      return this.$store.state.share.resultsP
     },
 
     sharedList () {
@@ -123,6 +206,10 @@ export default {
     entryBeingShared () {
       return this.$store.state.share.entryBeingShared
     },
+
+    promptBeingShared () {
+      return this.$store.state.share.promptBeingShared
+    }
   },
 }
 </script>
@@ -198,8 +285,4 @@ export default {
   padding: 5px;
 }
 
-h6 {
-  font-weight: 500;
-  font-size: 28px;
-}
 </style>

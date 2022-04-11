@@ -61,9 +61,19 @@ CREATE TABLE "shared_entries" (
 	"owner" SERIAL NOT NULL,
 	FOREIGN KEY ("entryid") REFERENCES "entries" ("entryid") ON DELETE CASCADE,
 	FOREIGN KEY ("userid") REFERENCES "accounts" ("userid") ON DELETE CASCADE,
-	FOREIGN KEY ("userid") REFERENCES "accounts" ("userid") ON DELETE CASCADE
+	FOREIGN KEY ("owner") REFERENCES "accounts" ("userid") ON DELETE CASCADE
 );
 create index "shared_entries_userid" ON "shared_entries" ("userid");
+
+
+CREATE TABLE "shared_prompts" (
+	"promptid" INTEGER NOT NULL,
+	"userid" SERIAL NOT NULL,
+	"sender" SERIAL NOT NULL,
+	FOREIGN KEY ("userid") REFERENCES "accounts" ("userid") ON DELETE CASCADE,
+	FOREIGN KEY ("sender") REFERENCES "accounts" ("userid") ON DELETE CASCADE
+);
+create index "shared_prompts_userid" ON "shared_prompts" ("userid");
 
 
 INSERT INTO topics (topictext) values('Gratitude');

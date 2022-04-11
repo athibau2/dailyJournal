@@ -1,19 +1,26 @@
 export const state = () => ({
-    results: [],
+    resultsE: [],
+    resultsP: [],
     sharedList: [],
     entryBeingShared: null,
+    promptBeingShared: null,
     sharedEntries: [],
     sharedPrompts: []
 })
 
 // mutations should update state
 export const mutations = {
-    updateResults(state, data) {
-        state.results = data
+    updateResultsE(state, data) {
+        state.resultsE = data
     },
 
-    entryBeingShared(state, data) {
-        state.entryBeingShared = data
+    updateResultsP(state, data) {
+        state.resultsP = data
+    },
+
+    entryBeingShared(state, entryid, promptid) {
+        state.entryBeingShared = entryid
+        state.promptBeingShared = promptid
     },
 
     setSharedList(state, data) {
@@ -27,21 +34,26 @@ export const mutations = {
 
 // actions should call mutations
 export const actions = {
-    async search({ commit }, { searchText }) {
+    async search({ commit }, { searchText, sharing }) {
+        console.log(searchText, sharing)
         try {
             const res = await this.$axios.get(`/api/share?searchtext=${searchText}`)
             if (res.status === 200) {
-                await commit('updateResults', res.data)
+                (sharing === 0) 
+                    ? await commit('updateResultsE', res.data)
+                    : await commit('updateResultsP', res.data)
             }
         } catch (err) {
-            if (err.response.status === 404) {
-                await commit('updateResults', undefined)
+            if (err.response.status === 404 || err.response.status === 400) {
+                (sharing === 0) 
+                    ? await commit('updateResultsE', undefined)
+                    : await commit('updateResultsP', undefined)
             }
         }
     },
 
-    async getSharedList({ commit }, { entryid }) {
-        await commit('entryBeingShared', entryid)
+    async getSharedList({ commit }, { entryid, promptid }) {
+        await commit('entryBeingShared', entryid, promptid)
         try {
             const res = await this.$axios.get(`/api/share?entryid=${entryid}`)
             if (res.status === 200) {
