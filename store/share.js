@@ -18,24 +18,30 @@ export const mutations = {
         state.resultsP = data
     },
 
-    entryBeingShared(state, entryid, promptid) {
-        state.entryBeingShared = entryid
-        state.promptBeingShared = promptid
+    entryBeingShared(state, data) {
+        state.entryBeingShared = data
+    },
+
+    promptBeingShared(state, data) {
+        state.promptBeingShared = data
     },
 
     setSharedList(state, data) {
         state.sharedList = data
     },
 
-    setSharedWithMe(state, data) {
+    setEntriesSharedWithMe(state, data) {
         state.sharedEntries = data
+    },
+
+    setPromptsSharedWithMe(state, data) {
+        state.sharedPrompts = data
     }
 }
 
 // actions should call mutations
 export const actions = {
     async search({ commit }, { searchText, sharing }) {
-        console.log(searchText, sharing)
         try {
             const res = await this.$axios.get(`/api/share?searchtext=${searchText}`)
             if (res.status === 200) {
@@ -53,7 +59,8 @@ export const actions = {
     },
 
     async getSharedList({ commit }, { entryid, promptid }) {
-        await commit('entryBeingShared', entryid, promptid)
+        await commit('entryBeingShared', entryid)
+        await commit('promptBeingShared', promptid)
         try {
             const res = await this.$axios.get(`/api/share?entryid=${entryid}`)
             if (res.status === 200) {
@@ -72,14 +79,29 @@ export const actions = {
                 const res = await this.$axios.post(`/api/share`, {
                     entryid: entryid,
                     owner: owner,
-                    userid: users[i].userid
+                    userid: users[i]
                 })
-                if (res.status === 201) {
-                    continue
-                }
+                if (res.status === 201) continue
             }
             await dispatch('getSharedList', { entryid })
-            alert('Your entry has been shared')
+            alert('Your entry has successfully been shared')
+        } catch (err) {
+            if (err.response.status === 400) {
+                alert('Something went wrong, please try again')
+            }
+        }
+    },
+
+    async sharePrompt({ dispatch }, { promptid, sender, users }) {
+        try {
+            for (let i = 0; i < users.length; ++i) {
+                const res = await this.$axios.post(`/api/share/${users[i].userid}`, {
+                    promptid: promptid,
+                    sender: sender
+                })
+                if (res.status === 201) continue
+            }
+            alert('This prompt has successfully been shared')
         } catch (err) {
             if (err.response.status === 400) {
                 alert('Something went wrong, please try again')
@@ -102,20 +124,39 @@ export const actions = {
         }
     },
 
-    async getSharedWithMe({ commit }, { userid }) {
+    async unsharePrompt({ dispatch }, { promptid, userid }) {
         try {
-            const res = await this.$axios.get(`/api/share/${userid}`)
-            if (res.status === 200) {
-                for (let i = 0; i < res.data.length; ++i) {
-                    res.data[i].date = await parseDate(res.data[i].date)
-                }
-                await commit('setSharedWithMe', res.data)
+            const res = await this.$axios.delete(`/api/share/${userid}?promptid=${promptid}`)
+            if (res.status === 204) {
+                await dispatch('getSharedWithMe', { userid })
             }
         } catch (err) {
             if (err.response.status === 400) {
                 alert('Something went wrong, please try again')
-            } else if (err.response.status === 404) {
-                await commit('setSharedWithMe', [])
+            }
+        }
+    },
+
+    async getSharedWithMe({ commit }, { userid }) {
+        try {
+            const res = await this.$axios.get(`/api/share/${userid}?type=entries`)
+            if (res.status === 200) {
+                if (res.data.length !== 0) {
+                    for (let i = 0; i < res.data.length; ++i) {
+                        res.data[i].date = await parseDate(res.data[i].date)
+                    }
+                    await commit('setEntriesSharedWithMe', res.data)
+                }
+                else if (res.data.length === 0) await commit('setEntriesSharedWithMe', [])
+            }
+            const res2 = await this.$axios.get(`/api/share/${userid}?type=prompts`)
+            if (res2.status === 200) {
+                if (res2.data.length !== 0) await commit('setPromptsSharedWithMe', res2.data)
+                else if (res2.data.length === 0) await commit('setPromptsSharedWithMe', [])
+            }
+        } catch (err) {
+            if (err.response.status === 400) {
+                alert('Something went wrong, please try again')
             }
         }
     },

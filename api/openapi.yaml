@@ -208,13 +208,46 @@ paths:
     x-controller: share
     parameters:
       - $ref: '#/components/parameters/PathUserid'
-    get:
-      x-operation: getSharedWithMe
+    post:
+      x-operation: sharePrompt
       tags:
         - Share
       security:
         - cookieAuth: []
-      summary: Get all entries shared with me
+      summary: Share a prompt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - promptid
+                - sender
+              properties:
+                promptid:
+                  type: number
+                sender:
+                  type: number
+            example:
+              promptid: 1
+              sender: 1
+      responses:
+        201:
+          description: Success
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+    get:
+      x-operation: getSharedWithMe
+      parameters:
+        - $ref: '#/components/parameters/QueryGetWhat'
+      tags:
+        - Share
+      security:
+        - cookieAuth: []
+      summary: Get all entries and prompts shared with me
       responses:
         200:
           description: Success
@@ -224,11 +257,25 @@ paths:
           description: Unauthorized
         404:
           description: Not found
+    delete:
+      x-operation: unsharePrompt
+      parameters:
+        - $ref: '#/components/parameters/QueryPromptid'
+      tags:
+        - Share
+      security:
+        - cookieAuth: []
+      summary: Remove a prompt from being shared with me
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
   /share/{entryid}/{userid}:
     x-controller: share
     parameters:
-      - $ref: '#/components/parameters/PathEntryid'
-      - $ref: '#/components/parameters/PathUserid'
+        - $ref: '#/components/parameters/PathEntryid'
+        - $ref: '#/components/parameters/PathUserid'
     delete:
       x-operation: unshareEntry
       tags:
@@ -485,6 +532,12 @@ paths:
           description: Access denied
 components:
   parameters:
+    QueryGetWhat:
+      name: type
+      in: query
+      required: false
+      schema:
+        type: string
     QueryUserid:
       name: userid
       in: query
@@ -504,6 +557,12 @@ components:
       schema:
         type: string
         format: date-time
+    QueryPromptid:
+      name: promptid
+      in: query
+      required: false
+      schema:
+        type: number
     QueryEntryid:
       name: entryid
       in: query

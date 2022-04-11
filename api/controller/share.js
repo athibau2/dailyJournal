@@ -33,6 +33,17 @@ module.exports = function (pool) {
             }
         },
 
+        async sharePrompt(req, res) {
+            const { userid } = req.enforcer.params
+            const { promptid, sender } = req.enforcer.body
+            const count = await share.sharePrompt(pool, promptid, userid, sender)
+            if (count !== undefined) {
+                res.enforcer.status(201).send()
+            } else {
+                res.enforcer.status(400).send()
+            }
+        },
+
         async unshareEntry(req, res) {
             const { entryid, userid } = req.enforcer.params
             const count = await share.unshareEntry(pool, entryid, userid)
@@ -43,15 +54,36 @@ module.exports = function (pool) {
             }
         },
 
+        async unsharePrompt(req, res) {
+            const { userid } = req.enforcer.params
+            const promptid = req.enforcer.query.promptid
+            const count = await share.unsharePrompt(pool, promptid, userid)
+            if (count !== undefined) {
+                res.enforcer.status(204).send()
+            } else {
+                res.enforcer.status(400).send()
+            }
+        },
+
         async getSharedWithMe(req, res) {
+            const type = req.enforcer.query.type
             const { userid } = req.enforcer.params
             if (userid === undefined || userid === null) res.enforcer.status(400).send();
             else {
-                const entries = await share.getSharedWithMe(pool, userid)
-                if (entries !== undefined) {
-                    res.enforcer.status(200).send(entries)
-                } else {
-                    res.enforcer.status(404).send()
+                if (type == 'entries') {
+                    const entries = await share.getEntriesSharedWithMe(pool, userid)
+                    if (entries !== undefined) {
+                        res.enforcer.status(200).send(entries)
+                    } else {
+                        res.enforcer.status(200).send([])
+                    }
+                } else if (type == 'prompts') {
+                    const prompts = await share.getPromptsSharedWithMe(pool, userid)
+                    if (prompts !== undefined) {
+                        res.enforcer.status(200).send(prompts)
+                    } else {
+                        res.enforcer.status(200).send([])
+                    }
                 }
             }
         }

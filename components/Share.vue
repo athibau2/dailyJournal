@@ -159,10 +159,18 @@ export default {
     },
 
     async sharePrompt() {
-
+      await this.$store.dispatch('share/sharePrompt', {
+        promptid: this.promptBeingShared,
+        sender: this.user.id,
+        users: this.sharePromptList
+      })
+      this.sharePromptList = []
     },
 
     async shareEntry () {
+      for (let i = 0; i < this.shareEntryList.length; ++i) {
+        this.shareEntryList[i] = this.shareEntryList[i].userid
+      }
       await this.$store.dispatch('share/shareEntry', {
         entryid: this.entryBeingShared,
         owner: this.user.id,

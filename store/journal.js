@@ -32,6 +32,7 @@ export const actions = {
         await commit('newestEntry', res.data)
         localStorage.setItem('newestEntry', JSON.stringify(res.data))
         alert('Your journal entry has been successfully submitted')
+        return res.data
     }
   },
 

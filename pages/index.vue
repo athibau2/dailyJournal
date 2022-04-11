@@ -45,6 +45,7 @@ export default {
 
   mounted() {
     this.$store.commit('accounts/setPrompt', JSON.parse(localStorage.getItem('prompt')))
+    this.$store.dispatch('accounts/activePrompt')
   },
 
   data () {
