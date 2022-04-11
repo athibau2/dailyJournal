@@ -43,8 +43,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn  @click="deleteAccount()">Delete Account</v-btn>
-            <v-btn  @click="updatePassword()">Update Password</v-btn>
+            <v-btn color="#cccccc" @click="deleteAccount()">Delete Account</v-btn>
+            <v-btn color="#abddd0" @click="updatePassword()">Update Password</v-btn>
           </v-card-actions>
         </v-card>
       </v-row>
@@ -68,6 +68,10 @@ export default {
 
   methods: {
       updatePassword() {
+        if (this.currentPass === "" || this.newPass === "") {
+          alert('Neither field can be left blank')
+        }
+        else {
           this.$store.dispatch('accounts/update', {
               currentPass: this.currentPass,
               newPass: this.newPass,
@@ -75,6 +79,7 @@ export default {
           })
           this.currentPass = ""
           this.newPass = ""
+        }
       },
 
       async deleteAccount () {

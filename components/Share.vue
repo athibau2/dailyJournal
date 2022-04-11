@@ -81,12 +81,12 @@
               </div>
               <div class="share-list">
                 <span class="share-item" v-for="(s, i) in sharePromptList" :key="i">
-                  {{s.username}}&nbsp;<v-icon size="20" @click="sharePromptList.splice(i, 1)">mdi-close</v-icon>
+                  {{s.username}}&nbsp;<v-icon size="16" @click="sharePromptList.splice(i, 1)">mdi-close</v-icon>
                 </span>
               </div>
             </div>
-            <v-btn @click="close()">Exit</v-btn>
-            <v-btn @click="sharing === 0 ? shareEntry() : sharePrompt()">Share</v-btn>
+            <v-btn color="#cccccc" @click="close()">Exit</v-btn>
+            <v-btn color="#abddd0" @click="sharing === 0 ? shareEntry() : sharePrompt()">Share</v-btn>
         </div>
     </div>
 </template>
@@ -252,6 +252,7 @@ export default {
 }
 
 .share-list {
+  background-color: #eeeeee;
   position: inherit;
   margin-top: 35%;
   height: 125px;
@@ -259,34 +260,39 @@ export default {
   text-align: left;
   width: 100%;
   bottom: 30px;
+  border-radius: 10px;
 }
 
 .shared-items {
   position: relative;
   word-wrap: break-word;
   display: inline-block;
+  background-color: #bdd0e7;
+  font-size: 12px;
   top: 5px;
   left: 5px;
   right: 5px;
   bottom: 5px;
   padding: 3px;
-  margin-right: 5px;
+  margin-right: 3px;
   margin-top: 5px;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .share-item {
   position: relative;
   word-wrap: break-word;
   display: inline-block;
+  background-color: #cccccc;
+  font-size: 12px;
   top: 5px;
   left: 5px;
   right: 5px;
   bottom: 5px;
   padding: 3px;
-  margin-right: 5px;
+  margin-right: 3px;
   margin-top: 5px;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .name-search {

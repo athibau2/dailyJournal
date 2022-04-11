@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col :cols="showDate ? 4 : 2">
-          <v-btn @click="loadEntries()">Entries Today</v-btn>
+          <v-btn color="#bdd0e7" @click="loadEntries()">Entries Today</v-btn>
           <br><br>
           <v-layout row wrap justify-center>
             <v-switch
@@ -14,7 +14,7 @@
             >
             </v-switch>
           </v-layout>
-          <v-btn  :disabled="!sortByDate" @click="showDate = !showDate">
+          <v-btn color="#bdd0e7" :disabled="!sortByDate" @click="showDate = !showDate">
               {{(afterDate.length === 0) ? dateHint : afterDate}}
           </v-btn>
           <v-date-picker 
@@ -42,7 +42,7 @@
             :close-on-content-click="true"
           >
             <template v-slot:activator="{ on, attrs }">
-              <v-btn  v-bind="attrs" v-on="on" :disabled="!sortByTopic">{{topicSort}}</v-btn>
+              <v-btn color="#bdd0e7" v-bind="attrs" v-on="on" :disabled="!sortByTopic">{{topicSort}}</v-btn>
             </template>
             <v-list>
               <v-list-item v-for="(t, i) in topics" :key="i" link>
@@ -81,6 +81,7 @@
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
+                      color="#bdd0e7"
                       v-bind="attrs"
                       v-on="on"
                       @click="getSharedList(entry)"
@@ -90,8 +91,9 @@
                   </template>
                   <span>Share</span>
                 </v-tooltip>
-                <v-btn  @click="deleteEntry(entry)">Delete</v-btn>
+                <v-btn color="#cccccc" @click="deleteEntry(entry)">Delete</v-btn>
                 <v-btn
+                  color="#abddd0"
                   :disabled="entryToEdit === null ? false : entryToEdit === entry.entryid ? false : true" 
                   @click="(viewState === 'Edit') ? editMode(entry.entryid) : updateEntry(entry)"
                 >

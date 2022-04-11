@@ -1,6 +1,7 @@
 <template>
   <v-app dark>
     <v-app-bar
+      color="#abddd0"
       :clipped-left="clipped"
       fixed
       app

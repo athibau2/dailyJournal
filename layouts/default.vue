@@ -25,11 +25,21 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
+      color="#abddd0"
       :clipped-left="true"
       fixed
       app
     >
-      <v-app-bar-nav-icon @click.stop="miniVariant = !miniVariant" />
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-app-bar-nav-icon 
+            @click.stop="miniVariant = !miniVariant"
+            v-on="on"
+            v-bind="attrs"
+          />
+        </template>
+        <span>{{miniVariant ? 'Expand' : 'Collapse'}}</span>
+      </v-tooltip>
       <v-toolbar-title class="title">
         <span class="title-text">{{title}}&nbsp;</span>
         <v-icon class="icon" size="30" @click="toHome()">mdi-thought-bubble</v-icon>

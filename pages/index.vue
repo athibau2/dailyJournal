@@ -21,6 +21,7 @@
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
+                  color="#bdd0e7"
                   v-bind="attrs"
                   v-on="on"
                   @click="newPrompt()"
@@ -30,7 +31,7 @@
               </template>
               <span>New Prompt</span>
             </v-tooltip>
-            <v-btn  @click="submit()">Submit</v-btn>
+            <v-btn color="#abddd0" @click="submit()">Submit</v-btn>
           </v-card-actions>
         </v-card>
       </v-row>

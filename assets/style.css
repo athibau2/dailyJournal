@@ -1,17 +1,21 @@
 .main{
+    /* Leaving this as a white background */
+    /* background-color: #c0a6a6; */
 }
 
 /* Logo on app-bar */
 .title-text {
     font-family: 'Courier New', Courier, monospace;
+    color: #575757;
 }
 
 .title {
     border-radius: 8px;
     box-shadow: 0px 0px 5px #231F20;
+    background-color: #DDDDDD;
     padding: 3px;
     font-style: italic;
-    font-weight: 700;
+    font-weight: 600;
     transition: transform 0.5s;
 }
 
@@ -20,9 +24,11 @@
 }
 
 .icon {
+    color: #8ea9c9;
 }
 
 /* All cards */
 .card {
+    background-color: #e4dfcd88;
 }
 

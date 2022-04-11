@@ -40,8 +40,8 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn @click="item.tab === 'entries' ? removeEntry(entry) : removePrompt(entry)">Remove</v-btn>
-                <v-btn v-if="item.tab === 'prompts'" @click="submit(entry)">Submit</v-btn>
+                <v-btn color="#cccccc" @click="item.tab === 'entries' ? removeEntry(entry) : removePrompt(entry)">Remove</v-btn>
+                <v-btn color="#abddd0" v-if="item.tab === 'prompts'" @click="submit(entry)">Submit</v-btn>
               </v-card-actions>
             </v-card>
           </v-tab-item>
