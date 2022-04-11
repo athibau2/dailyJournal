@@ -40,7 +40,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn @click="item.tab === 'entries' ? removeEntry(entry) : removePrompt(entry.promptid)">Remove</v-btn>
+                <v-btn @click="item.tab === 'entries' ? removeEntry(entry) : removePrompt(entry)">Remove</v-btn>
                 <v-btn v-if="item.tab === 'prompts'" @click="submit(entry)">Submit</v-btn>
               </v-card-actions>
             </v-card>
@@ -81,10 +81,11 @@ export default {
       })
     },
 
-    async removePrompt (promptid) {
+    async removePrompt (entry) {
       await this.$store.dispatch('share/unsharePrompt', {
-        promptid: promptid,
-        userid: this.user.id
+        promptid: entry.promptid,
+        userid: this.user.id,
+        sender: entry.userid
       })
     },
 

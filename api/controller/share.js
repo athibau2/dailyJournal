@@ -57,7 +57,8 @@ module.exports = function (pool) {
         async unsharePrompt(req, res) {
             const { userid } = req.enforcer.params
             const promptid = req.enforcer.query.promptid
-            const count = await share.unsharePrompt(pool, promptid, userid)
+            const sender = req.enforcer.query.sender
+            const count = await share.unsharePrompt(pool, promptid, userid, sender)
             if (count !== undefined) {
                 res.enforcer.status(204).send()
             } else {

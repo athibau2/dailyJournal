@@ -53,13 +53,14 @@ exports.unshareEntry = async function (client, entryid, userid) {
     return rowCount > 0 ? rowCount : undefined
 }
 
-exports.unsharePrompt = async function (client, promptid, userid) {
+exports.unsharePrompt = async function (client, promptid, userid, sender) {
     const { rowCount } = await client.query({
         name: 'unshare-prompt',
-        text: 'DELETE FROM shared_prompts WHERE promptid = $1 AND userid = $2 RETURNING *',
+        text: 'DELETE FROM shared_prompts WHERE promptid = $1 AND userid = $2 AND sender = $3 RETURNING *',
         values: [
             promptid,
-            userid
+            userid,
+            sender
         ]
     })
     return rowCount > 0 ? rowCount : undefined

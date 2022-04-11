@@ -124,9 +124,9 @@ export const actions = {
         }
     },
 
-    async unsharePrompt({ dispatch }, { promptid, userid }) {
+    async unsharePrompt({ dispatch }, { promptid, userid, sender }) {
         try {
-            const res = await this.$axios.delete(`/api/share/${userid}?promptid=${promptid}`)
+            const res = await this.$axios.delete(`/api/share/${userid}?promptid=${promptid}&sender=${sender}`)
             if (res.status === 204) {
                 await dispatch('getSharedWithMe', { userid })
             }

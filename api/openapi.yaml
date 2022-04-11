@@ -261,6 +261,7 @@ paths:
       x-operation: unsharePrompt
       parameters:
         - $ref: '#/components/parameters/QueryPromptid'
+        - $ref: '#/components/parameters/QuerySender'
       tags:
         - Share
       security:
@@ -542,6 +543,12 @@ components:
       name: userid
       in: query
       required: true
+      schema:
+        type: number
+    QuerySender:
+      name: sender
+      in: query
+      required: false
       schema:
         type: number
     QueryTopicid:
