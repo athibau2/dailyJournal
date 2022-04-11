@@ -8,7 +8,7 @@
     >
       <v-toolbar-title class="title">
         <span class="title-text">{{title}}&nbsp;</span>
-        <v-icon >mdi-thought-bubble</v-icon>
+        <v-icon class="icon">mdi-thought-bubble</v-icon>
       </v-toolbar-title>
       <v-spacer />
     </v-app-bar>
