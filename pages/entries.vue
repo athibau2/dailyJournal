@@ -60,7 +60,7 @@
           <h2 class="text-center">{{filterMethod}}</h2>
           <v-row justify="center" align="center" v-for="(entry, i) in entriesList" :key="i">
             <v-card class="card" elevation="5" width="450">
-              <v-card-title style="word-break: break-word">
+              <v-card-title class="card-title">
                 {{entry.prompttext}}
               </v-card-title>
               <v-card-subtitle>

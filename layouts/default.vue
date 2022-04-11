@@ -45,9 +45,10 @@
         <v-icon class="icon" size="30" @click="toHome()">mdi-thought-bubble</v-icon>
       </v-toolbar-title>
       <v-spacer />
-      <v-toolbar-title v-if="user !== null && user !== undefined">
+      <v-toolbar-title style="font-family: Cochin;" v-if="user !== null && user !== undefined">
         {{user.firstname}} {{user.lastname}}
       </v-toolbar-title>
+      <v-icon size="30" @click="toAccount()">mdi-account</v-icon>
     </v-app-bar>
     <v-main class="main">
       <v-container class="main">
@@ -101,6 +102,10 @@ export default {
   },
 
   methods: {
+    toAccount () {
+      this.$router.push('/account')
+    },
+
     toHome () {
       this.$router.push('/')
     },

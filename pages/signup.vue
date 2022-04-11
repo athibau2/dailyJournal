@@ -7,11 +7,12 @@
                         Welcome to Write Now!
                     </v-card-title>
                     <v-card-subtitle>
-                        Sign Up Here
+                        <em>Sign Up Here</em>
                     </v-card-subtitle>
                     <v-card-text>
                         <v-text-field
                             class="selector"
+                            background-color="#f0f0f0"
                             dense
                             solo
                             rounded
@@ -21,6 +22,7 @@
                         </v-text-field>
                         <v-text-field
                             class="selector"
+                            background-color="#f0f0f0"
                             dense
                             solo
                             rounded
@@ -30,6 +32,7 @@
                         </v-text-field>
                         <v-text-field
                             class="selector"
+                            background-color="#f0f0f0"
                             dense
                             solo
                             rounded
@@ -40,6 +43,7 @@
                         </v-text-field>
                         <v-text-field
                             class="selector"
+                            background-color="#f0f0f0"
                             dense
                             solo
                             rounded

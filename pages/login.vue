@@ -7,11 +7,12 @@
                     Welcome to Write Now!
                 </v-card-title>
                 <v-card-subtitle>
-                    Sign In Here
+                    <em>Sign In Here</em>
                 </v-card-subtitle>
                 <v-card-text>
                     <v-text-field
                         class="selector"
+                        background-color="#f0f0f0"
                         dense
                         solo
                         rounded
@@ -22,6 +23,7 @@
                     </v-text-field>
                     <v-text-field
                         class="selector"
+                        background-color="#f0f0f0"
                         dense
                         solo
                         rounded
@@ -38,7 +40,7 @@
                     <v-spacer />
                     <nuxt-link to="/signup">Join Here</nuxt-link>
                     <span>&nbsp;</span>
-                    <v-btn  nuxt @click="login()">
+                    <v-btn color="#abddd0" nuxt @click="login()">
                         Sign In
                     </v-btn>
                 </v-card-actions>

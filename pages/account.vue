@@ -8,7 +8,7 @@
           elevation="5"
           width="400"
         >
-          <v-card-title>
+          <v-card-title style="color: #575757; font-family: Cochin; font-size: 25px;">
             {{user.firstname}} {{user.lastname}}
           </v-card-title>
           <v-card-subtitle>
@@ -17,6 +17,7 @@
           <v-card-text>
             <v-text-field
               class="selector"
+              background-color="#f0f0f0"
               dense
               solo
               rounded
@@ -29,6 +30,7 @@
             </v-text-field>
             <v-text-field
               class="selector"
+              background-color="#f0f0f0"
               dense
               solo
               rounded

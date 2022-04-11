@@ -1,6 +1,6 @@
 .main{
     /* Leaving this as a white background */
-    /* background-color: #c0a6a6; */
+    /* background-color: #f0f0f0; */
 }
 
 /* Logo on app-bar */
@@ -32,3 +32,17 @@
     background-color: #e4dfcd88;
 }
 
+.card-title {
+    word-break: break-word; 
+    color: #575757;
+    font-family: Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+/* Page header */
+
+h2 {
+    background-color: lightgrey;
+    border-radius: 20px;
+    color: #575757;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}

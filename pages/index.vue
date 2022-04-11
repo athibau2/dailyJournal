@@ -2,38 +2,43 @@
   <v-app>
     <v-container>
       <v-row justify="center" align="center">
-        <v-card class="card" elevation="5" width="450" v-if="prompt !== null && prompt !== undefined">
-          <v-card-title style="word-break: break-word">
-            {{prompt.prompttext}}
-          </v-card-title>
-          <v-card-subtitle>
-            <i>{{prompt.topictext}}</i>
-          </v-card-subtitle>
-          <v-card-text>
-            <v-textarea
-              v-model="response"
-              placeholder="Enter your response here"
-            >
-            </v-textarea>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  color="#bdd0e7"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="newPrompt()"
+        <v-col cols="8">
+          <h2 class="text-center">Submit Your Entry Here!</h2>
+          <v-row justify="center" align="center">
+            <v-card class="card" elevation="5" width="450" v-if="prompt !== null && prompt !== undefined">
+              <v-card-title class="card-title">
+                {{prompt.prompttext}}
+              </v-card-title>
+              <v-card-subtitle>
+                <i>{{prompt.topictext}}</i>
+              </v-card-subtitle>
+              <v-card-text>
+                <v-textarea
+                  v-model="response"
+                  placeholder="Enter your response here"
                 >
-                  <v-icon>mdi-refresh</v-icon>
-                </v-btn>
-              </template>
-              <span>New Prompt</span>
-            </v-tooltip>
-            <v-btn color="#abddd0" @click="submit()">Submit</v-btn>
-          </v-card-actions>
-        </v-card>
+                </v-textarea>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer />
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      color="#bdd0e7"
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="newPrompt()"
+                    >
+                      <v-icon>mdi-refresh</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>New Prompt</span>
+                </v-tooltip>
+                <v-btn color="#abddd0" @click="submit()">Submit</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-row>
+        </v-col>
       </v-row>
     </v-container>
   </v-app>
@@ -89,4 +94,8 @@ export default {
 
 <style scoped>
 @import '~/assets/style.css';
+
+.card {
+  margin-top: 20px;
+}
 </style>
