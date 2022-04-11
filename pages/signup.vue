@@ -61,7 +61,7 @@
                         <v-spacer />
                         <nuxt-link to="/login">Sign In</nuxt-link>
                         <span>&nbsp;</span>
-                        <v-btn  nuxt @click="signup()">
+                        <v-btn color="#abddd0" nuxt @click="signup()">
                             Sign Up
                         </v-btn>
                     </v-card-actions>
