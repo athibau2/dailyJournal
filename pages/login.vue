@@ -65,11 +65,14 @@ export default {
 
   methods: {
     async login() {
-      await this.$store.dispatch('accounts/login', {
-        username: this.email,
-        password: this.password,
-        isNew: false
-      })
+      if (this.email === "" || this.password === "") alert('No fields may be left blank')
+      else {
+          await this.$store.dispatch('accounts/login', {
+            username: this.email,
+            password: this.password,
+            isNew: false
+        })
+      }
     },
   },
 

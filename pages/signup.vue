@@ -78,22 +78,27 @@ export default {
 
   data () {
     return {
-        firstname: '',
-        lastname: '',
-        email: '',
-        password: '',
+        firstname: "",
+        lastname: "",
+        email: "",
+        password: "",
         show: false
     }
   },
 
   methods: {
     signup() {
-        this.$store.dispatch('accounts/signup', {
-            firstname: this.firstname,
-            lastname: this.lastname,
-            username: this.email,
-            password: this.password
-        })
+        if (this.firstname === "" || this.lastname === "" || this.email === "" || this.password === "") {
+            alert('No fields may be left blank')
+        }
+        else {
+            this.$store.dispatch('accounts/signup', {
+                firstname: this.firstname,
+                lastname: this.lastname,
+                username: this.email,
+                password: this.password
+            })
+        }
     },
   },
 
