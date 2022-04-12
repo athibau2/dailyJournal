@@ -91,6 +91,9 @@ export default {
         if (this.firstname === "" || this.lastname === "" || this.email === "" || this.password === "") {
             alert('No fields may be left blank')
         }
+        else if (this.password.length < 8) {
+            alert('Password must be at least 8 characters')
+        }
         else {
             this.$store.dispatch('accounts/signup', {
                 firstname: this.firstname,
