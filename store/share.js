@@ -87,7 +87,7 @@ export const actions = {
             alert('Your entry has successfully been shared')
         } catch (err) {
             if (err.response.status === 400) {
-                alert('Something went wrong, please try again')
+                alert('Something went wrong, please refresh the page and try again')
             }
         }
     },
@@ -104,7 +104,7 @@ export const actions = {
             alert('This prompt has successfully been shared')
         } catch (err) {
             if (err.response.status === 400) {
-                alert('Something went wrong, please try again')
+                alert('Something went wrong, please refresh the page and try again')
             }
         }
     },
@@ -119,7 +119,7 @@ export const actions = {
             }
         } catch (err) {
             if (err.response.status === 400) {
-                alert('Something went wrong, please try again')
+                alert('Something went wrong, please refresh the page and try again')
             }
         }
     },
@@ -132,7 +132,7 @@ export const actions = {
             }
         } catch (err) {
             if (err.response.status === 400) {
-                alert('Something went wrong, please try again')
+                alert('Something went wrong, please refresh the page and try again')
             }
         }
     },
@@ -156,7 +156,7 @@ export const actions = {
             }
         } catch (err) {
             if (err.response.status === 400) {
-                alert('Something went wrong, please try again')
+                alert('Something went wrong, please refresh the page and try again')
             }
         }
     },

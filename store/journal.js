@@ -82,7 +82,7 @@ export const actions = {
       }
     } catch (err) {
         if (err.response.status === 400) {
-          alert('Something went wrong, please try again')
+          alert('Something went wrong, please refresh the page and try again')
         }
       }
   },
@@ -104,7 +104,7 @@ export const actions = {
       }
     } catch (err) {
         if (err.response.status === 400) {
-          alert('Something went wrong, please try again')
+          alert('Something went wrong, please refresh the page and try again')
         }
       }
   },
