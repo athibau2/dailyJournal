@@ -12,9 +12,9 @@
       </v-toolbar-title>
       <v-spacer />
     </v-app-bar>
-    <v-main class="main">
-      <v-container class="main">
-        <Nuxt class="main" />
+    <v-main class="noauth">
+      <v-container class="noauth">
+        <Nuxt class="noauth" />
       </v-container>
     </v-main>
   </v-app>

@@ -1,8 +1,19 @@
 <template>
     <v-app>
-        <v-col>
+      <v-row>
+        <v-col cols="8">
+          <h3 class="text-center">~Write now, right now~</h3>
+          <p>
+            <em>Write Now</em> keeps track of your thoughts, feelings, memories, hopes, and dreams in a simple way so that you don't forget!
+          </p>
+          <img src="~/assets/images/home-screen.png" height="250px">
+          <img src="~/assets/images/my-entries.png" height="250px">
+          <img src="~/assets/images/share.png" height="250px">
+          <img src="~/assets/images/shared-with-me.png" height="250px">
+        </v-col>
+        <v-col cols="4">
             <v-row justify="center" align="center">
-              <v-card class="card" elevation="5" width="400">
+              <v-card class="card" elevation="5" width="350">
                 <v-card-title class="headline">
                     Welcome to Write Now!
                 </v-card-title>
@@ -47,6 +58,7 @@
               </v-card>
             </v-row>
         </v-col>
+      </v-row>
     </v-app>
 </template>
 
@@ -87,5 +99,16 @@ export default {
 
 <style scoped>
 @import '~/assets/style.css';
+
+.card {
+  position: fixed;
+  top: 15%;
+}
+
+h3 {
+  font-size: 25px;
+  color: #575757;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
 
 </style>

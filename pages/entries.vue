@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <v-container>
       <v-row>
         <v-col :cols="showDate ? 4 : 2">
           <v-btn color="#bdd0e7" @click="loadEntries()">Entries Today</v-btn>
@@ -108,7 +107,6 @@
         </v-col>
         <Share v-show="showShare" @close-modal="showShare = false" />
       </v-row>
-    </v-container>
   </v-app>
 </template>
 
