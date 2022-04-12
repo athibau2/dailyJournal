@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <span>
-        <v-tabs left v-model="tab">
+      <span>
+        <v-tabs background-color="#FAF9F6" left v-model="tab">
           <v-tabs-slider></v-tabs-slider>
             <v-tab v-for="item in items" :key="item.tab">
               {{ item.tab }} ({{item.tab === 'entries' ? sharedEntries.length : sharedPrompts.length}})
@@ -9,7 +9,7 @@
         </v-tabs>
     </span>
     <v-tabs-items v-model="tab">
-      <v-col v-for="item in items" :key="item.tab">
+      <v-col v-for="item in items" :key="item.tab" class="main">
         <v-row justify="center" align="center">
           <v-tab-item>
             <v-card v-for="(entry, i) in item.tab === 'entries' ? sharedEntries : sharedPrompts" :key="i"
@@ -48,7 +48,6 @@
         </v-row>
       </v-col>
     </v-tabs-items>
-
   </v-app>
 </template>
 
@@ -100,7 +99,7 @@ export default {
         owner: this.user.id,
         users: [entry.userid]
       })
-      await this.removePrompt(entry.promptid)
+      await this.removePrompt(entry)
       this.response = ""
     }
   },
