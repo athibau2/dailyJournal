@@ -15,7 +15,6 @@
             </div>
           </div>
           <v-divider class="intro-divider" />
-          <!-- connects you to those you love. -->
 
           <!-- Row 1 -->
           <v-row class="intro-rows" align="center">
@@ -69,18 +68,16 @@
                 Check out the "Shared With Me" page to see what your loved ones have sent you! Respond to shared prompts and they will immediately see your response!
               </span>
             </v-col>
-          </v-row>   
-          
+          </v-row>
         </v-col>
+
+        <!-- Sign in Form -->
         <v-col cols="4">
             <v-row justify="center" align="center">
               <v-card class="card" elevation="5" width="350">
                 <v-card-title class="headline">
-                    Welcome to Write Now!
-                </v-card-title>
-                <v-card-subtitle>
                     <em>Sign In Here</em>
-                </v-card-subtitle>
+                </v-card-title>
                 <v-card-text>
                     <v-text-field
                         class="selector"
