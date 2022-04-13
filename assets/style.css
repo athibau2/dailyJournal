@@ -1,6 +1,11 @@
-.main{
+.main {
     /* Leaving this as a white background */
     background-color: #FAF9F6;
+}
+
+.noauth {
+    /* No auth pages have off-white background */
+    background-color: #fdfdfd;
 }
 
 /* Logo on app-bar */
