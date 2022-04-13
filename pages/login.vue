@@ -1,7 +1,7 @@
 <template>
     <v-app>
       <v-row>
-        <v-col cols="8">
+        <v-col class="intro-page" cols="8">
           <div class="full-intro">
             <h3 class="text-center">~Write on, Write now: the new way to journal!~</h3>
             <div class="intro text-center">
@@ -158,9 +158,29 @@ export default {
 <style scoped>
 @import '~/assets/style.css';
 
+.intro-page {
+  animation: fadeInAnimation ease 2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 .card {
   position: fixed;
   top: 15%;
+  animation: fadeInAnimation ease 2s;
+  opacity: 0;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-delay: 1s;
 }
 
 .full-intro {
