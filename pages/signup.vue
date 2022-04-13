@@ -3,7 +3,7 @@
         <v-row>
             <v-col class="intro-page" cols="8">
                 <div class="full-intro">
-                    <h3 class="text-center">~Write on, Write now: the new way to journal!~</h3>
+                    <h3 class="text-center">Write on, Write now: the new way to journal!</h3>
                     <div class="intro text-center">
                     Don't know what to write? <em>We'll tell you.</em>
                     </div>
@@ -75,7 +75,7 @@
             <v-col cols="4">
                 <v-row justify="center" align="center">
                     <v-card class="card" elevation="5" width="350">
-                        <v-card-title class="headline">
+                        <v-card-title class="headline" style="color: #575757">
                             <em>Sign Up Here</em>
                         </v-card-title>
                         <v-card-text>
@@ -188,7 +188,7 @@ export default {
 @import '~/assets/style.css';
 
 .intro-page {
-  animation: fadeInAnimation ease 2s;
+  animation: fadeInAnimation ease 3s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
