@@ -39,14 +39,31 @@
               @click:append="show2 = !show2"
               v-model="newPass" 
               placeholder="New Password"
-              @keyup.enter="updatePassword()"
+              @keyup.enter="updateAccount()"
             >
             </v-text-field>
+            <span>Notification Time: {{notifTime}}</span>
+            <v-icon @click="clearTime()">mdi-pencil</v-icon>
+            <br>
+            <span v-if="time.length !== 0">New Time: {{time}}</span>
+            <v-time-picker
+                v-if="showTime"
+                v-model="time"
+                elevation="6"
+            >
+            <v-btn
+                text
+                color="primary"
+                @click="prettyTime()"
+            >
+                OK
+            </v-btn>
+            </v-time-picker>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn color="#cccccc" @click="deleteAccount()">Delete Account</v-btn>
-            <v-btn color="#abddd0" @click="updatePassword()">Update Password</v-btn>
+            <v-btn color="#abddd0" @click="updateAccount()">Update Account</v-btn>
           </v-card-actions>
         </v-card>
       </v-row>
@@ -59,28 +76,41 @@ export default {
   name: 'AccountPage',
   middleware: "auth",
 
+  mounted () {
+    this.$store.dispatch('accounts/getNotifTime')
+  },
+
   data () {
     return {
-        currentPass: "",
-        newPass: "",
+        currentPass: undefined,
+        newPass: undefined,
         show1: false,
-        show2: false
+        show2: false,
+        showTime: false,
+        time: "",
+        rawTime: ""
     }
   },
 
   methods: {
-      updatePassword() {
-        if (this.currentPass === "" || this.newPass === "") {
-          alert('Neither field can be left blank')
+      async updateAccount() {
+        if ((this.currentPass === undefined || this.newPass === undefined) && this.time === "") {
+          alert('No updates have been made to your account')
         }
-        else {
-          this.$store.dispatch('accounts/update', {
-              currentPass: this.currentPass,
-              newPass: this.newPass,
+        else if ((this.currentPass !== undefined && this.newPass !== undefined) || this.time !== "") {
+          let parseTime = undefined
+          if (this.time !== "") {
+            parseTime = new Date('January 1, 2000 ' + this.rawTime + ':00').toTimeString()
+          }
+          await this.$store.dispatch('accounts/update', {
+              currentPass: this.currentPass === "" ? undefined : this.currentPass,
+              newPass: this.newPass === "" ? undefined : this.newPass,
+              notif_time: parseTime,
               userid: this.user.id
           })
-          this.currentPass = ""
-          this.newPass = ""
+          this.currentPass = undefined
+          this.newPass = undefined
+          this.time = ""
         }
       },
 
@@ -90,6 +120,24 @@ export default {
               userid: this.user.id
           })
         }
+      },
+
+      prettyTime () {
+          this.rawTime = this.time
+          this.showTime = false
+          let timeOfDay = ""
+          let hour = this.time[0] + this.time[1]
+          if (parseInt(hour) > 12) {
+              timeOfDay = " PM"
+              hour -= 12
+          } else timeOfDay = " AM"
+          if (hour < 10 && timeOfDay === " PM") hour = '0' + hour.toString()
+          this.time = hour + this.time[2] + this.time[3] + this.time[4] + timeOfDay
+      },
+
+      clearTime () {
+          this.time = ""
+          this.showTime = true
       }
   },
 
@@ -97,6 +145,14 @@ export default {
     user () {
       return JSON.parse(this.$store.state.accounts.user)
     },
+
+    timenow () {
+      return new Date().toTimeString()
+    },
+
+    notifTime () {
+      return this.$store.state.accounts.notifTime
+    }
   },
 }
 </script>

@@ -87,6 +87,7 @@ export default {
           icon: 'mdi-account-cog',
           title: 'Account',
           to: '/account',
+          click: this.loadTime
         },
         {
           icon: 'mdi-logout-variant',
@@ -121,6 +122,10 @@ export default {
 
     loadShared() {
       this.$store.dispatch('share/getSharedWithMe', { userid: this.user.id })
+    },
+
+    loadTime() {
+      this.$store.dispatch('accounts/getNotifTime')
     }
   },
 

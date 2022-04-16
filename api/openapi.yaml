@@ -48,6 +48,22 @@ paths:
     x-controller: accounts
     parameters:
       - $ref: '#/components/parameters/PathUserid'
+    get:
+      x-operation: getNotifTime
+      tags:
+        - Accounts
+      security:
+        - cookieAuth: []
+      summary: Get the user's notification time
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        404:
+          description: Not found
     delete: 
       x-operation: deleteAccount
       tags:
@@ -65,36 +81,19 @@ paths:
         403:
           description: Access denied
     put:
-      x-operation: updatePassword
+      x-operation: updateAccount
+      parameters:
+        - $ref: '#/components/parameters/QueryCurrentPass'
+        - $ref: '#/components/parameters/QueryNewPass'
+        - $ref: '#/components/parameters/QueryNotifTime'
       tags:
         - Accounts
       security:
         - cookieAuth: []
       summary: Update user password
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - currentPass
-                - newPass
-              properties:
-                currentPass:
-                  type: string
-                  format: password
-                  minLength: 8
-                newPass:
-                  type: string
-                  format: password
-                  minLength: 8
-            example:
-              currentPass: password
-              newPass: new-password
       responses:
         200:
-          description: Password updated
+          description: Account updated
         400:
           description: Invalid request
         401:
@@ -533,6 +532,24 @@ paths:
           description: Access denied
 components:
   parameters:
+    QueryCurrentPass:
+      name: currentPass
+      in: query
+      required: false
+      schema:
+        type: string
+    QueryNewPass:
+      name: newPass
+      in: query
+      required: false
+      schema:
+        type: string
+    QueryNotifTime:
+      name: notif_time
+      in: query
+      required: false
+      schema:
+        type: string
     QueryGetWhat:
       name: type
       in: query

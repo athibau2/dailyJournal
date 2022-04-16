@@ -4,6 +4,7 @@ CREATE TABLE "accounts" (
   "lastname" varchar(30) NOT NULL,
   "username" varchar(60) NOT NULL UNIQUE,
   "password" varchar(200) NOT NULL,
+  "notif_time" text DEFAULT '12:00:00 GMT-0600 (Mountain Daylight Time)',
   PRIMARY KEY ("userid")
 );
 

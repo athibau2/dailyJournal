@@ -38,13 +38,40 @@ exports.createAccount = async function (client, firstname, lastname, username, p
     return rowCount > 0 ? rows[0] : undefined
 }
 
-exports.updatePassword = async function (client, username, newPass) {
-    const { rows } = await client.query({
-        name: 'update-password',
-        text: 'UPDATE accounts SET password=$1 WHERE username=$2 RETURNING *',
-        values: [await encryptPassword(newPass), username]
+exports.getNotifTime = async function (client, userid) {
+    const { rowCount, rows } = await client.query({
+        name: 'get-notif-time',
+        text: 'SELECT notif_time FROM accounts WHERE userid = $1',
+        values: [userid]
     })
-    return rows[0]
+    return rowCount > 0 ? rows[0] : undefined
+}
+
+exports.updateAccount = async function (client, userid, newPass, notif_time) {
+    const { rowCount } = await client.query({
+        name: 'update-account',
+        text: 'UPDATE accounts SET password=$1, notif_time=$2 WHERE userid=$3 RETURNING *',
+        values: [await encryptPassword(newPass), notif_time, userid]
+    })
+    return rowCount > 0 ? rowCount : undefined
+}
+
+exports.updatePassword = async function (client, userid, newPass) {
+    const { rowCount } = await client.query({
+        name: 'update-password',
+        text: 'UPDATE accounts SET password=$1 WHERE userid=$2 RETURNING *',
+        values: [await encryptPassword(newPass), userid]
+    })
+    return rowCount > 0 ? rowCount : undefined
+}
+
+exports.updateNotifTime = async function (client, userid, notif_time) {
+    const { rowCount } = await client.query({
+        name: 'update-password',
+        text: 'UPDATE accounts SET notif_time=$1 WHERE userid=$2 RETURNING *',
+        values: [notif_time, userid]
+    })
+    return rowCount > 0 ? rowCount : undefined
 }
 
 exports.deleteAccount = async function (client, userid) {

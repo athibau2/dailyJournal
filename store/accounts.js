@@ -1,7 +1,8 @@
 export const state = () => {
     return {
         user: getUserFromCookie(),
-        prompt: {}
+        prompt: {},
+        notifTime: "",
     }
 }
   
@@ -13,6 +14,10 @@ export const mutations = {
 
   setPrompt(state, data) {
     state.prompt = data
+  },
+
+  notifTime(state, data) {
+      state.notifTime = data
   }
 }
 
@@ -119,18 +124,48 @@ export const actions = {
         }
     },
 
-    async update({ commit }, { currentPass, newPass, userid }) {
+    async getNotifTime({ commit, state }) {
         try {
-            const res = await this.$axios.put('/api/accounts/' + userid, {
-                currentPass: currentPass,
-                newPass: newPass
-            })
+            const res = await this.$axios.get('/api/accounts/' + JSON.parse(state.user).id)
             if (res.status === 200) {
-                alert('Your password has been successfully updated')
+                await commit('notifTime', await prettyTime(res.data.notif_time))
+            }
+        } catch (err) {
+            if (err.response.status === 404 || err.response.status === 400) {
+                alert('Something went wrong, please refresh the page and try again')
+            }
+        }
+    },
+
+    async update({ dispatch }, { currentPass, newPass, notif_time, userid }) {
+        try {
+            if (currentPass === undefined && newPass === undefined && notif_time !== undefined) {
+                const res = await this.$axios.put(`/api/accounts/${userid}?notif_time=${notif_time}`)
+                if (res.status === 200) {
+                    alert('Your notification time has been successfully updated')
+                    dispatch('getNotifTime')
+                }
+            } else if (currentPass !== undefined && newPass !== undefined && notif_time === undefined) {
+                const res = await this.$axios.put(`/api/accounts/${userid}?currentPass=${currentPass}&newPass=${newPass}`)
+                if (res.status === 200) {
+                    alert('Your password has been successfully updated')
+                }
+            } else if (currentPass !== undefined && newPass !== undefined && notif_time !== undefined) {
+                const res = await this.$axios.put(`/api/accounts/${userid}?currentPass=${currentPass}&newPass=${newPass}&notif_time=${notif_time}`)
+                if (res.status === 200) {
+                    alert('Your password and notification time have been successfully updated')
+                    await dispatch('getNotifTime')
+                }
             }
         } catch (err) {
             if (err.response.status === 401) {
                 alert('The current password you provided was incorrect')
+            } else if (err.response.status === 403) {
+                alert('You do not have permission to update this account')
+            } else if (err.response.status === 404) {
+                alert('Account not found')
+            } else if (err.response.status === 400) {
+                alert('Something went wrong, please refresh the page and try again')
             }
         }
     },
@@ -173,3 +208,17 @@ function getUserFromCookie () {
     return value != null ? unescape(value[1]) : null
 }
 
+
+function prettyTime (time) {
+    let hour = parseInt(time[0] + time[1])
+    let timeOfDay = ""
+    if (hour > 12) {
+        hour -= 12
+        timeOfDay = " PM"
+    } else if (hour === 12) timeOfDay = " PM"
+    else timeOfDay = " AM"
+    if (hour < 10) hour = '0' + hour.toString()
+    time = time.split(' ')
+    time = time[0].split(':')
+    return hour + ":" + time[1] + timeOfDay
+}
