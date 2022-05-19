@@ -1,12 +1,12 @@
 <template>
   <v-app>
-      <span>
-        <v-tabs background-color="#FAF9F6" left v-model="tab">
-          <v-tabs-slider></v-tabs-slider>
-            <v-tab v-for="item in items" :key="item.tab">
-              {{ item.tab }} ({{item.tab === 'entries' ? sharedEntries.length : sharedPrompts.length}})
-            </v-tab>
-        </v-tabs>
+    <span>
+      <v-tabs background-color="#FAF9F6" left v-model="tab">
+        <v-tabs-slider></v-tabs-slider>
+          <v-tab v-for="item in items" :key="item.tab">
+            {{ item.tab }} ({{item.tab === 'entries' ? sharedEntries.length : sharedPrompts.length}})
+          </v-tab>
+      </v-tabs>
     </span>
     <v-tabs-items v-model="tab">
       <v-col v-for="item in items" :key="item.tab" class="main">

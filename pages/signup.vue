@@ -205,6 +205,7 @@ export default {
 .card {
   position: fixed;
   top: 15%;
+  right: 30px;
   animation: fadeInAnimation ease 2s;
   opacity: 0;
   animation-iteration-count: 1;

@@ -146,10 +146,6 @@ export default {
       return JSON.parse(this.$store.state.accounts.user)
     },
 
-    timenow () {
-      return new Date().toTimeString()
-    },
-
     notifTime () {
       return this.$store.state.accounts.notifTime
     }
