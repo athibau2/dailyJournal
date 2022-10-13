@@ -11,23 +11,32 @@
         <v-icon class="icon">mdi-thought-bubble</v-icon>
       </v-toolbar-title>
       <v-spacer />
+      <v-btn color="#e4dfcd88" @click="showLogin = true">Login</v-btn>
     </v-app-bar>
     <v-main class="noauth">
       <v-container class="noauth">
         <Nuxt class="noauth" />
       </v-container>
     </v-main>
+    <Login v-show="showLogin" @close-modal="showLogin = false" />
   </v-app>
 </template>
 
 <script>
+import Login from "~/components/Login.vue"
 export default {
   name: 'NoauthLayout',
+
+  components: {
+    Login
+  },
+
   data () {
     return {
       clipped: false,
       fixed: false,
-      title: 'Write Now'
+      title: 'Write Now',
+      showLogin: false,
     }
   },
 }
