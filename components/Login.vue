@@ -2,12 +2,12 @@
     <div class="modal-overlay" @click="close()">
         <div :class="isMobile ? 'modal-mobile' : 'modal'" 
             @click.stop
-            :style="{'height': (isMobile && login === 0) ? '315px' : (isMobile && login === 1) ? '380px' : (!isMobile && login === 0) ? '315px' : '380px'}"
+            :style="{'height': (isMobile && isLogin === 0) ? '315px' : (isMobile && isLogin === 1) ? '380px' : (!isMobile && isLogin === 0) ? '315px' : '380px'}"
         >
             <v-btn-toggle
               mandatory
               rounded
-              v-model="login"
+              v-model="isLogin"
             >
               <v-btn @click="reset()">Login</v-btn>
               <v-btn @click="reset()">Signup</v-btn>
@@ -22,10 +22,10 @@
                     width="80%"
                 >
                     <v-card-title class="headline" style="color: #575757">
-                        <em>Sign {{login === 0 ? 'In' : 'Up'}} Here</em>
+                        <em>Sign {{isLogin === 0 ? 'In' : 'Up'}} Here</em>
                     </v-card-title>
                     <v-card-text>
-                        <v-row v-if="login === 1" justify="center">
+                        <v-row v-if="isLogin === 1" justify="center">
                             <v-text-field
                                 class="name-field"
                                 background-color="#e4dfcd88"
@@ -71,7 +71,7 @@
                                 :type="show ? 'text' : 'password'"
                                 @click:append="show = !show"
                                 v-model="password"
-                                @keyup.enter="login()"
+                                @keyup.enter="(isLogin === 0) ? login() : signup()"
                                 placeholder="Enter your password"
                             >
                             </v-text-field>
@@ -81,9 +81,9 @@
                         <v-spacer />
                         <v-btn color="#cccccc" @click="close()">Exit</v-btn>
                         <span>&nbsp;</span>
-                        <v-btn color="#abddd0" @click="login === 0 ? login() : signup()"
+                        <v-btn color="#abddd0" @click="isLogin === 0 ? login() : signup()"
                         >
-                            {{login === 0 ? 'Login' : 'Signup'}}
+                            {{isLogin === 0 ? 'Login' : 'Signup'}}
                         </v-btn>
                     </v-card-actions>
                 </v-card>
@@ -107,7 +107,7 @@ export default {
         firstname: "",
         lastname: "",
         show: false,
-        login: 0
+        isLogin: 0
     }
   },
 
@@ -127,18 +127,18 @@ export default {
         this.lastname = ""
     },
 
-    async login() {
+    async login () {
       if (this.email === "" || this.password === "") alert('No fields may be left blank')
       else {
           await this.$store.dispatch('accounts/login', {
-            username: this.email,
+            username: this.email.toLowerCase(),
             password: this.password,
             isNew: false
         })
       }
     },
 
-    async signup() {
+    async signup () {
         if (this.firstname === "" || this.lastname === "" || this.email === "" || this.password === "") {
             alert('No fields may be left blank')
         }
@@ -149,7 +149,7 @@ export default {
             await this.$store.dispatch('accounts/signup', {
                 firstname: this.firstname,
                 lastname: this.lastname,
-                username: this.email,
+                username: this.email.toLowerCase(),
                 password: this.password
             })
         }

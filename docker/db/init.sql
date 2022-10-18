@@ -77,6 +77,9 @@ CREATE TABLE "shared_prompts" (
 create index "shared_prompts_userid" ON "shared_prompts" ("userid");
 
 
+INSERT INTO accounts (firstname, lastname, username, "password") values ('Andrew', 'Thibaudeau', 'a.thibs98@gmail.com', 'hellothere');
+
+
 INSERT INTO topics (topictext) values('Gratitude');
 INSERT INTO topics (topictext) values('Goals');
 INSERT INTO topics (topictext) values('Self-awareness');
