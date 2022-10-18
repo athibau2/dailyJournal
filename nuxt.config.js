@@ -1,7 +1,10 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  target: 'static',
+  server: {
+    host: '0.0.0.0'
+  },
+ // target: 'static',
   middleware: ["auth"],
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
