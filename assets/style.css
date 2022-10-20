@@ -60,7 +60,7 @@
 
 /* Page header */
 
-h2, h3 {
+h2, h3, h4 {
     background-color: lightgrey;
     border-radius: 20px;
     color: #575757;
