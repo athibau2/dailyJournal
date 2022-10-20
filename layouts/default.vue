@@ -156,5 +156,13 @@ export default {
 <style scoped>
 @import '~/assets/style.css';
 
+.title-text {
+    font-family: 'Courier New', Courier, monospace;
+    color: #575757;
+}
+
+.icon {
+    color: #8ea9c9;
+}
 
 </style>

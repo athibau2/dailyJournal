@@ -8,7 +8,7 @@
     >
       <v-toolbar-title class="title">
         <span class="title-text">{{title}}&nbsp;</span>
-        <v-icon class="icon">mdi-thought-bubble</v-icon>
+        <v-icon class="icon" size="30">mdi-thought-bubble</v-icon>
       </v-toolbar-title>
       <v-spacer />
       <v-btn color="#e4dfcd88" @click="showLogin = true">Login</v-btn>
@@ -45,5 +45,13 @@ export default {
 <style scoped>
 @import '~/assets/style.css';
 
+.title-text {
+    font-family: 'Courier New', Courier, monospace;
+    color: #575757;
+}
+
+.icon {
+    color: #8ea9c9;
+}
 
 </style>
