@@ -216,7 +216,7 @@
                 <v-btn
                   color="#abddd0"
                   :disabled="entryToEdit === null ? false : entryToEdit === entry.entryid ? false : true" 
-                  @click="(viewState === 'Edit') ? editMode(entry.entryid) : updateEntry(entry)"
+                  @click="(viewState === 'Edit') ? editMode(entry) : updateEntry(entry)"
                 >
                   {{(entryToEdit === null) ? viewState : (entryToEdit === entry.entryid) ? "Save" : "Edit"}}
                 </v-btn>
@@ -278,12 +278,13 @@ export default {
       this.response = event
     },
 
-    editMode (entryid) {
+    editMode (entry) {
       this.viewState = "Save"
-      this.entryToEdit = entryid
+      this.entryToEdit = entry.entryid
+      this.response = entry.text
     },
 
-    updateEntry (e) { // TODO: Deletes entry if no change made
+    updateEntry (e) {
       this.viewState = "Edit"
       let temp = ""
       if (this.filterMethod === "Entries Today") temp = "today"
