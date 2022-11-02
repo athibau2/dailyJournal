@@ -56,6 +56,14 @@
         <Nuxt class="main" />
       </v-container>
     </v-main>
+    <v-footer
+      absolute
+      app
+    >
+      <span class="footer">&copy; {{ new Date().getFullYear() }}</span>
+      <v-spacer />
+      <span class="footer">{{contact}}</span>
+    </v-footer>
   </v-app>
 </template>
 
@@ -71,6 +79,11 @@ export default {
     return {
       fixed: true,
       mobilePermanent: true,
+      miniVariant: false,
+      right: true,
+      rightDrawer: false,
+      title: 'Write Now',
+      windowWidth: window.innerWidth,
       items: [
         {
           icon: 'mdi-home',
@@ -101,11 +114,7 @@ export default {
           click: this.logout
         }
       ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Write Now',
-      windowWidth: window.innerWidth,
+      contact: 'Contact Us - thibaudeauapps@gmail.com'
     }
   },
 
@@ -169,6 +178,10 @@ export default {
 
 .icon {
     color: #8ea9c9;
+}
+
+.footer {
+  font-size: 14px;
 }
 
 </style>

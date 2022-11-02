@@ -1,239 +1,239 @@
 <template>
   <v-app>
-      <v-row v-if="windowWidth >= 850">
-        <!-- Filters -->
-        <v-col :cols="showDate ? 5 : 2">
-          <!--Entries Today button-->
-          <v-tooltip right>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon
-                class="colBtn"
-                v-on="on"
-                v-bind="attrs"
-                @click="loadEntries()"
-              >
-                <v-icon>mdi-refresh</v-icon>
-              </v-btn>
-            </template>
-            <span>Reset Filters</span>
-          </v-tooltip>
-          <br>
-          <v-btn class="colBtn" color="#bdd0e7" @click="showDate = !showDate">
-              {{(afterDate.length === 0) ? dateHint : afterDate}}
-          </v-btn>
-          <v-date-picker 
-              v-if="showDate"
-              v-model="afterDate"
-              :max="today"
-              elevation="6"
-              @click:date="filterDate()"
-          >
-          </v-date-picker>
-          <br>
-          <v-menu 
-            bottom
-            transition="slide-y-transition"
-            :offset-y="true"
-            :close-on-content-click="true"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn class="colBtn" color="#bdd0e7" v-bind="attrs" v-on="on">{{topicSort}}</v-btn>
-            </template>
-            <v-list>
-              <v-list-item v-for="(t, i) in topics" :key="i" link>
-                  <v-list-item-title
-                    v-text="t.topictext"
-                    style='font-size: 10pt;'
-                    @click="filterTopic(t)"
-                  >
-                  </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-col>
-
-        <!-- Entries list -->
-        <v-col v-if="entriesList.length !== 0">
-          <h2 class="text-center" v-if="windowWidth >= 1100">{{filterMethod}}</h2>
-          <h3 class="text-center" v-else-if="windowWidth < 1100">{{filterMethod}}</h3>
-          <v-row justify="center" align="center" v-for="(entry, i) in entriesList" :key="i">
-            <v-card class="card" elevation="5"
-              :width="windowWidth >= 1100 ? '450px' : '60%'"
+    <v-row v-if="windowWidth >= 850">
+      <!-- Filters -->
+      <v-col :cols="showDate ? 5 : 2">
+        <!--Entries Today button-->
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon
+              class="colBtn"
+              v-on="on"
+              v-bind="attrs"
+              @click="loadEntries()"
             >
-              <v-card-title class="card-title">
-                {{entry.prompttext}}
-              </v-card-title>
-              <v-card-subtitle>
-                <em>{{entry.topictext}}</em>&nbsp;&nbsp;&nbsp;&nbsp;{{entry.date}}
-              </v-card-subtitle>
-              <v-card-text v-if="viewState === 'Save' && entryToEdit === entry.entryid">
-                <v-textarea
-                  :value="entry.text"
-                  @input="textChanged($event)"
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
+          </template>
+          <span>Reset Filters</span>
+        </v-tooltip>
+        <br>
+        <v-btn class="colBtn" color="#bdd0e7" @click="showDate = !showDate">
+            {{(afterDate.length === 0) ? dateHint : afterDate}}
+        </v-btn>
+        <v-date-picker 
+            v-if="showDate"
+            v-model="afterDate"
+            :max="today"
+            elevation="6"
+            @click:date="filterDate()"
+        >
+        </v-date-picker>
+        <br>
+        <v-menu 
+          bottom
+          transition="slide-y-transition"
+          :offset-y="true"
+          :close-on-content-click="true"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn class="colBtn" color="#bdd0e7" v-bind="attrs" v-on="on">{{topicSort}}</v-btn>
+          </template>
+          <v-list>
+            <v-list-item v-for="(t, i) in topics" :key="i" link>
+                <v-list-item-title
+                  v-text="t.topictext"
+                  style='font-size: 10pt;'
+                  @click="filterTopic(t)"
                 >
-                </v-textarea>
-              </v-card-text>
-              <v-card-text v-else>
-                {{entry.text}}
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      color="#bdd0e7"
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="getSharedList(entry)"
-                    >
-                      <v-icon>mdi-share-variant</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Share</span>
-                </v-tooltip>
-                <v-btn color="#cccccc" @click="deleteEntry(entry)">Delete</v-btn>
-                <v-btn
-                  color="#abddd0"
-                  :disabled="entryToEdit === null ? false : entryToEdit === entry.entryid ? false : true" 
-                  @click="(viewState === 'Edit') ? editMode(entry.entryid) : updateEntry(entry)"
+                </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-col>
+
+      <!-- Entries list -->
+      <v-col v-if="entriesList.length !== 0">
+        <h2 class="text-center" v-if="windowWidth >= 1100">{{filterMethod}}</h2>
+        <h3 class="text-center" v-else-if="windowWidth < 1100">{{filterMethod}}</h3>
+        <v-row justify="center" align="center" v-for="(entry, i) in entriesList" :key="i">
+          <v-card class="card" elevation="5"
+            :width="windowWidth >= 1100 ? '450px' : '60%'"
+          >
+            <v-card-title class="card-title">
+              {{entry.prompttext}}
+            </v-card-title>
+            <v-card-subtitle>
+              <em>{{entry.topictext}}</em>&nbsp;&nbsp;&nbsp;&nbsp;{{entry.date}}
+            </v-card-subtitle>
+            <v-card-text v-if="viewState === 'Save' && entryToEdit === entry.entryid">
+              <v-textarea
+                :value="entry.text"
+                @input="textChanged($event)"
+              >
+              </v-textarea>
+            </v-card-text>
+            <v-card-text v-else>
+              {{entry.text}}
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    color="#bdd0e7"
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="getSharedList(entry)"
+                  >
+                    <v-icon>mdi-share-variant</v-icon>
+                  </v-btn>
+                </template>
+                <span>Share</span>
+              </v-tooltip>
+              <v-btn color="#cccccc" @click="deleteEntry(entry)">Delete</v-btn>
+              <v-btn
+                color="#abddd0"
+                :disabled="entryToEdit === null ? false : entryToEdit === entry.entryid ? false : true" 
+                @click="(viewState === 'Edit') ? editMode(entry.entryid) : updateEntry(entry)"
+              >
+                {{(entryToEdit === null) ? viewState : (entryToEdit === entry.entryid) ? "Save" : "Edit"}}
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-row>
+      </v-col>
+      <v-col v-else>
+        <h2 class="text-center"
+          v-if="entriesList.length === 0 && windowWidth >= 1100"
+        >
+          No Entries Found For: {{filterMethod}}
+        </h2>
+        <h3 class="text-center"
+          v-if="entriesList.length === 0 && windowWidth < 1100"
+        >
+          No Entries Found For: {{filterMethod}}
+        </h3>
+      </v-col>
+      <Share v-show="showShare" @close-modal="showShare = false" />
+    </v-row>
+
+
+    <!-- Small Window or Mobile -->
+    <v-col v-else-if="windowWidth < 850 || isMobile">
+      <!-- Filters -->
+      <v-row>
+        <!--Entries Today button-->
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon
+              class="rowBtn"
+              v-on="on"
+              v-bind="attrs"
+              @click="loadEntries()"
+            >
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
+          </template>
+          <span>Reset Filters</span>
+        </v-tooltip>
+        <v-btn class="rowBtn" color="#bdd0e7" @click="showDate = !showDate">
+            {{(afterDate.length === 0) ? dateHint : afterDate}}
+        </v-btn>
+        <v-menu
+          bottom
+          transition="slide-y-transition"
+          :offset-y="true"
+          :close-on-content-click="true"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn class="rowBtn" color="#bdd0e7" v-bind="attrs" v-on="on">{{topicSort}}</v-btn>
+          </template>
+          <v-list>
+            <v-list-item v-for="(t, i) in topics" :key="i" link>
+                <v-list-item-title
+                  v-text="t.topictext"
+                  style='font-size: 10pt;'
+                  @click="filterTopic(t)"
                 >
-                  {{(entryToEdit === null) ? viewState : (entryToEdit === entry.entryid) ? "Save" : "Edit"}}
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-row>
-        </v-col>
-        <v-col v-else>
-          <h2 class="text-center"
-            v-if="entriesList.length === 0 && windowWidth >= 1100"
-          >
-            No Entries Found For: {{filterMethod}}
-          </h2>
-          <h3 class="text-center"
-            v-if="entriesList.length === 0 && windowWidth < 1100"
-          >
-            No Entries Found For: {{filterMethod}}
-          </h3>
-        </v-col>
-        <Share v-show="showShare" @close-modal="showShare = false" />
+                </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <v-date-picker 
+            v-if="showDate"
+            v-model="afterDate"
+            :max="today"
+            elevation="6"
+            @click:date="filterDate()"
+        >
+        </v-date-picker>
       </v-row>
 
-
-      <!-- Small Window or Mobile -->
-      <v-col v-else-if="windowWidth < 850 || isMobile">
-        <!-- Filters -->
-        <v-row>
-          <!--Entries Today button-->
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon
-                class="rowBtn"
-                v-on="on"
-                v-bind="attrs"
-                @click="loadEntries()"
+      <!-- Entries list -->
+      <v-col class="small-entries-list" v-if="entriesList.length !== 0">
+        <h3 class="text-center"
+          :style="{'width': isMobile ? '100%' : null}"
+        >
+          {{filterMethod}}
+        </h3>
+        <v-row justify="center" align="center" v-for="(entry, i) in entriesList" :key="i">
+          <v-card class="card" elevation="5"
+            :width="isMobile ? '100%' : windowWidth >= 700 ? '60%' : windowWidth >= 600 ? '70%' : '85%'"
+          >
+            <v-card-title class="card-title">
+              {{entry.prompttext}}
+            </v-card-title>
+            <v-card-subtitle>
+              <em>{{entry.topictext}}</em>&nbsp;&nbsp;&nbsp;&nbsp;{{entry.date}}
+            </v-card-subtitle>
+            <v-card-text v-if="viewState === 'Save' && entryToEdit === entry.entryid">
+              <v-textarea
+                :value="entry.text"
+                @input="textChanged($event)"
               >
-                <v-icon>mdi-refresh</v-icon>
-              </v-btn>
-            </template>
-            <span>Reset Filters</span>
-          </v-tooltip>
-          <v-btn class="rowBtn" color="#bdd0e7" @click="showDate = !showDate">
-              {{(afterDate.length === 0) ? dateHint : afterDate}}
-          </v-btn>
-          <v-menu
-            bottom
-            transition="slide-y-transition"
-            :offset-y="true"
-            :close-on-content-click="true"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn class="rowBtn" color="#bdd0e7" v-bind="attrs" v-on="on">{{topicSort}}</v-btn>
-            </template>
-            <v-list>
-              <v-list-item v-for="(t, i) in topics" :key="i" link>
-                  <v-list-item-title
-                    v-text="t.topictext"
-                    style='font-size: 10pt;'
-                    @click="filterTopic(t)"
+              </v-textarea>
+            </v-card-text>
+            <v-card-text v-else>
+              {{entry.text}}
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    color="#bdd0e7"
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="getSharedList(entry)"
                   >
-                  </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-date-picker 
-              v-if="showDate"
-              v-model="afterDate"
-              :max="today"
-              elevation="6"
-              @click:date="filterDate()"
-          >
-          </v-date-picker>
+                    <v-icon>mdi-share-variant</v-icon>
+                  </v-btn>
+                </template>
+                <span>Share</span>
+              </v-tooltip>
+              <v-btn color="#cccccc" @click="deleteEntry(entry)">Delete</v-btn>
+              <v-btn
+                color="#abddd0"
+                :disabled="entryToEdit === null ? false : entryToEdit === entry.entryid ? false : true" 
+                @click="(viewState === 'Edit') ? editMode(entry) : updateEntry(entry)"
+              >
+                {{(entryToEdit === null) ? viewState : (entryToEdit === entry.entryid) ? "Save" : "Edit"}}
+              </v-btn>
+            </v-card-actions>
+          </v-card>
         </v-row>
-
-        <!-- Entries list -->
-        <v-col class="small-entries-list" v-if="entriesList.length !== 0">
-          <h3 class="text-center"
-            :style="{'width': isMobile ? '100%' : null}"
-          >
-            {{filterMethod}}
-          </h3>
-          <v-row justify="center" align="center" v-for="(entry, i) in entriesList" :key="i">
-            <v-card class="card" elevation="5"
-              :width="isMobile ? '100%' : windowWidth >= 700 ? '60%' : windowWidth >= 600 ? '70%' : '85%'"
-            >
-              <v-card-title class="card-title">
-                {{entry.prompttext}}
-              </v-card-title>
-              <v-card-subtitle>
-                <em>{{entry.topictext}}</em>&nbsp;&nbsp;&nbsp;&nbsp;{{entry.date}}
-              </v-card-subtitle>
-              <v-card-text v-if="viewState === 'Save' && entryToEdit === entry.entryid">
-                <v-textarea
-                  :value="entry.text"
-                  @input="textChanged($event)"
-                >
-                </v-textarea>
-              </v-card-text>
-              <v-card-text v-else>
-                {{entry.text}}
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      color="#bdd0e7"
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="getSharedList(entry)"
-                    >
-                      <v-icon>mdi-share-variant</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Share</span>
-                </v-tooltip>
-                <v-btn color="#cccccc" @click="deleteEntry(entry)">Delete</v-btn>
-                <v-btn
-                  color="#abddd0"
-                  :disabled="entryToEdit === null ? false : entryToEdit === entry.entryid ? false : true" 
-                  @click="(viewState === 'Edit') ? editMode(entry) : updateEntry(entry)"
-                >
-                  {{(entryToEdit === null) ? viewState : (entryToEdit === entry.entryid) ? "Save" : "Edit"}}
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-row>
-        </v-col>
-        <v-col class="small-entries-list" v-else>
-          <h3 class="text-center"
-            v-if="entriesList.length === 0"
-            :style="{'width': isMobile ? '100%' : null}"
-          >
-            No Entries Found For: <br v-if="isMobile">{{filterMethod}}
-          </h3>
-        </v-col>
-        <Share v-show="showShare" @close-modal="showShare = false" />
       </v-col>
+      <v-col class="small-entries-list" v-else>
+        <h3 class="text-center"
+          v-if="entriesList.length === 0"
+          :style="{'width': isMobile ? '100%' : null}"
+        >
+          No Entries Found For: <br v-if="isMobile">{{filterMethod}}
+        </h3>
+      </v-col>
+      <Share v-show="showShare" @close-modal="showShare = false" />
+    </v-col>
   </v-app>
 </template>
 

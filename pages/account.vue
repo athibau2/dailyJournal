@@ -15,6 +15,9 @@
             {{user.username}}
           </v-card-subtitle>
           <v-card-text>
+            Feedback? <a @click="showSurvey = true">Let us know</a>.
+          </v-card-text>
+          <v-card-text>
             <v-text-field
               class="selector"
               background-color="#f0f0f0"
@@ -66,6 +69,16 @@
             <v-btn color="#abddd0" @click="updateAccount()">Update Account</v-btn>
           </v-card-actions>
         </v-card>
+        <iframe v-if="showSurvey"
+          src="https://docs.google.com/forms/d/e/1FAIpQLSc9CVQiYpsChk-02WOfVF_DMENcWP_jtCnoFS-QdZbYGwUj4g/viewform?embedded=true"
+          width="640"
+          height="709"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+        >
+          Loading…
+        </iframe>
       </v-row>
     </v-container>
   </v-app>
@@ -88,7 +101,8 @@ export default {
         show2: false,
         showTime: false,
         time: "",
-        rawTime: ""
+        rawTime: "",
+        showSurvey: false,
     }
   },
 
