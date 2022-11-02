@@ -2,7 +2,7 @@ exports.search = async function (client, searchText) {
     searchText = `${searchText}%`
     const { rowCount, rows } = await client.query({
         name: 'search-to-share',
-        text: 'SELECT a.firstname, a.lastname, a.username, a.userid FROM accounts a WHERE a.username LIKE $1',
+        text: 'SELECT a.firstname, a.lastname, a.username, a.userid FROM accounts a WHERE a.username LIKE $1 OR a.firstname LIKE $1 OR a.lastname LIKE $1',
         values: [searchText]
     })
     return rowCount > 0 ? rows : undefined

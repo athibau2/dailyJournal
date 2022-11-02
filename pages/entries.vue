@@ -332,6 +332,7 @@ export default {
     },
 
     filterTopic (t) {
+      this.showDate = false
       this.afterDate = ""
       this.topicSort = t.topictext
       this.filterMethod = "Entries About: " + this.topicSort

@@ -4,7 +4,7 @@
       :mini-variant="windowWidth < 1000 ? true : miniVariant"
       :clipped="true"
       fixed
-      permanent
+      :permanent="isMobile ? mobilePermanent : true"
       app
     >
       <v-list>
@@ -34,7 +34,7 @@
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-app-bar-nav-icon 
-            @click.stop="miniVariant = !miniVariant"
+            @click.stop="toggleMenu()"
             v-on="on"
             v-bind="attrs"
           />
@@ -70,6 +70,7 @@ export default {
   data () {
     return {
       fixed: true,
+      mobilePermanent: true,
       items: [
         {
           icon: 'mdi-home',
@@ -109,6 +110,11 @@ export default {
   },
 
   methods: {
+    toggleMenu() {
+      this.miniVariant = !this.miniVariant
+      this.mobilePermanent = !this.mobilePermanent
+    },
+
     toAccount () {
       this.$router.push('/account')
     },
