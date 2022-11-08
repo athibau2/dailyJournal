@@ -6,10 +6,11 @@
       fixed
       app
     >
-      <v-toolbar-title class="title">
+      <!-- <v-toolbar-title class="title">
         <span class="title-text">{{title}}&nbsp;</span>
         <v-icon class="icon" size="30">mdi-thought-bubble</v-icon>
-      </v-toolbar-title>
+      </v-toolbar-title> -->
+      <img src="~/assets/images/logo-dark.png" width="200px" />
       <v-spacer />
       <v-btn color="#e4dfcd88" @click="showLogin = true">Login</v-btn>
     </v-app-bar>

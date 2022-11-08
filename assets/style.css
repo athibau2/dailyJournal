@@ -8,6 +8,12 @@
     background-color: #fdfdfd;
 }
 
+.card {
+    background-image: url("~assets/images/faded.png");
+    background-position: center;
+    background-size: 50%;
+}
+
 .modal, .modal-overlay {
     animation: fadeInAnimation ease 1s;
     animation-iteration-count: 1;

@@ -20,7 +20,7 @@
           <v-card-text>
             <v-text-field
               class="selector"
-              background-color="#f0f0f0"
+              background-color="#bfcada"
               dense
               solo
               rounded
@@ -33,7 +33,7 @@
             </v-text-field>
             <v-text-field
               class="selector"
-              background-color="#f0f0f0"
+              background-color="#bfcada"
               dense
               solo
               rounded
@@ -65,7 +65,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="#cccccc" @click="deleteAccount()">Delete Account</v-btn>
+            <v-btn color="#aaaaaa" @click="deleteAccount()">Delete Account</v-btn>
             <v-btn color="#abddd0" @click="updateAccount()">Update Account</v-btn>
           </v-card-actions>
         </v-card>
@@ -175,4 +175,6 @@ export default {
 
 <style scoped>
 @import '~/assets/style.css';
+
+
 </style>

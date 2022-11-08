@@ -2,7 +2,7 @@
     <div class="modal-overlay" @click="close()">
         <div :class="isMobile ? 'modal-mobile' : 'modal'" 
             @click.stop
-            :style="{'height': (isMobile && isLogin === 0) ? '315px' : (isMobile && isLogin === 1) ? '380px' : (!isMobile && isLogin === 0) ? '315px' : '380px'}"
+            :style="{'height': (isMobile && isLogin === 0) ? '315px' : (isMobile && isLogin === 1) ? '420px' : (!isMobile && isLogin === 0) ? '315px' : '400px'}"
         >
             <v-btn-toggle
               mandatory
@@ -76,12 +76,22 @@
                             >
                             </v-text-field>
                         </v-row>
+                        <v-row v-if="isLogin === 1">
+                            <label class="age" for="age">
+                                Age: {{(age == 60) ? age+'+' : age}}&nbsp;
+                            </label>
+                            <input v-model="age" type="range" id="age" min="1" max="60" />
+                            <v-spacer />
+                            <span class="age-restriction" v-if="age < 13">You must be 13 or older</span>
+                        </v-row>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer />
                         <v-btn color="#cccccc" @click="close()">Exit</v-btn>
                         <span>&nbsp;</span>
-                        <v-btn color="#abddd0" @click="isLogin === 0 ? login() : signup()"
+                        <v-btn color="#abddd0"
+                            @click="isLogin === 0 ? login() : signup()"
+                            :disabled="(isLogin === 1 && age < 13) ? true : false"
                         >
                             {{isLogin === 0 ? 'Login' : 'Signup'}}
                         </v-btn>
@@ -106,6 +116,7 @@ export default {
         password: "",
         firstname: "",
         lastname: "",
+        age: 13,
         show: false,
         isLogin: 0
     }
@@ -203,6 +214,15 @@ export default {
 .name-field {
     width: 48%;
     margin: 2px;
+}
+
+.age {
+    font-size: 16px;
+}
+
+.age-restriction {
+    font-size: 16px;
+    color: rgb(216, 43, 43);
 }
 
 </style>

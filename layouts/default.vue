@@ -41,10 +41,11 @@
         </template>
         <span>{{miniVariant ? 'Expand' : 'Collapse'}}</span>
       </v-tooltip>
-      <v-toolbar-title class="title">
+      <!-- <v-toolbar-title class="title">
         <span class="title-text">{{title}}&nbsp;</span>
         <v-icon class="icon" size="30" @click="toHome()">mdi-thought-bubble</v-icon>
-      </v-toolbar-title>
+      </v-toolbar-title> -->
+      <img src="~/assets/images/logo-dark.png" width="200px" />
       <v-spacer />
       <v-toolbar-title style="font-family: Cochin;" v-if="user !== null && user !== undefined && !isMobile">
         {{user.firstname}} {{user.lastname}}
@@ -61,6 +62,8 @@
       app
     >
       <span class="footer">&copy; {{ new Date().getFullYear() }}</span>
+      &nbsp;&nbsp;&nbsp;
+      <a class="footer" target="_blank" href="privacy_policy.pdf">Privacy Policy</a>
       <v-spacer />
       <span class="footer">{{contact}}</span>
     </v-footer>
@@ -151,7 +154,7 @@ export default {
 
     resizeHandler() {
       this.windowWidth = window.innerWidth
-    }
+    },
   },
 
   computed: {
