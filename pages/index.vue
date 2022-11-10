@@ -16,10 +16,10 @@
               v-if="prompt !== null && prompt !== undefined"
             >
               <v-card-title class="card-title">
-                {{prompt.prompttext}}
+                {{isFreeWrite ? freePrompt : prompt.prompttext}}
               </v-card-title>
               <v-card-subtitle>
-                <i>{{prompt.topictext}}</i>
+                <i>{{isFreeWrite ? freePrompt : prompt.topictext}}</i>
               </v-card-subtitle>
               <v-card-text>
                 <v-textarea
@@ -30,6 +30,20 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      class="card-btn"
+                      color="#d3d3d3"
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="freeWrite()"
+                    >
+                      <v-icon>mdi-text-box-edit</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{isFreeWrite ? 'Stop Free Write' : 'Start Free Write'}}</span>
+                </v-tooltip>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
@@ -69,6 +83,8 @@ export default {
 
   data () {
     return {
+      isFreeWrite: false,
+      freePrompt: 'Free Write',
       response: "",
       hover: false,
       windowWidth: window.innerWidth,
@@ -76,6 +92,10 @@ export default {
   },
 
   methods: {
+    freeWrite () {
+      this.isFreeWrite = !this.isFreeWrite
+    },
+
     newPrompt () {
       this.$store.dispatch('accounts/getPrompt', { isNew: false })
     },
@@ -84,9 +104,10 @@ export default {
       this.$store.dispatch('journal/submit', {
         response: this.response,
         userid: this.user.id,
-        promptid: this.prompt.promptid
+        promptid: this.isFreeWrite ? 0 : this.prompt.promptid
       })
       this.response = ""
+      this.isFreeWrite = false
     },
 
     resizeHandler() {
@@ -121,6 +142,10 @@ export default {
 
 .card {
   margin-top: 20px;
+}
+
+.card-btn {
+  margin-right: 8px;
 }
 
 h2, h3 {
