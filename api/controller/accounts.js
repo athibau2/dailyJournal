@@ -1,5 +1,6 @@
 const accounts = require('../database/accounts')
 const bcrypt = require('bcryptjs')
+const stripe = require('stripe')('sk_test_51M1gi1BkmBpDuXUQniBlK26qulc8wxNSkxMNtYo8Tqc9VFXS73Haq1rWQ62RTltEco5Nk23oHuSmQv52KyZIuWpm00YBn6ueXs')
 
 module.exports = function (pool) {
 	return {
@@ -7,6 +8,11 @@ module.exports = function (pool) {
 			const { firstname, lastname, username, password } = req.enforcer.body
 			const userid = await accounts.createAccount(pool, firstname, lastname, username, password)
 			if (userid) {
+				const customer = await stripe.customers.create({
+					name: `${firstname} ${lastname}`,
+					email: username,
+				})
+				console.log('CUSTOMER: ', customer)
 				res.set('location', '/api/accounts/' + userid)
 					.enforcer
 					.status(201)

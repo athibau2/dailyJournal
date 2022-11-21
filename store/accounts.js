@@ -170,6 +170,15 @@ export const actions = {
         }
     },
 
+    async manageBilling({ commmit, state },) {
+        try {
+            const response = await this.$axios.post(`/api/authentication/manageBilling/${JSON.parse(state.user).id}`)
+            console.log(response)
+        } catch (err) {
+            console.log(err)
+        }
+    },
+
     async delete({ commit }, { userid }) {
         try {
             const res = await this.$axios.delete('/api/accounts/' + userid)

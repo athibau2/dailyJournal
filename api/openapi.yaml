@@ -137,6 +137,26 @@ paths:
           description: Not authenticated
         404:
           description: Account does not exist
+  /authentication/manageBilling/{userid}:
+    x-controller: authentication
+    post:
+      x-operation: manageBilling
+      parameters:
+        - $ref: '#/components/parameters/PathUserid'
+      tags:
+        - Authentication
+      security:
+        - cookieAuth: []
+      summary: Manange billing for user
+      responses:
+        200:
+          description: Customer portal accessed
+        400:
+          description: Invalid request
+        401:
+          description: Not authenticated
+        404:
+          description: Account does not exist
   /authentication/logout:
     x-controller: authentication
     put:

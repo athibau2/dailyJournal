@@ -1,5 +1,9 @@
 <template>
   <v-app>
+    <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+<stripe-pricing-table pricing-table-id="prctbl_1M2kVVBkmBpDuXUQtxzdhI2p"
+  publishable-key="pk_test_51M1gi1BkmBpDuXUQ0g28rOgBlprZMMT3kSrJk19bL0xgHkl634teZ9i8kG7mAGCJPrnfOVGpiFSHRf1HTB1URHKe00Qw7SaTNa">
+</stripe-pricing-table>
     <v-container>
       <v-row justify="center" align="center">
         <v-card
@@ -14,6 +18,9 @@
           <v-card-subtitle>
             {{user.username}}
           </v-card-subtitle>
+          <!-- <v-btn><a @click="manageBilling()">Manage Billing</a></v-btn> -->
+          <v-btn><a href="https://billing.stripe.com/p/login/test_8wM9Do9ya09Lbja4gg">Manage Billing</a></v-btn>
+          <v-btn><a href="https://buy.stripe.com/test_28o7ut9Ns8cuaze9AA">Upgrade Account</a></v-btn>
           <v-card-text>
             Feedback? <a @click="showSurvey = true">Let us know</a>.
           </v-card-text>
@@ -126,6 +133,10 @@ export default {
           this.newPass = undefined
           this.time = ""
         }
+      },
+
+      async manageBilling () {
+        await this.$store.dispatch('accounts/manageBilling')
       },
 
       async deleteAccount () {
