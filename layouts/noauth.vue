@@ -19,6 +19,16 @@
         <Nuxt class="noauth" />
       </v-container>
     </v-main>
+    <v-footer
+      absolute
+      app
+    >
+      <span class="footer">&copy; {{ new Date().getFullYear() }} Delta Apps</span>
+      &nbsp;&nbsp;&nbsp;
+      <a class="footer" target="_blank" href="privacy_policy.pdf">Privacy Policy</a>
+      <v-spacer />
+      <span class="footer">{{contact}}</span>
+    </v-footer>
     <Login v-show="showLogin" @close-modal="showLogin = false" />
   </v-app>
 </template>
@@ -38,6 +48,7 @@ export default {
       fixed: false,
       title: 'Write Now',
       showLogin: false,
+      contact: 'Contact Us - thibaudeauapps@gmail.com'
     }
   },
 }

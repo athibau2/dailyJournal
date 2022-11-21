@@ -61,7 +61,7 @@
       absolute
       app
     >
-      <span class="footer">&copy; {{ new Date().getFullYear() }}</span>
+      <span class="footer">&copy; {{ new Date().getFullYear() }} Delta Apps</span>
       &nbsp;&nbsp;&nbsp;
       <a class="footer" target="_blank" href="privacy_policy.pdf">Privacy Policy</a>
       <v-spacer />
@@ -181,10 +181,6 @@ export default {
 
 .icon {
     color: #8ea9c9;
-}
-
-.footer {
-  font-size: 14px;
 }
 
 </style>

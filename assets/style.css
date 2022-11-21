@@ -72,3 +72,7 @@ h2, h3, h4 {
     color: #575757;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
+
+.footer {
+    font-size: 14px;
+}
