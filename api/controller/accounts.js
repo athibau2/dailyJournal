@@ -1,5 +1,7 @@
 const accounts = require('../database/accounts')
 const bcrypt = require('bcryptjs')
+const sgMail = require('@sendgrid/mail')
+require('dotenv').config()
 
 module.exports = function (pool) {
 	return {
@@ -7,6 +9,25 @@ module.exports = function (pool) {
 			const { firstname, lastname, username, password } = req.enforcer.body
 			const userid = await accounts.createAccount(pool, firstname, lastname, username, password)
 			if (userid) {
+
+				sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+                const msg = {
+                    template_id: 'd-3cdfd7d337e04634a983fb96a4f86070',
+                    to: username, // Change to your recipient
+                    from: {
+                        name: 'Write Now',
+                        email: 'thibaudeauapps@gmail.com',
+                    }
+                }
+                sgMail
+                    .send(msg)
+                    .then(() => {
+                      console.log('Welcome email sent')
+                    })
+                    .catch((error) => {
+                      console.error(error)
+                    })
+
 				res.set('location', '/api/accounts/' + userid)
 					.enforcer
 					.status(201)

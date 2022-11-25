@@ -54,10 +54,10 @@ export const actions = {
                     dateadded: new Date().toDateString()
                 })
                 if (res.status === 200) {
-                    console.log('Success!!')
+                    console.log('Success!')
                 }
               } catch (err) {
-                  // do something
+                  console.log(err)
               }
           }
         }
@@ -83,16 +83,20 @@ export const actions = {
     },
 
     async signup({ dispatch, commit }, { firstname, lastname, username, password }) {
-        const response = await this.$axios.post('/api/accounts', {
-            firstname: firstname,
-            lastname: lastname,
-            username: username,
-            password: password
-        })
-        if (response.status === 201) {
-            dispatch('login', {
-                username: username, password: password, isNew: true
+        try {
+            const response = await this.$axios.post('/api/accounts', {
+                firstname: firstname,
+                lastname: lastname,
+                username: username,
+                password: password
             })
+            if (response.status === 201) {
+                dispatch('login', {
+                    username: username, password: password, isNew: true
+                })
+            }
+        } catch (error) {
+            console.log(error)
         }
     },
 
@@ -109,7 +113,11 @@ export const actions = {
             }
         } catch (err) {
             this.$router.push('/login')
-            alert('Something went wrong')
+            if (err.response.status === 401) {
+                alert('Email or password is incorrect.')
+            } else {
+                alert('Something went wrong, please try again.')
+            }
         }
     },
 
@@ -142,7 +150,7 @@ export const actions = {
             if (currentPass === undefined && newPass === undefined && notif_time !== undefined) {
                 const res = await this.$axios.put(`/api/accounts/${userid}?notif_time=${notif_time}`)
                 if (res.status === 200) {
-                    alert('Your notification time has been successfully updated')
+                    alert('Your notification time has been successfully updated. It will take effect in the next day.')
                     dispatch('getNotifTime')
                 }
             } else if (currentPass !== undefined && newPass !== undefined && notif_time === undefined) {
@@ -153,7 +161,7 @@ export const actions = {
             } else if (currentPass !== undefined && newPass !== undefined && notif_time !== undefined) {
                 const res = await this.$axios.put(`/api/accounts/${userid}?currentPass=${currentPass}&newPass=${newPass}&notif_time=${notif_time}`)
                 if (res.status === 200) {
-                    alert('Your password and notification time have been successfully updated')
+                    alert('Your password and notification time have been successfully updated. Your new notification time will take effect in the next day.')
                     await dispatch('getNotifTime')
                 }
             }
