@@ -118,6 +118,7 @@ paths:
               required:
                 - username
                 - password
+                - isNew
               properties:
                 username:
                   type: string
@@ -125,9 +126,12 @@ paths:
                   type: string
                   format: password
                   minLength: 4
+                isNew:
+                  type: boolean
             example:
               username: a.thibs98@gmail.com
               password: a-password
+              isNew: true
       responses:
         200:
           description: Account logged in

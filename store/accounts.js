@@ -42,7 +42,7 @@ export const actions = {
                 if (res.status === 201) {
                 }
               } catch (err) {
-                  // do something
+                  console.log(err)
               }
           }
           // not a new user
@@ -104,7 +104,8 @@ export const actions = {
         try {
             const response = await this.$axios.put('/api/authentication/login', {
                 username,
-                password
+                password,
+                isNew
             })
             if (response.status === 200) {
                 await commit('setUser', getUserFromCookie())
