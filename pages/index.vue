@@ -96,8 +96,9 @@ export default {
       this.isFreeWrite = !this.isFreeWrite
     },
 
-    newPrompt () {
-      this.$store.dispatch('accounts/getPrompt', { isNew: false })
+    async newPrompt () {
+      await this.$store.dispatch('accounts/getPrompt', { isNew: false })
+      this.isFreeWrite = false
     },
 
     submit () {

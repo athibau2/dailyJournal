@@ -1,5 +1,8 @@
 <template>
   <v-app>
+    <script src="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/js/shepherd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css"/>
+
     <v-navigation-drawer
       :mini-variant="windowWidth < 1000 ? true : miniVariant"
       :clipped="true"
@@ -11,6 +14,7 @@
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
+          :id="'menu-step-'+i"
           :to="item.to"
           @click="item.click"
           router
@@ -41,10 +45,6 @@
         </template>
         <span>{{miniVariant ? 'Expand' : 'Collapse'}}</span>
       </v-tooltip>
-      <!-- <v-toolbar-title class="title">
-        <span class="title-text">{{title}}&nbsp;</span>
-        <v-icon class="icon" size="30" @click="toHome()">mdi-thought-bubble</v-icon>
-      </v-toolbar-title> -->
       <img src="~/assets/images/logo-dark.png" width="200px" />
       <v-spacer />
       <v-toolbar-title style="font-family: Cochin;" v-if="user !== null && user !== undefined && !isMobile">
@@ -71,11 +71,20 @@
 </template>
 
 <script>
+import Shepherd from 'shepherd.js'
 export default {
   name: 'DefaultLayout',
 
   created () {
     window.addEventListener('resize', this.resizeHandler)
+  },
+
+  mounted () {
+    if (this.isNew) {
+      this.addSteps()
+      this.tour.start()
+      this.tour.on('complete', this.onboardingComplete)
+    }
   },
 
   data () {
@@ -117,7 +126,14 @@ export default {
           click: this.logout
         }
       ],
-      contact: 'Contact Us - thibaudeauapps@gmail.com'
+      contact: 'Contact Us - thibaudeauapps@gmail.com',
+      tour: new Shepherd.Tour({
+        useModalOverlay: true,
+        defaultStepOptions: {
+          classes: 'shadow-md bg-purple-dark',
+          scrollTo: true
+        }
+      }),
     }
   },
 
@@ -155,11 +171,107 @@ export default {
     resizeHandler() {
       this.windowWidth = window.innerWidth
     },
+
+    addSteps() {
+      this.tour.addSteps([
+        {
+          id: 'step-1',
+          title: 'Hello there!',
+          text: 'Welcome to Write Now. Let\'s get you started on your tour!',
+          buttons: [
+            {
+              text: 'Okay!',
+              action: this.tour.next
+            }
+          ]
+        },
+        {
+          id: 'menu-step-0',
+          title: 'Submit entry',
+          text: 'The home page is where you get your daily prompt. Log in and complete your journal entry here! You can also generate a different prompt or start a free write using the buttons.',
+          attachTo: {
+            element: '#menu-step-0',
+            on: 'right'
+          },
+          buttons: [
+            {
+              text: 'Next',
+              action: this.tour.next
+            }
+          ]
+        },
+        {
+          id: 'menu-step-1',
+          title: 'See past entries',
+          text: 'This page is where all your journal entries are stored. Go here to see what you\'ve submitted today or filter them by date or topic! You can also choose to share your entries with others, or share the prompt itself!',
+          attachTo: {
+            element: '#menu-step-1',
+            on: 'right'
+          },
+          buttons: [
+            {
+              text: 'Next',
+              action: this.tour.next
+            }
+          ]
+        },
+        {
+          id: 'menu-step-2',
+          title: 'See what\'s been shared with you',
+          text: 'Here, you can see all the entries and prompts that others have shared with you. For the prompts, completing them will automatically share your response back with the person who shared it with you!',
+          attachTo: {
+            element: '#menu-step-2',
+            on: 'right'
+          },
+          buttons: [
+            {
+              text: 'Next',
+              action: this.tour.next
+            }
+          ]
+        },
+        {
+          id: 'menu-step-3',
+          title: 'Account settings',
+          text: 'The account page is where you can see and edit your account settings, or submit a feedback form to us!',
+          attachTo: {
+            element: '#menu-step-3',
+            on: 'right'
+          },
+          buttons: [
+            {
+              text: 'Next',
+              action: this.tour.next
+            }
+          ]
+        },
+        {
+          id: 'final-step',
+          title: 'See you around!',
+          text: 'That concludes our tour! Now, get to it!',
+          buttons: [
+            {
+              text: 'Finish',
+              action: this.tour.complete
+            }
+          ]
+        },
+      ]);
+    },
+
+    onboardingComplete () {
+      console.log('Complete')
+      this.$store.commit('accounts/setIsNew', false)
+    },
   },
 
   computed: {
-    user() {
+    user () {
       return JSON.parse(this.$store.state.accounts.user)
+    },
+
+    isNew () {
+      return this.$store.state.accounts.isNew
     },
 
     isMobile () {

@@ -3,6 +3,7 @@ export const state = () => {
         user: getUserFromCookie(),
         prompt: {},
         notifTime: "",
+        isNew: false,
     }
 }
   
@@ -18,7 +19,11 @@ export const mutations = {
 
   notifTime(state, data) {
       state.notifTime = data
-  }
+  },
+
+  setIsNew(state, data) {
+    state.isNew = data
+  },
 }
 
 // actions should call mutations
@@ -27,7 +32,7 @@ export const actions = {
         // generate new prompt
         const response = await this.$axios.get('/api/prompts')
         if (response.status === 200) {
-            commit('setPrompt', response.data)
+            await commit('setPrompt', response.data)
             localStorage.setItem('prompt', JSON.stringify(response.data))
             
             // new user signing up
@@ -109,6 +114,7 @@ export const actions = {
             })
             if (response.status === 200) {
                 await commit('setUser', getUserFromCookie())
+                await commit('setIsNew', isNew)
                 this.$router.push('/')
                 isNew ? dispatch('getPrompt', { isNew: true }) : dispatch('activePrompt')
             }
