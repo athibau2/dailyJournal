@@ -134,6 +134,7 @@ export const actions = {
             localStorage.removeItem('prompt')
             localStorage.removeItem('newestEntry')
             localStorage.removeItem('entriesList')
+            localStorage.removeItem('tab')
             commit('setUser', null)
             this.$router.push('/login')
         }
@@ -193,6 +194,7 @@ export const actions = {
                 localStorage.removeItem('prompt')
                 localStorage.removeItem('newestEntry')
                 localStorage.removeItem('entriesList')
+                localStorage.removeItem('tab')
                 this.$router.push('/signup')
             }
         } catch (err) {

@@ -50,7 +50,76 @@
       <v-toolbar-title style="font-family: Cochin;" v-if="user !== null && user !== undefined && !isMobile">
         {{user.firstname}} {{user.lastname}}
       </v-toolbar-title>
-      <v-icon size="30" @click="toAccount()">mdi-account</v-icon>
+
+      <v-menu max-height="350px" max-width="375px"
+          bottom
+          transition="slide-y-transition"
+          :offset-y="true"
+          :close-on-content-click="true"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn id="nav-step-2" icon @click="loadNotifs()" v-bind="attrs" v-on="on">
+              <v-icon size="30" :color="newNotif ? '#8ea9c9' : null">{{newNotif ? 'mdi-bell-alert' : 'mdi-bell'}}</v-icon>
+            </v-btn>
+          </template>
+
+          <v-list outlined v-if="notifs.length !== 0">
+            <v-list-item @click="markAllAsRead()">
+              <v-list-item-title>
+                Mark all as read
+              </v-list-item-title>
+            </v-list-item>
+
+            <template v-for="(n, j) in notifs">
+
+              <v-divider
+                :key="j"
+              ></v-divider>
+
+              <v-list-item link dense three-line
+                class="js-scroll-trigger"
+                :key="j"
+                @click="toNotif(n)"
+              >
+                <!-- :href="n.title === 'Shared Prompt' ? `/shared#prompt-${n.journalid}` : `/shared#entry-${n.journalid}`" -->
+                <v-list-item-content>
+                  <v-list-item-title
+                    v-text="n.sendername"
+                    style='font-size: 14.5px;'
+                  >
+                  </v-list-item-title>
+
+                  <v-list-item-subtitle 
+                    v-text="n.title"
+                  >
+                  </v-list-item-subtitle>
+
+                  <v-list-item-subtitle>
+                    <em>"{{n.text}}"</em>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+
+                <v-list-item-action>
+                  <v-icon size="15">{{n.seen ? null : 'mdi-circle'}}</v-icon>
+                  <v-list-item-action-text
+                    v-text="n.date"
+                    style="white-space: pre; text-align: right"
+                  >
+                  </v-list-item-action-text>
+                </v-list-item-action>
+              </v-list-item>
+            </template>
+          </v-list>
+
+          <v-list outlined v-else>
+            <v-list-item>
+              <v-list-item-title>
+                No notifications to display
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      <v-btn id="nav-step-1" icon @click="toAccount()"><v-icon size="30">mdi-account</v-icon></v-btn>
     </v-app-bar>
     <v-main class="main">
       <v-container class="main">
@@ -85,6 +154,7 @@ export default {
       this.tour.start()
       this.tour.on('complete', this.onboardingComplete)
     }
+    this.$store.dispatch('notifications/getNotifs', {})
   },
 
   data () {
@@ -138,6 +208,28 @@ export default {
   },
 
   methods: {
+    loadNotifs () {
+      this.$store.dispatch('notifications/getNotifs', {})
+    },
+
+    async toNotif (n) {
+      const prefix = n.title === 'Shared Prompt' ? 'prompt-' : 'entry-'
+      const tab = n.title === 'Shared Prompt' ? 1 : 0
+      localStorage.setItem('tab', tab)
+      this.$router.push({ name: 'shared', params: {
+        hash: `#${prefix}${n.journalid}`,
+      }})
+      if (!n.seen) {
+        this.$store.dispatch('notifications/markRead', {
+          notifid: n.notifid,
+        })
+      }
+    },
+
+    markAllAsRead () {
+      this.$store.dispatch('notifications/markAllAsRead', {})
+    },
+
     toggleMenu() {
       this.miniVariant = !this.miniVariant
       this.mobilePermanent = !this.mobilePermanent
@@ -161,6 +253,7 @@ export default {
     },
 
     loadShared() {
+      localStorage.setItem('tab', 0)
       this.$store.dispatch('share/getSharedWithMe', { userid: this.user.id })
     },
 
@@ -246,6 +339,36 @@ export default {
           ]
         },
         {
+          id: 'nav-step-1',
+          title: 'Account settings',
+          text: 'You can also get to your account page by clicking this button.',
+          attachTo: {
+            element: '#nav-step-1',
+            on: 'bottom'
+          },
+          buttons: [
+            {
+              text: 'Next',
+              action: this.tour.next
+            }
+          ]
+        },
+        {
+          id: 'nav-step-2',
+          title: 'Notifications',
+          text: 'Your notifications will show up here. You will be notified when someone shares an entry or a prompt with you, or when they respond to a prompt you shared with them!',
+          attachTo: {
+            element: '#nav-step-2',
+            on: 'bottom'
+          },
+          buttons: [
+            {
+              text: 'Next',
+              action: this.tour.next
+            }
+          ]
+        },
+        {
           id: 'final-step',
           title: 'See you around!',
           text: 'That concludes our tour! Now, get to it!',
@@ -268,6 +391,14 @@ export default {
   computed: {
     user () {
       return JSON.parse(this.$store.state.accounts.user)
+    },
+
+    notifs () {
+      return this.$store.state.notifications.notifs
+    },
+
+    newNotif () {
+      return this.$store.state.notifications.newNotif
     },
 
     isNew () {

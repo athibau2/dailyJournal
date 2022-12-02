@@ -11,6 +11,7 @@ const Authentication = require('./controller/authentication')
 const Prompts = require('./controller/prompts')
 const Topics = require('./controller/topics')
 const Share = require('./controller/share')
+const Notifications = require('./controller/notifications')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
@@ -78,11 +79,15 @@ cron.schedule(`0 0 0 * * *`, () => {
 							}).catch((error) => {
 							  console.error(error)
 							})
+				}, {
+					timezone: "America/Denver"
 				})
 				task.start()
 			}
 		}
 	})
+}, {
+	timezone: "America/Denver"
 });
 
 
@@ -175,7 +180,8 @@ app.use(enforcerMiddleware.route({
 	entries: Entries(pool),
 	prompts: Prompts(pool),
 	topics: Topics(pool),
-	share: Share(pool)
+	share: Share(pool),
+	notifications: Notifications(pool),
 }))
 
 // fallback mocking middleware

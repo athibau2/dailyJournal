@@ -162,7 +162,7 @@ export default {
 
     async sharePrompt() {
       await this.$store.dispatch('share/sharePrompt', {
-        promptid: this.promptBeingShared,
+        prompt: this.promptBeingShared,
         sender: this.user.id,
         users: this.sharePromptList
       })
@@ -174,16 +174,17 @@ export default {
         this.shareEntryList[i] = this.shareEntryList[i].userid
       }
       await this.$store.dispatch('share/shareEntry', {
-        entryid: this.entryBeingShared,
+        entry: this.entryBeingShared,
         owner: this.user.id,
-        users: this.shareEntryList
+        users: this.shareEntryList,
+        title: 'Shared Entry',
       })
       this.shareEntryList = []
     },
 
     unshareEntry (s) {
       this.$store.dispatch('share/unshareEntry', {
-        entryid: this.entryBeingShared,
+        entry: this.entryBeingShared,
         userid: s.userid,
         type: "owner"
       })

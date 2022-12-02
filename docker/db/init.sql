@@ -76,6 +76,20 @@ CREATE TABLE "shared_prompts" (
 );
 create index "shared_prompts_userid" ON "shared_prompts" ("userid");
 
+CREATE TABLE "notifications" (
+  "notifid" SERIAL NOT NULL,
+  "userid" INTEGER NOT NULL,
+  "senderid" INTEGER NOT NULL,
+  "sendername" text NOT NULL,
+  "date" timestamp NOT NULL,
+  "seen" boolean DEFAULT false,
+  "journalid" INTEGER NOT NULL,
+  "text" text NOT NULL,
+  "title" text NOT NULL,
+  PRIMARY KEY ("notifid")
+);
+create index "notifications_userid" ON "notifications" ("userid");
+
 
 INSERT INTO accounts (firstname, lastname, username, "password") values ('Andrew', 'Thibaudeau', 'a.thibs98@gmail.com', 'hellothere');
 

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <span>
-      <v-tabs background-color="#FAF9F6" left v-model="tab">
+      <v-tabs left v-model="tab">
         <v-tabs-slider></v-tabs-slider>
           <v-tab v-for="item in items" :key="item.tab">
             {{ item.tab }} ({{item.tab === 'entries' ? sharedEntries.length : sharedPrompts.length}})
@@ -13,6 +13,7 @@
         <v-tab-item>
           <v-card v-for="(entry, i) in item.tab === 'entries' ? sharedEntries : sharedPrompts" :key="i"
             class="card"
+            :id="entry.hash"
             elevation="5"
             :width="windowWidth < 600 ? '90%' : '450'"
           >
@@ -68,13 +69,22 @@ export default {
     window.addEventListener('resize', this.resizeHandler)
   },
 
-  mounted () {
-    this.$store.dispatch('share/getSharedWithMe', { userid: this.user.id })
+  async mounted () {
+    await this.$store.dispatch('share/getSharedWithMe', { userid: this.user.id })
+    this.tab = parseInt(localStorage.getItem('tab')) ?? null
+    const id = this.$route.params.hash
+    if (id !== undefined && prompt !== undefined) {
+      const el = document.querySelector(id)
+      setTimeout(scrollToNotif, 500)
+      function scrollToNotif () {
+        el && el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" })
+      }
+    }
   },
 
   data () {
     return {
-      tab: null,
+      tab: parseInt(localStorage.getItem('tab')) ?? null,
       items: [
         { tab: 'entries' },
         { tab: 'prompts' },
@@ -87,7 +97,7 @@ export default {
   methods: {
     async removeEntry (entry) {
       await this.$store.dispatch('share/unshareEntry', {
-        entryid: entry.entryid,
+        entry: entry,
         userid: this.user.id,
         type: "receiver"
       })
@@ -108,9 +118,10 @@ export default {
         promptid: entry.promptid
       })
       await this.$store.dispatch('share/shareEntry', {
-        entryid: toShare.entryid,
+        entry: toShare,
         owner: this.user.id,
-        users: [entry.userid]
+        users: [entry.userid],
+        title: `Response`,
       })
       await this.removePrompt(entry)
       this.response = ""

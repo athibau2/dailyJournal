@@ -153,6 +153,125 @@ paths:
           description: Account logged out
         400:
           description: Invalid request
+  /notifications:
+    x-controller: notifications
+    get:
+      x-operation: getNotifs
+      parameters:
+        - $ref: '#/components/parameters/QueryUserid'
+      tags:
+        - Notifications
+      security:
+        - cookieAuth: []
+      summary: Get the user's notifications
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notifications'
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        404:
+          description: Not found
+    put:
+      x-operation: markAllAsRead
+      parameters:
+        - $ref: '#/components/parameters/QueryUserid'
+      tags:
+        - Notifications
+      security:
+        - cookieAuth: []
+      summary: Update all notifications for user
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        404:
+          description: Not found
+    post:
+      x-operation: sendNotif
+      tags:
+        - Notifications
+      security:
+        - cookieAuth: []
+      summary: Send a notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userid
+                - senderid
+                - sendername
+                - date
+                - journalid
+                - text
+                - title
+              properties:
+                userid:
+                  type: number
+                senderid:
+                  type: number
+                sendername:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+                journalid:
+                  type: number
+                text:
+                  type: string
+                title:
+                  type: string
+      responses:
+        201:
+            description: Success
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+  /notifications/{notifid}:
+    x-controller: notifications
+    parameters:
+      - $ref: '#/components/parameters/PathNotifid'
+    put:
+      x-operation: markRead
+      tags:
+        - Notifications
+      security:
+        - cookieAuth: []
+      summary: Update a notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - seen
+              properties:
+                seen:
+                  type: boolean
+              example:
+                seen: true
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        404:
+          description: Not found
   /share:
     x-controller: share
     post:
@@ -597,6 +716,12 @@ components:
       required: false
       schema:
         type: number
+    QueryNotifid:
+      name: notifid
+      in: query
+      required: true
+      schema:
+        type: number
     QuerySearchText:
       name: searchtext
       in: query
@@ -609,6 +734,12 @@ components:
       required: true
       schema:
         type: string
+    PathNotifid:
+      name: notifid
+      in: path
+      required: true
+      schema:
+        type: number
     Pathusername:
       name: username
       in: path
@@ -688,6 +819,41 @@ components:
           readOnly: true
         topicid:
           type: number
+          readOnly: true
+    Notifications:
+      type: array
+      items:
+        $ref: '#/components/schemas/Notification'
+    Notification:
+      type: object
+      properties:
+        notifid:
+          type: number
+          readOnly: true
+        userid:
+          type: number
+          readOnly: true
+        senderid:
+          type: number
+          readOnly: true
+        sendername:
+          type: string
+          readOnly: true
+        date:
+          type: string
+          format: date-time
+          readOnly: true
+        seen:
+          type: boolean
+          readOnly: false
+        journalid:
+          type: number
+          readOnly: true
+        text:
+          type: string
+          readOnly: true
+        title:
+          type: string
           readOnly: true
     GetEntry:
       type: object

@@ -346,8 +346,8 @@ export default {
     getSharedList (entry) {
       this.showShare = true
       this.$store.dispatch('share/getSharedList', {
-        entryid: entry.entryid,
-        promptid: entry.promptid
+        entry: entry, //entry.entryid
+        // prompt: entry, //entry.promptid
       })
     },
 
