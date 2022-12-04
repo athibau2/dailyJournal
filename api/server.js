@@ -59,9 +59,8 @@ cron.schedule(`0 0 0 * * *`, () => {
 				let day = new Date().getDay()
 				let hour = time[0]
 				let min = time[1]
-				let ts = Math.round((new Date(Date.UTC(year, month, date, hour, min, 0, 0)).getTime() / 1000))
 				month += 1
-				// console.log(ts, year, month, date, day, hour, min, res.rows[i].username)
+				// let ts = Math.round((new Date(Date.UTC(year, month, date, hour, min, 0, 0)).getTime() / 1000))
 
 				let task = cron.schedule(`0 ${min} ${hour} ${date} ${month} ${day}`, () => {
 					sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -80,14 +79,14 @@ cron.schedule(`0 0 0 * * *`, () => {
 							  console.error(error)
 							})
 				}, {
-					timezone: "America/Denver"
+					timezone: "America/Denver" // Intl.DateTimeFormat().resolvedOptions().timeZone
 				})
 				task.start()
 			}
 		}
 	})
 }, {
-	timezone: "America/Denver"
+	timezone: "America/Denver" // Intl.DateTimeFormat().resolvedOptions().timeZone
 });
 
 
