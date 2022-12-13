@@ -16,15 +16,21 @@ exports.getAccount = async function (client, userid) {
 }
 
 exports.getAccountByUsername = async function (client, username) {
-    const { rows } = await client.query({
+    const { rows, rowCount } = await client.query({
         name: 'get-account-by-username',
         text: 'SELECT * FROM accounts WHERE username=$1',
         values: [username]
     })
-    return rows[0]
+    return rowCount > 0 ? rows[0] : undefined
 }
 
 exports.createAccount = async function (client, firstname, lastname, username, password) {
+    password = password.split('===')
+    const pass = password[0] === 'writenow' ? {
+        writenow: await encryptPassword(password[1])
+    } : {
+        google: await encryptPassword(password[1])
+    }
     const { rowCount, rows } = await client.query({
         name: 'create-account',
         text: 'INSERT INTO accounts (firstname, lastname, username, password) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING RETURNING userid',
@@ -32,7 +38,7 @@ exports.createAccount = async function (client, firstname, lastname, username, p
             firstname,
             lastname,
             username,
-            await encryptPassword(password)
+            pass,
         ]
     })
     return rowCount > 0 ? rows[0] : undefined

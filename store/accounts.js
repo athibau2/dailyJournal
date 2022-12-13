@@ -1,3 +1,5 @@
+import jwt_decode from "jwt-decode"
+
 export const state = () => {
     return {
         user: getUserFromCookie(),
@@ -87,30 +89,71 @@ export const actions = {
         }
     },
 
-    async signup({ dispatch, commit }, { firstname, lastname, username, password }) {
+    async googleSignin({ commit, dispatch }, { jwt }) {
+        // console.log(jwt)
+        const userObj = jwt_decode(jwt)
         try {
+            const res = await this.$axios.get(`/api/accounts?username=${userObj.email}`)
+            if (res.status === 200) {
+                await dispatch('login', {
+                    username: userObj.email,
+                    password: 'google===google',
+                    isNew: false,
+                    iss: userObj.iss.split('//')[1]
+                })
+            }
+        } catch (err) {
+            console.log(err)
+            if (err.response.status === 404) {
+                await dispatch('signup', {
+                    firstname: userObj.given_name ?? '',
+                    lastname: userObj.family_name ?? '',
+                    username: userObj.email,
+                    password: 'google===google',
+                    iss: userObj.iss.split('//')[1],
+                })
+            }
+        }
+        // await commit('setUser', JSON.stringify(userObj))
+        // this.$router.push('/')
+    },
+
+    async signup({ dispatch }, { firstname, lastname, username, password, iss }) {
+        try {
+            const res = await this.$axios.get(`/api/accounts?username=${username}`)
+            if (res.status === 200) {
+
+            }
             const response = await this.$axios.post('/api/accounts', {
                 firstname: firstname,
                 lastname: lastname,
                 username: username,
-                password: password
+                password: password,
+                logintype: iss,
             })
             if (response.status === 201) {
                 dispatch('login', {
-                    username: username, password: password, isNew: true
+                    username: username,
+                    password: password,
+                    isNew: true,
+                    iss: iss,
                 })
             }
         } catch (error) {
             console.log(error)
+            if (error.response.status === 409) {
+                alert('An account with that username already exists.')
+            }
         }
     },
 
-    async login({ dispatch, commit }, { username, password, isNew }) {
+    async login({ dispatch, commit }, { username, password, isNew, iss }) {
         try {
             const response = await this.$axios.put('/api/authentication/login', {
-                username,
-                password,
-                isNew
+                username: username,
+                password: password,
+                isNew: isNew,
+                iss: iss,
             })
             if (response.status === 200) {
                 await commit('setUser', getUserFromCookie())

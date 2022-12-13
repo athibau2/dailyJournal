@@ -24,7 +24,11 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/png', href: '/logo.png' }
-    ]
+    ],
+    script: [
+      { src: "https://apis.google.com/js/api.js", },
+      { src: 'https://accounts.google.com/gsi/client', }
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css

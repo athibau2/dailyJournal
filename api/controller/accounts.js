@@ -3,17 +3,38 @@ const bcrypt = require('bcryptjs')
 
 module.exports = function (pool) {
 	return {
-		async createAccount (req, res) {
-			const { firstname, lastname, username, password } = req.enforcer.body
-			const userid = await accounts.createAccount(pool, firstname, lastname, username, password)
-			if (userid) {
-				res.set('location', '/api/accounts/' + userid)
-					.enforcer
-					.status(201)
-					.send()
+		async getAccount (req, res) {
+			const username = req.enforcer.query.username
+			const user = await accounts.getAccountByUsername(pool, username)
+			if (user !== undefined) {
+				res.enforcer.status(200).send(user)
 			} else {
-				res.enforcer.status(409).send()
+				res.enforcer.status(404).send()
 			}
+		},
+
+		async createAccount (req, res) {
+			const { firstname, lastname, username, password, logintype } = req.enforcer.body
+			const user = await accounts.getAccountByUsername(pool, username)
+			if (user === undefined) {
+				const userid = await accounts.createAccount(pool, firstname, lastname, username, password)
+				if (userid) {
+					res.set('location', '/api/accounts/' + userid)
+						.enforcer
+						.status(201)
+						.send()
+				} else {
+					res.enforcer.status(400).send()
+				}
+			} else if ((user.password.google !== undefined && user.password.writenow !== undefined) ||
+				(logintype === 'writenow' && user.password.writenow !== undefined)) {
+				res.enforcer.status(409).send()
+			} else if (logintype === 'writenow' && user.password.google !== undefined && user.password.writenow === undefined) {
+				// TODO: add writenow password to user account
+			} else if (logintype !== 'writenow' && user.password.google === undefined && user.password.writenow !== undefined) {
+				// TODO: add google password to user account
+			}
+
 		},
 
 		async getNotifTime (req, res) {

@@ -81,7 +81,6 @@
                 :key="j"
                 @click="toNotif(n)"
               >
-                <!-- :href="n.title === 'Shared Prompt' ? `/shared#prompt-${n.journalid}` : `/shared#entry-${n.journalid}`" -->
                 <v-list-item-content>
                   <v-list-item-title
                     v-text="n.sendername"

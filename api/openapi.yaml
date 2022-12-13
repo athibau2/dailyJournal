@@ -5,6 +5,22 @@ info:
 paths:
   /accounts:
     x-controller: accounts
+    get:
+      x-operation: getAccount
+      parameters:
+        - $ref: '#/components/parameters/QueryUsername'
+      tags:
+        - Accounts
+      summary: Get an account by username
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        404:
+          description: Not found
     post:
       x-operation: createAccount
       tags:
@@ -21,6 +37,7 @@ paths:
                 - lastname
                 - username
                 - password
+                - type
               properties:
                 firstname:
                   type: string
@@ -29,14 +46,16 @@ paths:
                 username:
                   type: string
                 password:
+                  type: object
+                logintype:
                   type: string
-                  format: password
-                  minLength: 4
             example:
               firstname: Andrew
               lastname: Thibaudeau
               username: example@username.com
-              password: password
+              password: {
+                writenow: 'writenow===password'
+              }
       responses:
         201:
           description: Account created
@@ -119,19 +138,22 @@ paths:
                 - username
                 - password
                 - isNew
+                - iss
               properties:
                 username:
                   type: string
                 password:
                   type: string
                   format: password
-                  minLength: 4
                 isNew:
                   type: boolean
+                iss:
+                  type: string
             example:
               username: a.thibs98@gmail.com
-              password: a-password
+              password: 'writenow===password'
               isNew: true
+              iss: writenow
       responses:
         200:
           description: Account logged in
@@ -685,6 +707,12 @@ components:
       required: true
       schema:
         type: number
+    QueryUsername:
+      name: username
+      in: query
+      required: true
+      schema:
+          type: string
     QuerySender:
       name: sender
       in: query

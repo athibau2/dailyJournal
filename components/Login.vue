@@ -87,8 +87,23 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer />
+                        <div id="googleButton"></div>
+                        <!-- <v-tooltip top>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    color="transparent"
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    @click="googleSignIn()"
+                                >
+                                    <img src="~/assets/images/google_logo.png" width="30px" />
+                                </v-btn>
+                            </template>
+                            <span>Continue with Google</span>
+                        </v-tooltip> -->
+                        &ensp;
                         <v-btn color="#cccccc" @click="close()">Exit</v-btn>
-                        <span>&nbsp;</span>
+                        <span>&ensp;</span>
                         <v-btn color="#abddd0"
                             @click="isLogin === 0 ? login() : signup()"
                             :disabled="(isLogin === 1 && age < 13) ? true : false"
@@ -107,7 +122,27 @@ export default {
   name: 'Login',
 
   mounted () {
+    google.accounts.id.initialize({
+        client_id: '1071033375578-imrgvdsogh5trkm7g58lf7e0729rglgr.apps.googleusercontent.com',
+        callback: this.handleCredentialResponse, //method to run after user clicks the Google sign in button
+        context: 'signin'
+      })
+    
+    // render button
+    google.accounts.id.renderButton(
+      document.getElementById('googleButton'),
+      { 
+        type: 'standard',
+        size: this.isMobile ? 'medium' : 'large',
+        text: 'signin_with',
+        shape: 'rectangular',
+        logo_alignment: 'center',
+        width: this.isMobile ? 150 : 250,
+      }
+    )
+  },
 
+  components: {
   },
 
   data () {
@@ -143,8 +178,9 @@ export default {
       else {
           await this.$store.dispatch('accounts/login', {
             username: this.email.toLowerCase(),
-            password: this.password,
-            isNew: false
+            password: 'writenow===' + this.password,
+            isNew: false,
+            iss: 'writenow',
         })
       }
     },
@@ -153,17 +189,26 @@ export default {
         if (this.firstname === "" || this.lastname === "" || this.email === "" || this.password === "") {
             alert('No fields may be left blank')
         }
-        else if (this.password.length < 8) {
-            alert('Password must be at least 8 characters')
+        if (this.password.includes('=') || this.password.length < 8) {
+            alert('Password must be at least 8 characters and cannot contain \'=\'')
         }
         else {
             await this.$store.dispatch('accounts/signup', {
                 firstname: this.firstname,
                 lastname: this.lastname,
                 username: this.email.toLowerCase(),
-                password: this.password
+                password: {
+                    writenow: this.password,
+                },
+                iss: 'writenow',
             })
         }
+    },
+
+    async handleCredentialResponse(response) {
+        await this.$store.dispatch('accounts/googleSignin', {
+            jwt: response.credential,
+        })
     },
   },
 

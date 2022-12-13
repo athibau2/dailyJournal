@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-container>
+      {{user}}
       <v-row justify="center" align="center">
         <v-col>
           <h2 class="text-center" v-if="windowWidth >= 850">Submit Your Entry Here!</h2>

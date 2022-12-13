@@ -15,6 +15,7 @@ const Notifications = require('./controller/notifications')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
+const GoogleStrategy = require('passport-google-oidc');
 const session = require('express-session')
 const DatabaseAccounts = require('./database/accounts')
 const ConnectPgSimple = require('connect-pg-simple')(session)
@@ -92,21 +93,22 @@ cron.schedule(`0 0 0 * * *`, () => {
 
 // set up passport local strategy
 passport.use(new LocalStrategy((username, password, done) => {
+	const type = password.split('===')[0]
+	const pass = password.split('===')[1]
 	DatabaseAccounts.getAccountByUsername(pool, username)
 		.then(async account => {
-			// if no account with the username was found then authentication failed
-			if (account === undefined) {
+			console.log(account)
+			if (account === undefined && type === 'writenow') {
 				done(null, false)
 			} else {
 				// compare encrypted password
-				const match = await bcrypt.compare(password, account.password)
+				const match = await bcrypt.compare(pass, account.password.writenow)
 				if (match) {
 					// passwords matched, so create the user object
-					done(null, { id: account.userid, username: account.username, firstname: account.firstname, lastname: account.lastname })
+					done(null, { id: account.userid, username: account.username, firstname: account.firstname, lastname: account.lastname, type: type })
 				} else {
-					const hash = await bcrypt.hash(password, 10)
-					const m2 = await bcrypt.compare(password, hash)
-
+					const hash = await bcrypt.hash(pass, 10)
+					const m2 = await bcrypt.compare(pass, hash)
 					// passwords did not match
 					done(null, false)
 				}
@@ -114,6 +116,102 @@ passport.use(new LocalStrategy((username, password, done) => {
 		})
 		.catch(e => done(e, null))
 }))
+
+
+// passport.use(new GoogleStrategy({
+//     clientID: process.env.GOOGLE_CLIENT_ID,
+//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//     callbackURL: 'http://localhost:3001/oauth2/redirect/google'
+//   },
+//   function(issuer, profile, cb) {
+// 	console.log('1')
+// 	pool.query('SELECT * FROM federated_credentials WHERE provider = ? AND subject = ?', [
+// 		issuer,
+// 		profile.id
+// 	], async (err, res) => {
+// 		if (err) {
+// 			console.error(err)
+// 			return cb(err)
+// 			process.exit(1)
+// 		}
+// 		if (!res) {
+// 			const salt = await bcrypt.genSalt(10)
+// 			const pass = {
+// 				google: await bcrypt.hash('google', salt)
+// 			}
+// 			// The Google account has not logged in to this app before.  Create a
+//         	// new user record and link it to the Google account.
+// 			pool.query('INSERT INTO accounts (firstname, lastname, username, password) VALUES (?, ?, ?, ?)', [
+// 				profile.name.givenName,
+// 				profile.name.familyName,
+// 				profile.emails[0].value,
+// 				pass,
+// 			  ], function(err) {
+// 				if (err) { return cb(err); }
+	  
+// 				var id = this.lastID;
+// 				pool.query('INSERT INTO federated_credentials (user_id, provider, subject) VALUES (?, ?, ?)', [
+// 				  id,
+// 				  issuer,
+// 				  profile.id
+// 				], function(err) {
+// 				  if (err) { return cb(err); }
+// 				  var user = {
+// 					id: id.toString(),
+// 					name: profile.displayName
+// 				  };
+// 				  return cb(null, user);
+// 				});
+// 			  });
+// 		}
+// 	})
+//     db.get('SELECT * FROM federated_credentials WHERE provider = ? AND subject = ?', [
+//       issuer,
+//       profile.id
+//     ], async function(err, cred) {
+//       if (err) { return cb(err); }
+//       if (!cred) {
+// 		const salt = await bcrypt.genSalt(10)
+//     	const pass = {
+// 			google: await bcrypt.hash('google', salt)
+// 		}
+//         // The Google account has not logged in to this app before.  Create a
+//         // new user record and link it to the Google account.
+//         // db.run('INSERT INTO users (firstname, lastname, username, password) VALUES (?, ?, ?, ?)', [
+//         //   profile.name.givenName,
+// 		//   profile.name.familyName,
+// 		//   profile.emails[0].value,
+// 		//   pass,
+//         // ], function(err) {
+//         //   if (err) { return cb(err); }
+
+//         //   var id = this.lastID;
+//         //   db.run('INSERT INTO federated_credentials (user_id, provider, subject) VALUES (?, ?, ?)', [
+//         //     id,
+//         //     issuer,
+//         //     profile.id
+//         //   ], function(err) {
+//         //     if (err) { return cb(err); }
+//         //     var user = {
+//         //       id: id.toString(),
+//         //       name: profile.displayName
+//         //     };
+//         //     return cb(null, user);
+//         //   });
+//         // });
+//       } else {
+//         // The Google account has previously logged in to the app.  Get the
+//         // user record linked to the Google account and log the user in.
+//         db.get('SELECT * FROM users WHERE id = ?', [ cred.user_id ], function(err, user) {
+//           if (err) { return cb(err); }
+//           if (!user) { return cb(null, false); }
+//           return cb(null, user);
+//         });
+//       }
+//     });
+//   }
+// ));
+
 
 passport.serializeUser((user, done) => {
 	done(null, JSON.stringify(user))
